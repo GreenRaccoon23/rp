@@ -149,7 +149,6 @@ func genDest(path string) {
 func edit(in string, out string) {
 	content, err := FileToString(in)
 	if err != nil {
-		Copy(in, out)
 		return
 	}
 
