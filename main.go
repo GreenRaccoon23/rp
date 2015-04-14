@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -101,7 +100,6 @@ func checkRegex() {
 func main() {
 	defer ColorUnset()
 	checkMethod()
-	fmt.Println(newString)
 	report()
 }
 
