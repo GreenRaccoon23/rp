@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -43,6 +45,7 @@ func flags() []string {
 	flag.StringVar(&newString, "n", "", "")
 	flag.BoolVar(&doRecursive, "r", false, "")
 	flag.StringVar(&rootDir, "d", Pwd(), "")
+	flag.BoolVar(&doAll, "a", false, "")
 	flag.BoolVar(&quiet, "q", false, "")
 	flag.BoolVar(&shutUp, "Q", false, "")
 	flag.Parse()
@@ -52,6 +55,7 @@ func flags() []string {
 		"-n", newString,
 		"-r",
 		"-d", rootDir,
+		"-a",
 		"-q",
 		"-Q",
 	)
@@ -77,7 +81,12 @@ func checkColor() {
 }
 
 func checkRegex() {
-	if oldFile == "*" || IsDir(oldFile) {
+	switch oldFile {
+	case "*", ".":
+		doAll = true
+		return
+	}
+	if IsDir(oldFile) {
 		doAll = true
 		return
 	}
@@ -92,22 +101,43 @@ func checkRegex() {
 func main() {
 	defer ColorUnset()
 	checkMethod()
+	fmt.Println(newString)
 	report()
 }
 
 func checkMethod() {
-	if doRecursive == false {
-		editSingle()
+	if doRecursive {
+		Progress("Editing matching files recursively...")
+		editRecursive()
 		return
 	}
-	Progress("Editing matching files recursively...")
-	editRecursive()
+	if doAll || doRegex {
+		editMultiple()
+		return
+	}
+	editSingle()
 }
 
 func editSingle() {
 	in := oldFile
 	out := in
 	edit(in, out)
+}
+
+func editMultiple() {
+	files, err := ioutil.ReadDir(rootDir)
+	LogErr(err)
+	for _, f := range files {
+		if isMatch(f) == false {
+			continue
+		}
+
+		fileName := f.Name()
+		in := Concat(rootDir, "/", fileName)
+		out := in
+
+		edit(in, out)
+	}
 }
 
 func editRecursive() {

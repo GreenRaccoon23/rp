@@ -50,8 +50,8 @@ func report() {
 func printHelp() {
 	defer os.Exit(0)
 	fmt.Printf(
-		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v%v%v\n%v\n  %v\n%v\n  %v\n%v\n",
-		"rp <options> <original file/directory>",
+		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v%v%v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n",
+		"rp <options> <file/directory>",
 		`-o="": (old)`,
 		"      string in file to replace",
 		`-n="": (new)`,
@@ -59,7 +59,9 @@ func printHelp() {
 		"-r=false: (recursive)",
 		"      Edit matching files recursively [down to the bottom of the directory]",
 		"-d=\"", Pwd(), "\": (directory)",
-		"      (optional) directory under which to edit files recursively",
+		"      directory under which to edit files recursively",
+		"-a=false: (all)",
+		"      Edit all matching files in the target directory, NON-recursively",
 		"-q=false: (quiet)",
 		"      don't list edited files",
 		"-Q=false: (Quiet)",

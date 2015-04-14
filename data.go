@@ -35,11 +35,10 @@ var (
 	}
 )
 
-func Pwd() (pwd string) {
-	var err error
-	pwd, err = os.Getwd()
+func Pwd() string {
+	pwd, err := os.Getwd()
 	LogErr(err)
-	return
+	return pwd
 }
 
 func Log(err error) {
@@ -60,7 +59,10 @@ func LogErr(err error) {
 }
 
 func IsStringSymlink(filename string) bool {
-	file, _ := os.Lstat(filename)
+	file, err := os.Lstat(filename)
+	if err != nil {
+		return true
+	}
 	return IsSymlink(file)
 }
 
@@ -80,11 +82,10 @@ func IsSymlink(file os.FileInfo) bool {
 	return false
 }
 
-func Create(fileName string) (file *os.File) {
-	var err error
-	file, err = os.Create(fileName)
+func Create(fileName string) *os.File {
+	file, err := os.Create(fileName)
 	LogErr(err)
-	return
+	return file
 }
 
 func MakeDir(dir string) {
@@ -101,27 +102,32 @@ func RemoveIfExists(fileName string) {
 }
 
 func WalkReplace(path string, file os.FileInfo, err error) error {
-	if file.IsDir() {
-		return nil
-	}
-	if IsSymlink(file) {
+	// Do a workaround for filepath package bug.
+	if _, err = os.Stat(path); err != nil {
 		return nil
 	}
 
-	fileName := file.Name()
-	if isMatch(fileName) {
+	if isMatch(file) == false {
 		return nil
 	}
 
 	in := path
-	out := fmtDest(path)
-	genDest(out)
+	out := path
 
 	edit(in, out)
 	return nil
 }
 
-func isMatch(fileName string) bool {
+func isMatch(file os.FileInfo) bool {
+	fileName := file.Name()
+
+	if file.IsDir() {
+		return false
+	}
+	if IsSymlink(file) {
+		return false
+	}
+
 	if doAll {
 		return true
 	}
