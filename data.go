@@ -5,34 +5,10 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"path/filepath"
 )
 
 var (
-	MaterialDesign map[string]string = map[string]string{
-		"red":        "#F44336",
-		"pink":       "#E91E63",
-		"purple":     "#9C27B0",
-		"deeppurple": "#673AB7",
-		"indigo":     "#3F51B5",
-		"blue":       "#2196F3",
-		"lightblue":  "#03A9F4",
-		"cyan":       "#00BCD4",
-		"teal":       "#009688",
-		"green":      "#4CAF50",
-		"kellygreen": "#00C853",
-		"shamrock":   "#00E676",
-		"lightgreen": "#8BC34A",
-		"lime":       "#CDDC39",
-		"yellow":     "#FFEB3B",
-		"amber":      "#FFC107",
-		"orange":     "#FF9800",
-		"deeporange": "#FF5722",
-		"brown":      "#795548",
-		"grey":       "#9E9E9E",
-		"bluegrey":   "#607D8B",
-		"archblue":   "#1793D1",
-	}
+	Tally int
 )
 
 func Pwd() string {
@@ -42,28 +18,20 @@ func Pwd() string {
 }
 
 func Log(err error) {
-	if shutUp {
+	if doShutUp {
 		return
 	}
 	fmt.Println(err)
 }
 
 func LogErr(err error) {
-	if shutUp {
+	if doShutUp {
 		return
 	}
 	if err == nil {
 		return
 	}
 	Log(err)
-}
-
-func IsStringSymlink(filename string) bool {
-	file, err := os.Lstat(filename)
-	if err != nil {
-		return true
-	}
-	return IsSymlink(file)
 }
 
 func IsDir(filename string) bool {
@@ -82,26 +50,7 @@ func IsSymlink(file os.FileInfo) bool {
 	return false
 }
 
-func Create(fileName string) *os.File {
-	file, err := os.Create(fileName)
-	LogErr(err)
-	return file
-}
-
-func MakeDir(dir string) {
-	if _, err := os.Stat(dir); err != nil {
-		err := os.MkdirAll(dir, 0777)
-		LogErr(err)
-	}
-}
-
-func RemoveIfExists(fileName string) {
-	if _, err := os.Stat(fileName); err == nil {
-		os.Remove(fileName)
-	}
-}
-
-func WalkReplace(path string, file os.FileInfo, err error) error {
+func WalkRp(path string, file os.FileInfo, err error) error {
 	// Do a workaround for filepath package bug.
 	if _, err = os.Stat(path); err != nil {
 		return nil
@@ -114,7 +63,7 @@ func WalkReplace(path string, file os.FileInfo, err error) error {
 	in := path
 	out := path
 
-	edit(in, out)
+	Rp(in, out)
 	return nil
 }
 
@@ -128,31 +77,36 @@ func isMatch(file os.FileInfo) bool {
 		return false
 	}
 
+	if IsExcl(file) {
+		return false
+	}
+
 	if doAll {
 		return true
 	}
 	if doRegex {
-		return oldFileRe.MatchString(fileName)
+		return trgtRe.MatchString(fileName)
 	}
 
-	if fileName == oldFile {
+	if fileName == trgt {
 		return true
 	}
 	return false
 }
 
-func isMatchRe(fileName string) bool {
-	result := oldFileRe.MatchString(fileName)
-	return result
+func isExcl(file os.FileInfo) bool {
+	name := file.Name()
+
+	for _, e := range Exclusions {
+		if e == name {
+			return true
+		}
+	}
+
+	return false
 }
 
-func genDest(path string) {
-	dir := filepath.Dir(path)
-	MakeDir(dir)
-	return
-}
-
-func edit(in string, out string) {
+func Rp(in string, out string) {
 	content, err := FileToString(in)
 	if err != nil {
 		return
@@ -174,7 +128,7 @@ func edit(in string, out string) {
 	defer newFile.Close()
 
 	StringToFile(edited, newFile)
-	numChanged += 1
+	Tally += 1
 	Progress(out)
 }
 
@@ -226,23 +180,3 @@ func Copy(source, destination string) {
 	err = toWrite.Sync()
 	LogErr(err)
 }
-
-/*func Copy(source, destination string) error {
-	toRead, err := os.Open(source)
-	if err != nil {
-		return err
-	}
-	defer toRead.Close()
-
-	toWrite, err := os.Create(destination)
-	if err != nil {
-		return err
-	}
-	defer toWrite.Close()
-
-	_, err = io.Copy(toWrite, toRead)
-	if err != nil {
-		return err
-	}
-	return
-}*/

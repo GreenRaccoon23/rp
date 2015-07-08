@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/fatih/color"
 )
@@ -23,48 +24,60 @@ var (
 )
 
 func ColorUnset() {
+	if doColor == false {
+		return
+	}
 	color.Unset()
 }
 
-func Progress(current ...string) {
-	if shutUp || quiet {
+func Progress(path string) {
+	if doShutUp || doQuiet {
 		return
 	}
 
-	for _, c := range current {
-		fmt.Printf("%v \n", c)
+	if doColor == false {
+		fmt.Println(path)
+		return
 	}
+	dir := filepath.Dir(path)
+	name := filepath.Base(path)
+	Blue.Printf("%v/", dir)
+	BGreen.Println(name)
 }
 
 func report() {
-	if shutUp {
+	if doShutUp {
 		return
 	}
-	if doRecursive == false {
+	if doRcrsv == false {
 		return
 	}
 
-	fmt.Printf("Edited %d files in %v\n", numChanged, rootDir)
+	fmt.Printf("Edited %d files in %v\n", Tally, Root)
 }
 
-func printHelp() {
+func Help() {
 	defer os.Exit(0)
 	fmt.Printf(
-		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v%v%v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n",
+		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v%v%v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n",
 		"rp <options> <file/directory>",
 		`-o="": (old)`,
 		"      string in file to replace",
 		`-n="": (new)`,
 		"      string to replace old string with",
+		`-x="": (exclude)`,
+		"      Patterns to exclude from matches, separated by commas",
 		"-r=false: (recursive)",
 		"      Edit matching files recursively [down to the bottom of the directory]",
-		"-d=\"", Pwd(), "\": (directory)",
-		"      directory under which to edit files recursively",
+		"-d=", Pwd(), ": (directory)",
+		"      Directory under which to edit files recursively",
 		"-a=false: (all)",
 		"      Edit all matching files in the target directory, NON-recursively",
-		"-q=false: (quiet)",
-		"      don't list edited files",
+		"-c=false: (color)",
+		"      Colorize output",
+		"-q=false: (doQuiet)",
+		"      Don't list edited files",
 		"-Q=false: (Quiet)",
-		"      don't show any output",
+		"      Don't show any output at all",
 	)
 }

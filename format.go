@@ -11,6 +11,8 @@ var (
 )
 
 func IsTrue(args ...bool) bool {
+	// Test the value of one or more bool variables.
+	// If ANY are true, return true.
 	for _, a := range args {
 		if a {
 			return true
@@ -19,9 +21,12 @@ func IsTrue(args ...bool) bool {
 	return false
 }
 
-func Str(slice []string) (concatenated string) {
-	for _, s := range slice {
-		buffer.WriteString(s)
+func Str(slcs ...[]string) (concatenated string) {
+	// Convert one or more slices into one string.
+	for _, c := range slcs {
+		for _, s := range c {
+			buffer.WriteString(s)
+		}
 	}
 	concatenated = buffer.String()
 	buffer.Reset()
@@ -29,20 +34,25 @@ func Str(slice []string) (concatenated string) {
 }
 
 func Slc(args ...string) []string {
+	// Convert one or more strings into one slice.
 	return args
 }
 
 func Concat(args ...string) string {
+	// Concatenate one or more strings into one single string.
 	return Str(args)
 }
 
 func Filter(slc []string, args ...string) (filtered []string) {
+	// Opposite of func Strain().
+	// REMOVE any elements of a slice 'slc'
+	//    which contain any of the strings in 'args'.
 	sediment := Strain(slc, args...)
 	for _, s := range slc {
 		if s == "" {
 			continue
 		}
-		if SliceContains(sediment, s) {
+		if SlcContains(sediment, s) {
 			continue
 		}
 		filtered = append(filtered, s)
@@ -51,11 +61,14 @@ func Filter(slc []string, args ...string) (filtered []string) {
 }
 
 func Strain(slc []string, args ...string) (sediment []string) {
+	// Opposite of func Filter().
+	// KEEP any elements of a slice 'slc'
+	//    which contain any of the strings in 'args'.
 	for _, s := range args {
 		if s == "" {
 			continue
 		}
-		if SliceContains(slc, s) == false {
+		if SlcContains(slc, s) == false {
 			continue
 		}
 		sediment = append(sediment, s)
@@ -63,7 +76,8 @@ func Strain(slc []string, args ...string) (sediment []string) {
 	return
 }
 
-func SliceContains(slc []string, args ...string) bool {
+func SlcHas(slc []string, args ...string) bool {
+	// Test whether any element in a slice MATCHES any of the strings in 'args',
 	for _, s := range slc {
 		if s == "" {
 			continue
@@ -72,7 +86,24 @@ func SliceContains(slc []string, args ...string) bool {
 			if a == "" {
 				continue
 			}
-			//if s == a {
+			if a == s {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func SlcContains(slc []string, args ...string) bool {
+	// Test whether any element in a slice CONTAINS any of the substrings in 'args',
+	for _, s := range slc {
+		if s == "" {
+			continue
+		}
+		for _, a := range args {
+			if a == "" {
+				continue
+			}
 			if strings.Contains(s, a) {
 				return true
 			}
@@ -82,6 +113,7 @@ func SliceContains(slc []string, args ...string) bool {
 }
 
 func IsMatch(s string, q string) bool {
+	// Test whether two strings match each other.
 	if s == q {
 		return true
 	}
@@ -89,6 +121,7 @@ func IsMatch(s string, q string) bool {
 }
 
 func IsMatchAny(s string, args ...string) bool {
+	// Test whether a string matches any of the strings in 'args'.
 	for _, a := range args {
 		if a == s {
 			return true
@@ -96,20 +129,20 @@ func IsMatchAny(s string, args ...string) bool {
 	}
 	return false
 }
-func IsFirstLetter(s string, args ...string) bool {
-	firstLetter := string(s[0])
+func IsFirstLtr(s string, args ...string) bool {
+	firstLtr := string(s[0])
 	for _, a := range args {
-		if firstLetter == a {
+		if firstLtr == a {
 			return true
 		}
 	}
 	return false
 }
 
-func IsLastLetter(s string, args ...string) bool {
-	lastLetter := string(s[len(s)-1])
+func IsLastLtr(s string, args ...string) bool {
+	lastLtr := string(s[len(s)-1])
 	for _, z := range args {
-		if lastLetter == z {
+		if lastLtr == z {
 			return true
 		}
 	}
@@ -150,7 +183,7 @@ func EndsWith(s string, sub string) bool {
 		return false
 	}
 	subA := sub[0]
-	target, exists := WhereIsByteInString(s, subA)
+	target, exists := WhereIsByteInStr(s, subA)
 	if exists == false {
 		return false
 	}
@@ -163,7 +196,28 @@ func EndsWith(s string, sub string) bool {
 	return true
 }
 
-func IsByteInString(s string, b byte) bool {
+func SlcContains(slc []string, args ...string) bool {
+	for _, s := range slc {
+		for _, a := range args {
+			if s == a {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func IsByteLtr(b uint8, args ...string) bool {
+	letter := string(b)
+	for _, a := range args {
+		if a == letter {
+			return true
+		}
+	}
+	return false
+}
+
+func IsByteInStr(s string, b byte) bool {
 	for i := 0; i < len(s); i++ {
 		if s[i] == b {
 			return true
@@ -172,7 +226,7 @@ func IsByteInString(s string, b byte) bool {
 	return false
 }
 
-func WhereIsByteInString(s string, b byte) (int, bool) {
+func WhereIsByteInStr(s string, b byte) (int, bool) {
 	for i := 0; i < len(s); i++ {
 		if s[i] == b {
 			return i, true
@@ -181,18 +235,40 @@ func WhereIsByteInString(s string, b byte) (int, bool) {
 	return 0, false
 }
 
-func FmtDir(dir string) (formatted string) {
-	pwd := Pwd()
-	formatted = dir
+func FmtDir(dir string) (fmtd string) {
+	fmtd = dir
 
-	if IsFirstLetter(dir, "/", "~") == false {
-		formatted = Concat(pwd, "/", dir)
+	if IsFirstLtr(dir, "/", "~") == false {
+		fmtd = Concat(Root, "/", dir)
 	}
-	if IsLastLetter(dir, "/") == false {
-		formatted = Concat(formatted, "/")
+	if IsLastLtr(dir, "/") == false {
+		fmtd = Concat(fmtd, "/")
 	}
 	if dir == "." {
-		formatted = pwd
+		fmtd = Root
+	}
+
+	return
+}
+
+func FmtPath(path string) (fullpath string) {
+	fullpath = path
+
+	if path == "" {
+		return
+	}
+
+	if IsFirstLtr(path, "~") {
+		fullpath = Concat(Pwd(), "/", path)
+		return
+	}
+
+	if IsFirstLtr(path, "/") == false {
+		fullpath = Concat(Root, "/", path)
+	}
+
+	if IsLastLtr(fullpath, "/") {
+		fullpath = fullpath[:len(fullpath)-1]
 	}
 
 	return
@@ -213,11 +289,11 @@ func replace(s string) (replaced string) {
 }
 
 func findReplacements(s string) (re *regexp.Regexp, replacement string) {
-	if oldString == "" {
+	if SOld == "" {
 		return
 	}
 
-	re = regexp.MustCompile(oldString)
-	replacement = newString
+	re = regexp.MustCompile(SOld)
+	replacement = SNew
 	return
 }
