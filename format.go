@@ -10,7 +10,7 @@ var (
 	buffer bytes.Buffer
 )
 
-func IsTrue(args ...bool) bool {
+func isTrue(args ...bool) bool {
 	// Test the value of one or more bool variables.
 	// If ANY are true, return true.
 	for _, a := range args {
@@ -21,7 +21,7 @@ func IsTrue(args ...bool) bool {
 	return false
 }
 
-func Str(slcs ...[]string) (concatenated string) {
+func str(slcs ...[]string) (concatenated string) {
 	// Convert one or more slices into one string.
 	for _, c := range slcs {
 		for _, s := range c {
@@ -33,26 +33,26 @@ func Str(slcs ...[]string) (concatenated string) {
 	return
 }
 
-func Slc(args ...string) []string {
+func slc(args ...string) []string {
 	// Convert one or more strings into one slice.
 	return args
 }
 
-func Concat(args ...string) string {
-	// Concatenate one or more strings into one single string.
-	return Str(args)
+func concat(args ...string) string {
+	// concatenate one or more strings into one single string.
+	return str(args)
 }
 
-func Filter(slc []string, args ...string) (filtered []string) {
-	// Opposite of func Strain().
+func filter(slc []string, args ...string) (filtered []string) {
+	// Opposite of func strain().
 	// REMOVE any elements of a slice 'slc'
 	//    which contain any of the strings in 'args'.
-	sediment := Strain(slc, args...)
+	sediment := strain(slc, args...)
 	for _, s := range slc {
 		if s == "" {
 			continue
 		}
-		if SlcContains(sediment, s) {
+		if slcContains(sediment, s) {
 			continue
 		}
 		filtered = append(filtered, s)
@@ -60,15 +60,15 @@ func Filter(slc []string, args ...string) (filtered []string) {
 	return
 }
 
-func Strain(slc []string, args ...string) (sediment []string) {
-	// Opposite of func Filter().
+func strain(slc []string, args ...string) (sediment []string) {
+	// Opposite of func filter().
 	// KEEP any elements of a slice 'slc'
 	//    which contain any of the strings in 'args'.
 	for _, s := range args {
 		if s == "" {
 			continue
 		}
-		if SlcContains(slc, s) == false {
+		if slcContains(slc, s) == false {
 			continue
 		}
 		sediment = append(sediment, s)
@@ -76,7 +76,7 @@ func Strain(slc []string, args ...string) (sediment []string) {
 	return
 }
 
-func SlcHas(slc []string, args ...string) bool {
+func slcHas(slc []string, args ...string) bool {
 	// Test whether any element in a slice MATCHES any of the strings in 'args',
 	for _, s := range slc {
 		if s == "" {
@@ -94,7 +94,7 @@ func SlcHas(slc []string, args ...string) bool {
 	return false
 }
 
-func SlcContains(slc []string, args ...string) bool {
+func slcContains(slc []string, args ...string) bool {
 	// Test whether any element in a slice CONTAINS any of the substrings in 'args',
 	for _, s := range slc {
 		if s == "" {
@@ -112,24 +112,7 @@ func SlcContains(slc []string, args ...string) bool {
 	return false
 }
 
-func IsMatch(s string, q string) bool {
-	// Test whether two strings match each other.
-	if s == q {
-		return true
-	}
-	return false
-}
-
-func IsMatchAny(s string, args ...string) bool {
-	// Test whether a string matches any of the strings in 'args'.
-	for _, a := range args {
-		if a == s {
-			return true
-		}
-	}
-	return false
-}
-func IsFirstLtr(s string, args ...string) bool {
+func isFirstLtr(s string, args ...string) bool {
 	firstLtr := string(s[0])
 	for _, a := range args {
 		if firstLtr == a {
@@ -139,7 +122,7 @@ func IsFirstLtr(s string, args ...string) bool {
 	return false
 }
 
-func IsLastLtr(s string, args ...string) bool {
+func isLastLtr(s string, args ...string) bool {
 	lastLtr := string(s[len(s)-1])
 	for _, z := range args {
 		if lastLtr == z {
@@ -149,7 +132,7 @@ func IsLastLtr(s string, args ...string) bool {
 	return false
 }
 
-func IsKeyInMap(m map[string]string, s string) bool {
+func isKeyInMap(m map[string]string, s string) bool {
 	for k, _ := range m {
 		if k == s {
 			return true
@@ -158,7 +141,7 @@ func IsKeyInMap(m map[string]string, s string) bool {
 	return false
 }
 
-func IsValueInMap(m map[string]string, s string) bool {
+func isValueInMap(m map[string]string, s string) bool {
 	for _, v := range m {
 		if v == s {
 			return true
@@ -167,23 +150,23 @@ func IsValueInMap(m map[string]string, s string) bool {
 	return false
 }
 
-func EndsWithAny(s string, args ...string) bool {
+func endsWithAny(s string, args ...string) bool {
 	for _, a := range args {
-		if EndsWith(s, a) {
+		if endsWith(s, a) {
 			return true
 		}
 	}
 	return false
 }
 
-func EndsWith(s string, sub string) bool {
+func endsWith(s string, sub string) bool {
 	subZ := sub[len(sub)-1]
 	sZ := s[len(s)-1]
 	if sZ != subZ {
 		return false
 	}
 	subA := sub[0]
-	target, exists := WhereIsByteInStr(s, subA)
+	target, exists := whereIsByte(s, subA)
 	if exists == false {
 		return false
 	}
@@ -196,18 +179,7 @@ func EndsWith(s string, sub string) bool {
 	return true
 }
 
-func SlcContains(slc []string, args ...string) bool {
-	for _, s := range slc {
-		for _, a := range args {
-			if s == a {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-func IsByteLtr(b uint8, args ...string) bool {
+func isByteLtr(b uint8, args ...string) bool {
 	letter := string(b)
 	for _, a := range args {
 		if a == letter {
@@ -217,7 +189,7 @@ func IsByteLtr(b uint8, args ...string) bool {
 	return false
 }
 
-func IsByteInStr(s string, b byte) bool {
+func isByteInstr(s string, b byte) bool {
 	for i := 0; i < len(s); i++ {
 		if s[i] == b {
 			return true
@@ -226,7 +198,7 @@ func IsByteInStr(s string, b byte) bool {
 	return false
 }
 
-func WhereIsByteInStr(s string, b byte) (int, bool) {
+func whereIsByte(s string, b byte) (int, bool) {
 	for i := 0; i < len(s); i++ {
 		if s[i] == b {
 			return i, true
@@ -235,14 +207,14 @@ func WhereIsByteInStr(s string, b byte) (int, bool) {
 	return 0, false
 }
 
-func FmtDir(dir string) (fmtd string) {
+func fmtDir(dir string) (fmtd string) {
 	fmtd = dir
 
-	if IsFirstLtr(dir, "/", "~") == false {
-		fmtd = Concat(Root, "/", dir)
+	if isFirstLtr(dir, "/", "~") == false {
+		fmtd = concat(Root, "/", dir)
 	}
-	if IsLastLtr(dir, "/") == false {
-		fmtd = Concat(fmtd, "/")
+	if isLastLtr(dir, "/") == false {
+		fmtd = concat(fmtd, "/")
 	}
 	if dir == "." {
 		fmtd = Root
@@ -251,23 +223,23 @@ func FmtDir(dir string) (fmtd string) {
 	return
 }
 
-func FmtPath(path string) (fullpath string) {
+func fmtPath(path string) (fullpath string) {
 	fullpath = path
 
 	if path == "" {
 		return
 	}
 
-	if IsFirstLtr(path, "~") {
-		fullpath = Concat(Pwd(), "/", path)
+	if isFirstLtr(path, "~") {
+		fullpath = concat(pwd(), "/", path)
 		return
 	}
 
-	if IsFirstLtr(path, "/") == false {
-		fullpath = Concat(Root, "/", path)
+	if isFirstLtr(path, "/") == false {
+		fullpath = concat(Root, "/", path)
 	}
 
-	if IsLastLtr(fullpath, "/") {
+	if isLastLtr(fullpath, "/") {
 		fullpath = fullpath[:len(fullpath)-1]
 	}
 

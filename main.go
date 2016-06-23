@@ -1,66 +1,63 @@
 package main
 
 import (
-	//"fmt"
 	"io/ioutil"
 	"path/filepath"
 )
 
-var ()
-
 func init() {
-	ChkHelp()
+	chkHelp()
 	flags()
 	flagsEval()
 }
 
 func main() {
-	defer ColorUnset()
+	defer colorUnset()
 	chkMethod()
 	report()
 }
 
 func chkMethod() {
 	if doRcrsv {
-		Rcrsv(Root)
+		rpRcrsv(Root)
 		return
 	}
 
 	if doAll || doRegex {
-		Dir(Root)
+		rpDir(Root)
 		return
 	}
 
-	Files(Targets)
+	rpFiles(Targets)
 }
 
-func Files(files []string) {
+func rpFiles(files []string) {
 	for _, f := range files {
-		trgt = f
-		//path := FmtDir(trgt)
-		path := FmtPath(trgt)
+		Trgt = f
+		//path := fmtDir(Trgt)
+		path := fmtPath(Trgt)
 		Root = filepath.Dir(path)
-		Dir(Root)
+		rpDir(Root)
 	}
 }
 
-func Dir(dir string) {
+func rpDir(dir string) {
 	files, err := ioutil.ReadDir(dir)
-	LogErr(err)
+	logErr(err)
 	for _, f := range files {
 		if isMatch(f) == false {
 			continue
 		}
 
 		fileName := f.Name()
-		in := Concat(dir, "/", fileName)
+		in := concat(dir, "/", fileName)
 		out := in
 
-		Rp(in, out)
+		rp(in, out)
 	}
 }
 
-func Rcrsv(dir string) {
-	err := filepath.Walk(dir, WalkRp)
-	LogErr(err)
+func rpRcrsv(dir string) {
+	err := filepath.Walk(dir, walkRp)
+	logErr(err)
 }

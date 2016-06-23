@@ -23,19 +23,19 @@ var (
 	BBlack   = color.New(color.Bold, color.FgBlack)
 )
 
-func ColorUnset() {
-	if doColor == false {
+func colorUnset() {
+	if !doColor {
 		return
 	}
 	color.Unset()
 }
 
-func Progress(path string) {
+func progress(path string) {
 	if doShutUp || doQuiet {
 		return
 	}
 
-	if doColor == false {
+	if !doColor {
 		fmt.Println(path)
 		return
 	}
@@ -46,17 +46,14 @@ func Progress(path string) {
 }
 
 func report() {
-	if doShutUp {
-		return
-	}
-	if doRcrsv == false {
+	if doShutUp || !doRcrsv {
 		return
 	}
 
-	fmt.Printf("Edited %d files in %v\n", Tally, Root)
+	fmt.Printf("Edited %d files in %v\n", Total, Root)
 }
 
-func Help() {
+func help() {
 	defer os.Exit(0)
 	fmt.Printf(
 		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v%v%v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n",
@@ -69,7 +66,7 @@ func Help() {
 		"      Patterns to exclude from matches, separated by commas",
 		"-r=false: (recursive)",
 		"      Edit matching files recursively [down to the bottom of the directory]",
-		"-d=", Pwd(), ": (directory)",
+		"-d=", pwd(), ": (directory)",
 		"      Directory under which to edit files recursively",
 		"-a=false: (all)",
 		"      Edit all matching files in the target directory, NON-recursively",

@@ -8,76 +8,65 @@ import (
 )
 
 var (
-	Tally int
+	Total int
 )
 
-func Pwd() string {
+func pwd() string {
 	pwd, err := os.Getwd()
-	LogErr(err)
+	logErr(err)
 	return pwd
 }
 
-func Log(err error) {
+func log(err error) {
 	if doShutUp {
 		return
 	}
 	fmt.Println(err)
 }
 
-func LogErr(err error) {
+func logErr(err error) {
 	if doShutUp {
 		return
 	}
 	if err == nil {
 		return
 	}
-	Log(err)
+	log(err)
 }
 
-func IsDir(filename string) bool {
-	file, err := os.Stat(filename)
+func isDir(filename string) bool {
+	fi, err := os.Lstat(filename)
 	if err != nil {
 		return false
 	}
-	mode := file.Mode()
-	return mode.IsDir()
+	return fi.Mode().IsDir()
 }
 
-func IsSymlink(file os.FileInfo) bool {
-	if file.Mode()&os.ModeSymlink == os.ModeSymlink {
+func isSymlink(file os.FileInfo) bool {
+	if file.Mode()&os.ModeSymlink != 0 {
 		return true
 	}
 	return false
 }
 
-func WalkRp(path string, file os.FileInfo, err error) error {
+func walkRp(path string, file os.FileInfo, err error) error {
 	// Do a workaround for filepath package bug.
 	if _, err = os.Stat(path); err != nil {
 		return nil
 	}
 
-	if isMatch(file) == false {
+	if !isMatch(file) {
 		return nil
 	}
 
-	in := path
-	out := path
-
-	Rp(in, out)
+	rp(path, path)
 	return nil
 }
 
 func isMatch(file os.FileInfo) bool {
 	fileName := file.Name()
 
-	if file.IsDir() {
-		return false
-	}
-	if IsSymlink(file) {
-		return false
-	}
-
-	if IsExcl(file) {
+	if file.IsDir() || isSymlink(file) || isExcl(file) {
 		return false
 	}
 
@@ -85,10 +74,10 @@ func isMatch(file os.FileInfo) bool {
 		return true
 	}
 	if doRegex {
-		return trgtRe.MatchString(fileName)
+		return ReTrgt.MatchString(fileName)
 	}
 
-	if fileName == trgt {
+	if fileName == Trgt {
 		return true
 	}
 	return false
@@ -102,12 +91,11 @@ func isExcl(file os.FileInfo) bool {
 			return true
 		}
 	}
-
 	return false
 }
 
-func Rp(in string, out string) {
-	content, err := FileToString(in)
+func rp(in string, out string) {
+	content, err := fileToString(in)
 	if err != nil {
 		return
 	}
@@ -122,61 +110,61 @@ func Rp(in string, out string) {
 
 	newFile, err := os.Create(out)
 	if err != nil {
-		Log(err)
+		log(err)
 		return
 	}
 	defer newFile.Close()
 
-	StringToFile(edited, newFile)
-	Tally += 1
-	Progress(out)
+	stringToFile(edited, newFile)
+	Total += 1
+	progress(out)
 }
 
-func FileToString(fileName string) (fileString string, err error) {
+func fileToString(fileName string) (fileString string, err error) {
 	var file []byte
 	file, err = ioutil.ReadFile(fileName)
 	if err != nil {
-		Log(err)
+		log(err)
 		return
 	}
 	fileString = string(file)
 	return
 }
 
-func StringToFile(s string, file *os.File) {
+func stringToFile(s string, file *os.File) {
 	b := []byte(s)
 	_, err := file.Write(b)
-	LogErr(err)
+	logErr(err)
 
 	err = file.Sync()
-	LogErr(err)
+	logErr(err)
 }
 
-func Copy(source, destination string) {
+func copyFile(source, destination string) {
 	if destination == source {
 		return
 	}
 
 	toRead, err := os.Open(source)
 	if err != nil {
-		Log(err)
+		log(err)
 		return
 	}
 	defer toRead.Close()
 
 	toWrite, err := os.Create(destination)
 	if err != nil {
-		Log(err)
+		log(err)
 		return
 	}
 	defer toWrite.Close()
 
 	_, err = io.Copy(toWrite, toRead)
 	if err != nil {
-		Log(err)
+		log(err)
 		return
 	}
 
 	err = toWrite.Sync()
-	LogErr(err)
+	logErr(err)
 }

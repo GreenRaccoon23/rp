@@ -2,16 +2,16 @@ package main
 
 import (
 	//"fmt"
+	"flag"
 	"os"
 	"regexp"
 	"strings"
 )
 
 var (
-	SOld    string
-	SNew    string
-	Root    string = Pwd()
-	Exclude string
+	SOld string
+	SNew string
+	Root string = pwd()
 
 	doRcrsv  bool
 	doAll    bool
@@ -28,14 +28,14 @@ var (
 	ReTrgt     *regexp.Regexp
 )
 
-func ChkHelp() {
+func chkHelp() {
 	if len(os.Args) < 2 {
 		return
 	}
 
 	switch os.Args[1] {
 	case "-h", "h", "help", "--help", "-H", "H", "HELP", "--HELP", "-help", "--h", "--H":
-		Help()
+		help()
 	}
 
 }
@@ -54,29 +54,18 @@ func flags() {
 		"q": &doQuiet,
 		"Q": &doShutUp,
 	}
-
-	for i, f := range os.Args {
-		if len(f) == 0 {
-			continue
-		}
-		if IsByteLtr(f[0], "-") == false {
-			continue
-		}
-
-		for _, r := range f[1:] {
-			s := string(r)
-			BoolParse(bFlags, s)
-			StrParse(sFlags, i, s)
-		}
+	for a, s := range sFlags {
+		flag.StringVar(s, a, "", "")
 	}
-
-	args := FlagFilter(sFlags)
-	Targets = args
+	for a, b := range bFlags {
+		flag.BoolVar(b, a, false, "")
+	}
+	flag.Parse()
 }
 
 func flagsEval() {
 	chkColor()
-	Root = FmtDir(Root)
+	Root = fmtDir(Root)
 	chkExclusions()
 	chkTargets()
 }
@@ -110,7 +99,7 @@ func chkRegex(t string) {
 		return
 	}
 
-	if IsDir(t) {
+	if isDir(t) {
 		doRcrsv = true
 		return
 	}
@@ -119,7 +108,7 @@ func chkRegex(t string) {
 		doRegex = true
 		var err error
 		ReTrgt, err = regexp.Compile(t)
-		LogErr(err)
+		logErr(err)
 		return
 	}
 }
@@ -128,61 +117,10 @@ func chkColor() {
 	o := strings.ToLower(SOld)
 	n := strings.ToLower(SNew)
 
-	if IsKeyInMap(MaterialDesign, o) {
+	if isKeyInMap(MaterialDesign, o) {
 		SOld = MaterialDesign[o]
 	}
-	if IsKeyInMap(MaterialDesign, n) {
+	if isKeyInMap(MaterialDesign, n) {
 		SNew = MaterialDesign[n]
 	}
-}
-
-func BoolParse(m map[string]*bool, f string) {
-	for s, b := range m {
-		if s != f {
-			continue
-		}
-		*b = true
-	}
-}
-
-func StrParse(m map[string]*string, i int, f string) {
-	for s, t := range m {
-		if s != f {
-			continue
-		}
-		*t = ArgNext(i)
-	}
-}
-
-func ArgNext(i int) string {
-	if len(os.Args) <= i {
-		Help()
-	}
-	return os.Args[i+1]
-}
-
-func FlagFilter(m map[string]*string) (filtered []string) {
-	if len(os.Args) < 2 {
-		return
-	}
-
-	strFlags := StrFlags(m)
-
-	for _, a := range os.Args[1:] {
-		if IsFirstLtr(a, "-") {
-			continue
-		}
-		if SlcContains(strFlags, a) {
-			continue
-		}
-		filtered = append(filtered, a)
-	}
-	return
-}
-
-func StrFlags(m map[string]*string) (slc []string) {
-	for _, v := range m {
-		slc = append(slc, *v)
-	}
-	return
 }
