@@ -3,18 +3,107 @@ package main
 import (
 	"io/ioutil"
 	"path/filepath"
+	"regexp"
+	"strings"
+)
+
+var (
+	SOld string
+	SNew string
+	Root string = pwd()
+
+	doRcrsv  bool
+	doAll    bool
+	doColor  bool
+	doQuiet  bool
+	doShutUp bool
+
+	Targets    []string
+	Trgt       string
+	Exclude    string
+	Exclusions []string
+	doExclude  bool
+	doRegex    bool
+	ReTrgt     *regexp.Regexp
 )
 
 func init() {
-	chkHelp()
-	flags()
-	flagsEval()
+
+	boolFlagVars := map[string]*bool{
+		"r": &doRcrsv,
+		"a": &doAll,
+		"c": &doColor,
+		"q": &doQuiet,
+		"Q": &doShutUp,
+	}
+
+	stringFlagVars := map[string]*string{
+		"o": &SOld,
+		"n": &SNew,
+		"d": &Root,
+		"x": &Exclude,
+	}
+
+	var noFlagVars []*string
+
+	parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
+
+	_setRoot()
+	_setExclusions()
+	_setTargets()
 }
 
 func main() {
 	defer colorUnset()
 	chkMethod()
 	report()
+}
+
+func _setRoot() {
+	Root = fmtDir(Root)
+}
+
+func _setExclusions() {
+	if Exclude == "" {
+		return
+	}
+
+	doExclude = true
+	Exclusions = strings.Split(Exclude, ",")
+}
+
+func _setTargets() {
+	n := len(Targets)
+	switch n {
+	case 0:
+		doAll = true
+	case 1:
+		Trgt = Targets[0]
+		_setRegex(Trgt)
+	default:
+		Trgt = Targets[0]
+	}
+}
+
+func _setRegex(t string) {
+	switch t {
+	case "*", ".":
+		doAll = true
+		return
+	}
+
+	if isDir(t) {
+		doRcrsv = true
+		return
+	}
+
+	if strings.Contains(t, "*") {
+		doRegex = true
+		var err error
+		ReTrgt, err = regexp.Compile(t)
+		logErr(err)
+		return
+	}
 }
 
 func chkMethod() {

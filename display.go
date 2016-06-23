@@ -53,7 +53,7 @@ func report() {
 	fmt.Printf("Edited %d files in %v\n", Total, Root)
 }
 
-func help() {
+func printHelp() {
 	defer os.Exit(0)
 	fmt.Printf(
 		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v%v%v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n",

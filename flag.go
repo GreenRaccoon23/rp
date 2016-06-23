@@ -2,125 +2,167 @@ package main
 
 import (
 	//"fmt"
-	"flag"
+
 	"os"
-	"regexp"
 	"strings"
+
+	"github.com/GreenRaccoon23/slices"
 )
 
-var (
-	SOld string
-	SNew string
-	Root string = pwd()
+func parseArgs(boolFlagVars map[string]*bool, stringFlagVars map[string]*string, noFlagVars []*string) (extraArgs []string) {
 
-	doRcrsv  bool
-	doAll    bool
-	doColor  bool
-	doQuiet  bool
-	doShutUp bool
+	if _helpRequested() {
+		printHelp()
+	}
 
-	Targets    []string
-	Trgt       string
-	Exclude    string
-	Exclusions []string
-	doExclude  bool
-	doRegex    bool
-	ReTrgt     *regexp.Regexp
-)
+	a := _argParser{
+		boolFlagVars:   boolFlagVars,
+		stringFlagVars: stringFlagVars,
+		noFlagVars:     noFlagVars,
+	}
+	a._init()
+	defer a._reset()
 
-func chkHelp() {
+	extraArgs = a._parseArgs()
+	return
+}
+
+func _helpRequested() bool {
+
 	if len(os.Args) < 2 {
-		return
+		return true
 	}
 
 	switch os.Args[1] {
 	case "-h", "h", "help", "--help", "-H", "H", "HELP", "--HELP", "-help", "--h", "--H":
-		help()
+		return true
 	}
 
+	return false
 }
 
-func flags() {
-	sFlags := map[string]*string{
-		"o": &SOld,
-		"n": &SNew,
-		"d": &Root,
-		"x": &Exclude,
-	}
-	bFlags := map[string]*bool{
-		"r": &doRcrsv,
-		"a": &doAll,
-		"c": &doColor,
-		"q": &doQuiet,
-		"Q": &doShutUp,
-	}
-	for a, s := range sFlags {
-		flag.StringVar(s, a, "", "")
-	}
-	for a, b := range bFlags {
-		flag.BoolVar(b, a, false, "")
-	}
-	flag.Parse()
+type _argParser struct {
+	boolFlagVars   map[string]*bool
+	stringFlagVars map[string]*string
+	noFlagVars     []*string
+
+	_args    []string
+	_iEndArg int
+
+	_argsNotFlagged []string
 }
 
-func flagsEval() {
-	chkColor()
-	Root = fmtDir(Root)
-	chkExclusions()
-	chkTargets()
+func (a *_argParser) _init() {
+	a._setArgs()
 }
 
-func chkExclusions() {
-	if Exclude == "" {
-		return
-	}
+func (a *_argParser) _setArgs() {
 
-	doExclude = true
-	Exclusions = strings.Split(Exclude, ",")
-}
+	osArgs := os.Args
+	lenOsArgs := len(osArgs)
+	for i := 1; i < lenOsArgs; i++ {
+		arg := osArgs[i]
 
-func chkTargets() {
-	n := len(Targets)
-	switch n {
-	case 0:
-		doAll = true
-	case 1:
-		Trgt = Targets[0]
-		chkRegex(Trgt)
-	default:
-		Trgt = Targets[0]
+		if isEmptyArg := (arg == ""); isEmptyArg {
+			continue
+		}
+
+		a._args = append(a._args, arg)
 	}
 }
 
-func chkRegex(t string) {
-	switch t {
-	case "*", ".":
-		doAll = true
-		return
-	}
-
-	if isDir(t) {
-		doRcrsv = true
-		return
-	}
-
-	if strings.Contains(t, "*") {
-		doRegex = true
-		var err error
-		ReTrgt, err = regexp.Compile(t)
-		logErr(err)
-		return
-	}
+func (a *_argParser) _reset() {
+	go func() { a.boolFlagVars = nil }()
+	go func() { a.stringFlagVars = nil }()
+	go func() { a.noFlagVars = nil }()
+	go func() { a._args = nil }()
+	go func() { a._argsNotFlagged = nil }()
 }
 
-func chkColor() {
-	o := strings.ToLower(SOld)
-	n := strings.ToLower(SNew)
+func (a *_argParser) _parseArgs() (extraArgs []string) {
 
-	if isKeyInMap(MaterialDesign, o) {
-		SOld = MaterialDesign[o]
+	args := a._args
+	iEnd := len(args) - 1
+	a._iEndArg = iEnd
+
+	for i := 0; i <= iEnd; i++ {
+		arg := args[i]
+
+		if isFlag := a._parseArg(arg, &i); !isFlag {
+			a._argsNotFlagged = append(a._argsNotFlagged, arg)
+		}
 	}
-	if isKeyInMap(MaterialDesign, n) {
-		SNew = MaterialDesign[n]
+
+	extraArgs = a._setNoFlags()
+	return
+}
+
+func (a *_argParser) _parseArg(arg string, i *int) bool {
+
+	if beginsWithHyphen := (string(arg[0]) == "-"); !beginsWithHyphen {
+		return false
 	}
+
+	argTrimmed := strings.TrimLeft(arg, "-")
+
+	if hasBoolFlags := a._setBoolFlags(argTrimmed); hasBoolFlags {
+		return true
+	}
+
+	if isLastArg := (*i == a._iEndArg); isLastArg {
+		return false
+	}
+
+	if isStringFlag := a._setStringFlag(argTrimmed, i); isStringFlag {
+		return true
+	}
+
+	return false
+}
+
+func (a *_argParser) _setBoolFlags(argTrimmed string) (hasBoolFlags bool) {
+
+	iEnd := len(argTrimmed) - 1
+	for i := 0; i <= iEnd; i++ {
+		c := string(argTrimmed[i])
+
+		if isBoolFlag := (a.boolFlagVars[c] != nil); isBoolFlag {
+			*(a.boolFlagVars[c]) = true
+			hasBoolFlags = true
+		}
+	}
+
+	return
+}
+
+func (a *_argParser) _setStringFlag(argTrimmed string, i *int) (isStringFlag bool) {
+
+	if isStringFlag = (a.stringFlagVars[argTrimmed] != nil); isStringFlag {
+		*i++
+		nextArg := a._args[*i]
+		*(a.stringFlagVars[argTrimmed]) = nextArg
+	}
+
+	return
+}
+
+func (a *_argParser) _setNoFlags() (extraArgs []string) {
+
+	argsNotFlagged := a._argsNotFlagged
+	lenArgsNotFlagged := len(argsNotFlagged)
+
+	noFlagVars := a.noFlagVars
+	lenNoFlagVars := len(noFlagVars)
+
+	iMax := lenNoFlagVars
+	if enoughArgs := (lenArgsNotFlagged > lenNoFlagVars); !enoughArgs {
+		iMax = lenArgsNotFlagged
+	}
+
+	for i := 0; i < iMax; i++ {
+		*noFlagVars[i] = argsNotFlagged[i]
+	}
+
+	extraArgs = slices.Cut(argsNotFlagged, iMax, -1)
+	return
 }
