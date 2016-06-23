@@ -51,6 +51,7 @@ func init() {
 	_setRoot()
 	_setExclusions()
 	_setTargets()
+	_setRegex()
 }
 
 func main() {
@@ -73,34 +74,37 @@ func _setExclusions() {
 }
 
 func _setTargets() {
-	n := len(Targets)
-	switch n {
+	switch len(Targets) {
 	case 0:
 		doAll = true
 	case 1:
 		Trgt = Targets[0]
-		_setRegex(Trgt)
 	default:
 		Trgt = Targets[0]
 	}
 }
 
-func _setRegex(t string) {
-	switch t {
+func _setRegex() {
+
+	if Trgt == "" {
+		return
+	}
+
+	switch Trgt {
 	case "*", ".":
 		doAll = true
 		return
 	}
 
-	if isDir(t) {
+	if isDir(Trgt) {
 		doRcrsv = true
 		return
 	}
 
-	if strings.Contains(t, "*") {
+	if strings.Contains(Trgt, "*") {
 		doRegex = true
 		var err error
-		ReTrgt, err = regexp.Compile(t)
+		ReTrgt, err = regexp.Compile(Trgt)
 		logErr(err)
 		return
 	}
