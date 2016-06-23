@@ -18,14 +18,14 @@ func pwd() string {
 }
 
 func log(err error) {
-	if doShutUp {
+	if DoShutUp {
 		return
 	}
 	fmt.Println(err)
 }
 
 func logErr(err error) {
-	if doShutUp {
+	if DoShutUp {
 		return
 	}
 	if err == nil {
@@ -70,14 +70,14 @@ func isMatch(file os.FileInfo) bool {
 		return false
 	}
 
-	if doAll {
+	if DoEditAll {
 		return true
 	}
-	if doRegex {
-		return ReTrgt.MatchString(fileName)
+	if DoRegex {
+		return ReToEdit.MatchString(fileName)
 	}
 
-	if fileName == Trgt {
+	if fileName == ToEdit {
 		return true
 	}
 	return false

@@ -24,18 +24,18 @@ var (
 )
 
 func colorUnset() {
-	if !doColor {
+	if !DoColor {
 		return
 	}
 	color.Unset()
 }
 
 func progress(path string) {
-	if doShutUp || doQuiet {
+	if DoShutUp || DoQuiet {
 		return
 	}
 
-	if !doColor {
+	if !DoColor {
 		fmt.Println(path)
 		return
 	}
@@ -46,7 +46,7 @@ func progress(path string) {
 }
 
 func report() {
-	if doShutUp || !doRcrsv {
+	if DoShutUp || !DoRecursive {
 		return
 	}
 
@@ -72,7 +72,7 @@ func printHelp() {
 		"      Edit all matching files in the target directory, NON-recursively",
 		"-c=false: (color)",
 		"      Colorize output",
-		"-q=false: (doQuiet)",
+		"-q=false: (quiet)",
 		"      Don't list edited files",
 		"-Q=false: (Quiet)",
 		"      Don't show any output at all",

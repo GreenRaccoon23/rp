@@ -8,38 +8,38 @@ import (
 )
 
 var (
-	SOld string
-	SNew string
-	Root string = pwd()
+	ToFind    string
+	ToReplace string
+	Root      string = pwd()
 
-	doRcrsv  bool
-	doAll    bool
-	doColor  bool
-	doQuiet  bool
-	doShutUp bool
+	DoRecursive bool
+	DoEditAll   bool
+	DoColor     bool
+	DoQuiet     bool
+	DoShutUp    bool
 
 	Targets    []string
-	Trgt       string
+	ToEdit     string
 	Exclude    string
 	Exclusions []string
-	doExclude  bool
-	doRegex    bool
-	ReTrgt     *regexp.Regexp
+	DoExclude  bool
+	DoRegex    bool
+	ReToEdit   *regexp.Regexp
 )
 
 func init() {
 
 	boolFlagVars := map[string]*bool{
-		"r": &doRcrsv,
-		"a": &doAll,
-		"c": &doColor,
-		"q": &doQuiet,
-		"Q": &doShutUp,
+		"r": &DoRecursive,
+		"a": &DoEditAll,
+		"c": &DoColor,
+		"q": &DoQuiet,
+		"Q": &DoShutUp,
 	}
 
 	stringFlagVars := map[string]*string{
-		"o": &SOld,
-		"n": &SNew,
+		"o": &ToFind,
+		"n": &ToReplace,
 		"d": &Root,
 		"x": &Exclude,
 	}
@@ -69,54 +69,54 @@ func _setExclusions() {
 		return
 	}
 
-	doExclude = true
+	DoExclude = true
 	Exclusions = strings.Split(Exclude, ",")
 }
 
 func _setTargets() {
 	switch len(Targets) {
 	case 0:
-		doAll = true
+		DoEditAll = true
 	case 1:
-		Trgt = Targets[0]
+		ToEdit = Targets[0]
 	default:
-		Trgt = Targets[0]
+		ToEdit = Targets[0]
 	}
 }
 
 func _setRegex() {
 
-	if Trgt == "" {
+	if ToEdit == "" {
 		return
 	}
 
-	switch Trgt {
+	switch ToEdit {
 	case "*", ".":
-		doAll = true
+		DoEditAll = true
 		return
 	}
 
-	if isDir(Trgt) {
-		doRcrsv = true
+	if isDir(ToEdit) {
+		DoRecursive = true
 		return
 	}
 
-	if strings.Contains(Trgt, "*") {
-		doRegex = true
+	if strings.Contains(ToEdit, "*") {
+		DoRegex = true
 		var err error
-		ReTrgt, err = regexp.Compile(Trgt)
+		ReToEdit, err = regexp.Compile(ToEdit)
 		logErr(err)
 		return
 	}
 }
 
 func chkMethod() {
-	if doRcrsv {
+	if DoRecursive {
 		rpRcrsv(Root)
 		return
 	}
 
-	if doAll || doRegex {
+	if DoEditAll || DoRegex {
 		rpDir(Root)
 		return
 	}
@@ -126,9 +126,9 @@ func chkMethod() {
 
 func rpFiles(files []string) {
 	for _, f := range files {
-		Trgt = f
-		//path := fmtDir(Trgt)
-		path := fmtPath(Trgt)
+		ToEdit = f
+		//path := fmtDir(ToEdit)
+		path := fmtPath(ToEdit)
 		Root = filepath.Dir(path)
 		rpDir(Root)
 	}

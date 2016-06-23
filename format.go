@@ -261,11 +261,11 @@ func replace(s string) (replaced string) {
 }
 
 func findReplacements(s string) (re *regexp.Regexp, replacement string) {
-	if SOld == "" {
+	if ToFind == "" {
 		return
 	}
 
-	re = regexp.MustCompile(SOld)
-	replacement = SNew
+	re = regexp.MustCompile(ToFind)
+	replacement = ToReplace
 	return
 }
