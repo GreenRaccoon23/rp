@@ -54,7 +54,6 @@ func init() {
 
 func main() {
 	defer colorUnset()
-	// chkMethod()
 	editPaths()
 	report()
 }
@@ -94,20 +93,6 @@ func _setRegex() {
 	ToReplaceBytes = []byte(ToReplace)
 }
 
-// func chkMethod() {
-// 	if DoRecursive {
-// 		rpRcrsv(ToEdit)
-// 		return
-// 	}
-
-// 	if DoEditAll {
-// 		rpDir(Root)
-// 		return
-// 	}
-
-// 	rpFiles(PathsToEdit)
-// }
-
 func editPaths() {
 
 	for _, path := range PathsToEdit {
@@ -118,41 +103,6 @@ func editPaths() {
 		}
 	}
 }
-
-// func rpFiles(files []string) {
-// 	for _, f := range files {
-// 		ToEdit = f
-// 		//path := fmtDir(ToEdit)
-// 		path := fmtPath(ToEdit)
-// 		Root = filepath.Dir(path)
-// 		rpDir(Root)
-// 	}
-// }
-
-// func rpDir(dir string) {
-// 	files, err := ioutil.ReadDir(dir)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	for _, f := range files {
-// 		if isMatch(f) == false {
-// 			continue
-// 		}
-
-// 		fileName := f.Name()
-// 		in := concat(dir, "/", fileName)
-// 		out := in
-
-// 		if err := rp(in, out); err != nil {
-// 			log.Fatal(err)
-// 		}
-// 	}
-// }
-
-// func rpRcrsv1(dir string) {
-//  err := filepath.Walk(dir, walkRp)
-//  Log(err)
-// }
 
 func editRecursive(dir string) {
 

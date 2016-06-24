@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -13,18 +14,10 @@ var (
 
 func pwd() string {
 	pwd, err := os.Getwd()
-	logErr(err)
+	if err != nil {
+		log.Fatal(err) // if the fs is screwed, so is this program
+	}
 	return pwd
-}
-
-func logErr(err error) {
-	if DoShutUp {
-		return
-	}
-	if err == nil {
-		return
-	}
-	Log(err)
 }
 
 func isDir(filename string) bool {
@@ -58,15 +51,6 @@ func getPathsUnder(dir string) (paths []string, err error) {
 	})
 
 	return
-}
-
-func walkRp(path string, fi os.FileInfo, err error) error {
-
-	if !isMatch(fi) {
-		return nil
-	}
-
-	return rp(path, path)
 }
 
 func isMatch(fi os.FileInfo) bool {
