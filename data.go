@@ -70,24 +70,24 @@ func isExclusion(fi os.FileInfo) bool {
 	return false
 }
 
-func rp(path string) error {
+func rp(path string) (bool, error) {
 
 	contents, err := ioutil.ReadFile(path)
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	edited := ReToFind.ReplaceAll(contents, ToReplaceBytes)
 	if len(edited) == 0 {
-		return nil
+		return false, nil
 	}
 	if bytes.Equal(edited, contents) {
-		return nil
+		return false, nil
 	}
 
 	if err := ioutil.WriteFile(path, edited, os.ModePerm); err != nil {
-		return err
+		return false, err
 	}
 
-	return nil
+	return true, nil
 }

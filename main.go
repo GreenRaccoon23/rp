@@ -124,15 +124,16 @@ func _setPaths() {
 
 func editPaths() {
 	for _, path := range PathsToEdit {
-		editOne(path)
-	}
-}
+		wasEdited, err := rp(path)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-func editOne(path string) {
-	if err := rp(path); err != nil {
-		log.Fatal(err)
-	}
+		if !wasEdited {
+			continue
+		}
 
-	TotalEdited += 1
-	progress(path)
+		TotalEdited += 1
+		progress(path)
+	}
 }
