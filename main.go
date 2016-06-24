@@ -152,7 +152,9 @@ func rpFiles(files []string) {
 
 func rpDir(dir string) {
 	files, err := ioutil.ReadDir(dir)
-	logErr(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 	for _, f := range files {
 		if isMatch(f) == false {
 			continue
@@ -162,11 +164,13 @@ func rpDir(dir string) {
 		in := concat(dir, "/", fileName)
 		out := in
 
-		rp(in, out)
+		if err := rp(in, out); err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 
 func rpRcrsv(dir string) {
 	err := filepath.Walk(dir, walkRp)
-	logErr(err)
+	Log(err)
 }

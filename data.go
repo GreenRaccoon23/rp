@@ -47,8 +47,7 @@ func walkRp(path string, file os.FileInfo, err error) error {
 		return nil
 	}
 
-	rp(path, path)
-	return nil
+	return rp(path, path)
 }
 
 func isMatch(file os.FileInfo) bool {
@@ -82,38 +81,42 @@ func isExcl(file os.FileInfo) bool {
 	return false
 }
 
-func rp(in string, out string) {
+func rp(in string, out string) error {
 
 	contents, err := ioutil.ReadFile(in)
 	if err != nil {
-		return
+		return err
 	}
 
 	edited := ReToFind.ReplaceAll(contents, ToReplaceBytes)
 	if len(edited) == 0 {
-		return
+		return nil
 	}
 	if bytes.Equal(edited, contents) {
-		return
+		return nil
 	}
 
 	newFile, err := os.Create(out)
 	if err != nil {
-		Log(err)
-		return
+		return err
 	}
 	defer newFile.Close()
 
-	bytesToFile(edited, newFile)
+	if err := bytesToFile(edited, newFile); err != nil {
+		return err
+	}
+
 	Total += 1
 	progress(out)
+
+	return nil
 }
 
-func bytesToFile(contents []byte, file *os.File) {
+func bytesToFile(contents []byte, file *os.File) error {
 
-	_, err := file.Write(contents)
-	logErr(err)
+	if _, err := file.Write(contents); err != nil {
+		return err
+	}
 
-	err = file.Sync()
-	logErr(err)
+	return file.Sync()
 }
