@@ -50,10 +50,6 @@ func isSymlink(file os.FileInfo) bool {
 }
 
 func walkRp(path string, file os.FileInfo, err error) error {
-	// Do a workaround for filepath package bug.
-	if _, err = os.Stat(path); err != nil {
-		return nil
-	}
 
 	if !isMatch(file) {
 		return nil

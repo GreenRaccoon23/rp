@@ -26,6 +26,7 @@ var (
 	DoExclude   bool
 	DoRegex     bool
 	ReToEdit    *regexp.Regexp
+	ReToFind    *regexp.Regexp
 )
 
 func init() {
@@ -125,7 +126,7 @@ func _setRegex() {
 
 func chkMethod() {
 	if DoRecursive {
-		rpRcrsv(Root)
+		rpRcrsv(ToEdit)
 		return
 	}
 
