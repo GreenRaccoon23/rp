@@ -112,11 +112,9 @@ func editPaths() {
 
 	for _, path := range PathsToEdit {
 		if isDir(path) && DoRecursive {
-			rpRcrsv(path)
+			editRecursive(path)
 		} else {
-			if err := rp(path, path); err != nil {
-				log.Fatal(err)
-			}
+			editOne(path)
 		}
 	}
 }
@@ -156,7 +154,7 @@ func editPaths() {
 //  Log(err)
 // }
 
-func rpRcrsv(dir string) {
+func editRecursive(dir string) {
 
 	Log("here")
 
@@ -171,5 +169,11 @@ func rpRcrsv(dir string) {
 		if err := rp(path, path); err != nil {
 			log.Fatal(err)
 		}
+	}
+}
+
+func editOne(path string) {
+	if err := rp(path, path); err != nil {
+		log.Fatal(err)
 	}
 }
