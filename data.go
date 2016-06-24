@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"io"
 	"io/ioutil"
 	"os"
 )
@@ -116,34 +115,5 @@ func bytesToFile(contents []byte, file *os.File) {
 	logErr(err)
 
 	err = file.Sync()
-	logErr(err)
-}
-
-func copyFile(source, destination string) {
-	if destination == source {
-		return
-	}
-
-	toRead, err := os.Open(source)
-	if err != nil {
-		Log(err)
-		return
-	}
-	defer toRead.Close()
-
-	toWrite, err := os.Create(destination)
-	if err != nil {
-		Log(err)
-		return
-	}
-	defer toWrite.Close()
-
-	_, err = io.Copy(toWrite, toRead)
-	if err != nil {
-		Log(err)
-		return
-	}
-
-	err = toWrite.Sync()
 	logErr(err)
 }
