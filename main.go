@@ -137,25 +137,7 @@ func editPaths() {
 
 	for _, path := range PathsToEdit {
 		semaphore <- true
-
-		go func(path string) {
-
-			defer func() { <-semaphore }()
-			defer wg.Done()
-
-			wasEdited, err := rp(path)
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			if !wasEdited {
-				return
-			}
-
-			chanEdited <- wasEdited
-			progress(path)
-
-		}(path)
+		go editOne(path, &wg, semaphore, chanEdited)
 	}
 
 	for i := 0; i < cap(semaphore); i++ {
@@ -166,4 +148,21 @@ func editPaths() {
 	close(chanEdited)
 
 	TotalEdited = len(chanEdited)
+}
+
+func editOne(path string, wg *sync.WaitGroup, semaphore <-chan bool, chanEdited chan<- bool) {
+	defer func() { <-semaphore }()
+	defer wg.Done()
+
+	wasEdited, err := rp(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if !wasEdited {
+		return
+	}
+
+	chanEdited <- wasEdited
+	progress(path)
 }
