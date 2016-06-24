@@ -6,26 +6,17 @@ var (
 	buffer bytes.Buffer
 )
 
-func str(slcs ...[]string) (concatenated string) {
-	// Convert one or more slices into one string.
-	for _, c := range slcs {
+func concat(args ...string) string {
+
+	var b bytes.Buffer
+	defer b.Reset()
+
+	for _, c := range args {
 		for _, s := range c {
-			buffer.WriteString(s)
+			b.WriteString(s)
 		}
 	}
-	concatenated = buffer.String()
-	buffer.Reset()
-	return
-}
-
-func slc(args ...string) []string {
-	// Convert one or more strings into one slice.
-	return args
-}
-
-func concat(args ...string) string {
-	// concatenate one or more strings into one single string.
-	return str(args)
+	return b.String()
 }
 
 func isFirstLtr(s string, args ...string) bool {
@@ -49,14 +40,17 @@ func isLastLtr(s string, args ...string) bool {
 }
 
 func fmtDir(dir string) (fmtd string) {
+
 	fmtd = dir
 
 	if isFirstLtr(dir, "/", "~") == false {
 		fmtd = concat(Root, "/", dir)
 	}
+
 	if isLastLtr(dir, "/") == false {
 		fmtd = concat(fmtd, "/")
 	}
+
 	if dir == "." {
 		fmtd = Root
 	}
@@ -65,6 +59,7 @@ func fmtDir(dir string) (fmtd string) {
 }
 
 func fmtPath(path string) (fullpath string) {
+
 	fullpath = path
 
 	if path == "" {
