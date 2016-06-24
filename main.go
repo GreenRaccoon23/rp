@@ -23,6 +23,8 @@ var (
 	Exclusions  []string
 	DoExclude   bool
 	ReToFind    *regexp.Regexp
+
+	TotalEdited int
 )
 
 func init() {
@@ -115,6 +117,9 @@ func editRecursive(dir string) {
 		if err := rp(path); err != nil {
 			log.Fatal(err)
 		}
+
+		TotalEdited += 1
+		progress(path)
 	}
 }
 
@@ -122,4 +127,7 @@ func editOne(path string) {
 	if err := rp(path); err != nil {
 		log.Fatal(err)
 	}
+
+	TotalEdited += 1
+	progress(path)
 }

@@ -8,10 +8,6 @@ import (
 	"path/filepath"
 )
 
-var (
-	Total int
-)
-
 func pwd() string {
 	pwd, err := os.Getwd()
 	if err != nil {
@@ -92,9 +88,6 @@ func rp(path string) error {
 	if err := ioutil.WriteFile(path, edited, os.ModePerm); err != nil {
 		return err
 	}
-
-	Total += 1
-	progress(path)
 
 	return nil
 }
