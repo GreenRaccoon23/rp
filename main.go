@@ -106,14 +106,10 @@ func editPaths() {
 
 func editRecursive(dir string) {
 
-	Log("here")
-
 	paths, err := getPathsUnder(dir)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	Log(len(paths))
 
 	for _, path := range paths {
 		if err := rp(path); err != nil {
