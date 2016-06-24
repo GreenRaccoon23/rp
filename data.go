@@ -34,26 +34,27 @@ func isDir(filename string) bool {
 	return fi.Mode().IsDir()
 }
 
-func isSymlink(file os.FileInfo) bool {
-	if file.Mode()&os.ModeSymlink != 0 {
+func isSymlink(fi os.FileInfo) bool {
+	if fi.Mode()&os.ModeSymlink != 0 {
 		return true
 	}
 	return false
 }
 
-func walkRp(path string, file os.FileInfo, err error) error {
+func walkRp(path string, fi os.FileInfo, err error) error {
 
-	if !isMatch(file) {
+	if !isMatch(fi) {
 		return nil
 	}
 
 	return rp(path, path)
 }
 
-func isMatch(file os.FileInfo) bool {
-	fileName := file.Name()
+func isMatch(fi os.FileInfo) bool {
 
-	if file.IsDir() || isSymlink(file) || isExcl(file) {
+	fileName := fi.Name()
+
+	if fi.IsDir() || isSymlink(fi) || isExclusion(fi) {
 		return false
 	}
 
@@ -70,8 +71,9 @@ func isMatch(file os.FileInfo) bool {
 	return false
 }
 
-func isExcl(file os.FileInfo) bool {
-	name := file.Name()
+func isExclusion(fi os.FileInfo) bool {
+
+	name := fi.Name()
 
 	for _, e := range Exclusions {
 		if e == name {
@@ -81,9 +83,9 @@ func isExcl(file os.FileInfo) bool {
 	return false
 }
 
-func rp(in string, out string) error {
+func rp(srcPath string, dstPath string) error {
 
-	contents, err := ioutil.ReadFile(in)
+	contents, err := ioutil.ReadFile(srcPath)
 	if err != nil {
 		return err
 	}
@@ -96,7 +98,7 @@ func rp(in string, out string) error {
 		return nil
 	}
 
-	newFile, err := os.Create(out)
+	newFile, err := os.Create(dstPath)
 	if err != nil {
 		return err
 	}
@@ -107,7 +109,7 @@ func rp(in string, out string) error {
 	}
 
 	Total += 1
-	progress(out)
+	progress(dstPath)
 
 	return nil
 }
