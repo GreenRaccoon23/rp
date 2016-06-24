@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sync"
 )
 
 func pwd() string {
@@ -68,6 +69,51 @@ func isExclusion(fi os.FileInfo) bool {
 		}
 	}
 	return false
+}
+
+func editPaths() {
+
+	var wg sync.WaitGroup
+
+	lenPathsToEdit := len(PathsToEdit)
+	wg.Add(lenPathsToEdit)
+	chanEdited := make(chan bool, lenPathsToEdit)
+
+	//http://jmoiron.net/blog/limiting-concurrency-in-go/
+	maxConcurrency := 1000
+	semaphore := make(chan bool, maxConcurrency)
+
+	for _, path := range PathsToEdit {
+		semaphore <- true
+		go editOne(path, &wg, semaphore, chanEdited)
+	}
+
+	for i := 0; i < cap(semaphore); i++ {
+		semaphore <- true
+	}
+
+	wg.Wait()
+	close(chanEdited)
+
+	TotalEdited = len(chanEdited)
+}
+
+func editOne(path string, wg *sync.WaitGroup, semaphore <-chan bool, chanEdited chan<- bool) {
+
+	defer func() { <-semaphore }()
+	defer wg.Done()
+
+	wasEdited, err := rp(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if !wasEdited {
+		return
+	}
+
+	chanEdited <- wasEdited
+	showProgress(path)
 }
 
 func rp(path string) (bool, error) {

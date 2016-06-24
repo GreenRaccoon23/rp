@@ -10,18 +10,18 @@ import (
 )
 
 var (
-	Red      = color.New(color.FgRed)
-	Blue     = color.New(color.FgBlue)
-	Green    = color.New(color.FgGreen)
-	Magenta  = color.New(color.FgMagenta)
-	White    = color.New(color.FgWhite)
-	Black    = color.New(color.FgBlack)
-	BRed     = color.New(color.FgRed, color.Bold)
-	BBlue    = color.New(color.FgBlue, color.Bold)
-	BGreen   = color.New(color.FgGreen, color.Bold)
-	BMagenta = color.New(color.FgMagenta, color.Bold)
-	BWhite   = color.New(color.Bold, color.FgWhite)
-	BBlack   = color.New(color.Bold, color.FgBlack)
+	// Red      = color.New(color.FgRed)
+	Blue = color.New(color.FgBlue)
+	// Green    = color.New(color.FgGreen)
+	// Magenta  = color.New(color.FgMagenta)
+	// White    = color.New(color.FgWhite)
+	// Black    = color.New(color.FgBlack)
+	// BRed     = color.New(color.FgRed, color.Bold)
+	// BBlue    = color.New(color.FgBlue, color.Bold)
+	BGreen = color.New(color.FgGreen, color.Bold)
+	// BMagenta = color.New(color.FgMagenta, color.Bold)
+	// BWhite   = color.New(color.Bold, color.FgWhite)
+	// BBlack   = color.New(color.Bold, color.FgBlack)
 
 	Log    = fmt.Println
 	LogErr = fmt.Println
@@ -31,14 +31,7 @@ func LogNoop(x ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func colorUnset() {
-	if !DoColor {
-		return
-	}
-	color.Unset()
-}
-
-func progress(path string) {
+func showProgress(path string) {
 	if DoShutUp || DoQuiet {
 		return
 	}
@@ -47,13 +40,16 @@ func progress(path string) {
 		fmt.Println(path)
 		return
 	}
+
 	dir := filepath.Dir(path)
 	name := filepath.Base(path)
+
 	Blue.Printf("%v/", dir)
 	BGreen.Println(name)
 }
 
 func report() {
+
 	if DoShutUp || !DoRecursive {
 		return
 	}

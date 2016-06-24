@@ -1,5 +1,5 @@
 # rp
-Go package/program to replace strings within files.  
+Go program to replace strings within files.  
 
 Install:  
 `go install github.com/GreenRaccoon23/rp`  
