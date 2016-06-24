@@ -23,7 +23,6 @@ var (
 	PathsToEdit []string
 	ToExclude   string
 	Exclusions  []string
-	DoExclude   bool
 	ReToFind    *regexp.Regexp
 
 	TotalEdited int
@@ -82,11 +81,11 @@ func _setRoot() {
 }
 
 func _setExclusions() {
+
 	if ToExclude == "" {
 		return
 	}
 
-	DoExclude = true
 	Exclusions = strings.Split(ToExclude, ",")
 }
 
