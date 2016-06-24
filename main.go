@@ -49,6 +49,7 @@ func init() {
 
 	parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
 
+	_setLogger()
 	_setRoot()
 	_setExclusions()
 	_setTargets()
@@ -59,6 +60,17 @@ func main() {
 	defer colorUnset()
 	chkMethod()
 	report()
+}
+
+func _setLogger() {
+	if DoQuiet {
+		Log = LogNoop
+	}
+
+	if DoShutUp {
+		Log = LogNoop
+		LogErr = LogNoop
+	}
 }
 
 func _setRoot() {

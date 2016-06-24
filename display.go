@@ -21,7 +21,14 @@ var (
 	BMagenta = color.New(color.FgMagenta, color.Bold)
 	BWhite   = color.New(color.Bold, color.FgWhite)
 	BBlack   = color.New(color.Bold, color.FgBlack)
+
+	Log    = fmt.Println
+	LogErr = fmt.Println
 )
+
+func LogNoop(x ...interface{}) (int, error) {
+	return 0, nil
+}
 
 func colorUnset() {
 	if !DoColor {
