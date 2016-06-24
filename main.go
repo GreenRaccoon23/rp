@@ -111,7 +111,7 @@ func _setPaths() {
 			continue
 		}
 
-		dirContents, err := getPathsUnder(path)
+		dirContents, err := getMatchingPathsUnder(path)
 		if err != nil {
 			log.Fatal(err)
 		}

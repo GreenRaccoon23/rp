@@ -31,7 +31,7 @@ func isSymlink(fi os.FileInfo) bool {
 	return false
 }
 
-func getPathsUnder(dir string) (paths []string, err error) {
+func getMatchingPathsUnder(dir string) (paths []string, err error) {
 
 	err = filepath.Walk(dir, func(path string, fi os.FileInfo, err error) error {
 
