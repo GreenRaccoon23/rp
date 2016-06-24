@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/fatih/color"
 )
@@ -58,6 +59,7 @@ func report() {
 	}
 
 	fmt.Printf("Edited %d files in %v\n", TotalEdited, Root)
+	fmt.Printf("Total time: %v\n", time.Since(StartTime))
 }
 
 func printHelp() {

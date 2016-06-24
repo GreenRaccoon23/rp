@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 )
 
 var (
@@ -26,6 +27,8 @@ var (
 	ReToFind    *regexp.Regexp
 
 	TotalEdited int
+
+	StartTime time.Time
 )
 
 func init() {
@@ -58,6 +61,7 @@ func init() {
 
 func main() {
 	defer colorUnset()
+	StartTime = time.Now()
 	editPaths()
 	report()
 }
