@@ -249,10 +249,3 @@ func fmtDest(path string) (out string) {
 	out = strings.Replace(out, "//", "/", -1)
 	return
 }
-
-func replace(s string) string {
-	if ToReplace == "" {
-		return
-	}
-	return ReToFind.ReplaceAllString(s, ToReplace)
-}

@@ -9,9 +9,10 @@ import (
 )
 
 var (
-	ToFind    string
-	ToReplace string
-	Root      string = pwd()
+	ToFind         string
+	ToReplace      string
+	ToReplaceBytes []byte
+	Root           string = pwd()
 
 	DoRecursive bool
 	DoEditAll   bool
@@ -101,6 +102,7 @@ func _setTargets() {
 func _setRegex() {
 
 	ReToFind = regexp.MustCompile(ToFind)
+	ToReplaceBytes = []byte(ToReplace)
 
 	switch ToEdit {
 	case "":

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"bytes"
 	"io"
 	"io/ioutil"
 	"os"
@@ -15,13 +15,6 @@ func pwd() string {
 	pwd, err := os.Getwd()
 	logErr(err)
 	return pwd
-}
-
-func Log(err error) {
-	if DoShutUp {
-		return
-	}
-	fmt.Println(err)
 }
 
 func logErr(err error) {
@@ -91,16 +84,17 @@ func isExcl(file os.FileInfo) bool {
 }
 
 func rp(in string, out string) {
-	content, err := fileToString(in)
+
+	contents, err := ioutil.ReadFile(in)
 	if err != nil {
 		return
 	}
 
-	edited := replace(content)
-	if edited == "" {
+	edited := ReToFind.ReplaceAll(contents, ToReplaceBytes)
+	if len(edited) == 0 {
 		return
 	}
-	if edited == content {
+	if bytes.Equal(edited, contents) {
 		return
 	}
 
@@ -111,25 +105,14 @@ func rp(in string, out string) {
 	}
 	defer newFile.Close()
 
-	stringToFile(edited, newFile)
+	bytesToFile(edited, newFile)
 	Total += 1
 	progress(out)
 }
 
-func fileToString(fileName string) (fileString string, err error) {
-	var file []byte
-	file, err = ioutil.ReadFile(fileName)
-	if err != nil {
-		Log(err)
-		return
-	}
-	fileString = string(file)
-	return
-}
+func bytesToFile(contents []byte, file *os.File) {
 
-func stringToFile(s string, file *os.File) {
-	b := []byte(s)
-	_, err := file.Write(b)
+	_, err := file.Write(contents)
 	logErr(err)
 
 	err = file.Sync()
