@@ -2,19 +2,13 @@ package main
 
 import "bytes"
 
-var (
-	buffer bytes.Buffer
-)
-
 func concat(args ...string) string {
 
 	var b bytes.Buffer
 	defer b.Reset()
 
-	for _, c := range args {
-		for _, s := range c {
-			b.WriteString(s)
-		}
+	for _, s := range args {
+		b.WriteString(s)
 	}
 	return b.String()
 }
