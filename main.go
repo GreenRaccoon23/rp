@@ -25,7 +25,6 @@ var (
 	ToExclude   string
 	Exclusions  []string
 	DoExclude   bool
-	DoRegex     bool
 	ReToEdit    *regexp.Regexp
 	ReToFind    *regexp.Regexp
 )
@@ -117,7 +116,6 @@ func _setRegex() {
 		return
 	}
 
-	DoRegex = true
 	var err error
 	ReToEdit, err = regexp.Compile(ToEdit)
 	if err != nil {
@@ -132,7 +130,7 @@ func chkMethod() {
 		return
 	}
 
-	if DoEditAll || DoRegex {
+	if DoEditAll {
 		rpDir(Root)
 		return
 	}

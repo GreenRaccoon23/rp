@@ -61,9 +61,6 @@ func isMatch(fi os.FileInfo) bool {
 	if DoEditAll {
 		return true
 	}
-	if DoRegex {
-		return ReToEdit.MatchString(fileName)
-	}
 
 	if fileName == ToEdit {
 		return true
