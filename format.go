@@ -19,6 +19,25 @@ func concat(args ...string) string {
 	return b.String()
 }
 
+func fmtDir(dir string) (fmtd string) {
+
+	fmtd = dir
+
+	if isFirstLtr(dir, "/", "~") == false {
+		fmtd = concat(Root, "/", dir)
+	}
+
+	if isLastLtr(dir, "/") == false {
+		fmtd = concat(fmtd, "/")
+	}
+
+	if dir == "." {
+		fmtd = Root
+	}
+
+	return
+}
+
 func isFirstLtr(s string, args ...string) bool {
 	firstLtr := string(s[0])
 	for _, a := range args {
@@ -37,23 +56,4 @@ func isLastLtr(s string, args ...string) bool {
 		}
 	}
 	return false
-}
-
-func fmtDir(dir string) (fmtd string) {
-
-	fmtd = dir
-
-	if isFirstLtr(dir, "/", "~") == false {
-		fmtd = concat(Root, "/", dir)
-	}
-
-	if isLastLtr(dir, "/") == false {
-		fmtd = concat(fmtd, "/")
-	}
-
-	if dir == "." {
-		fmtd = Root
-	}
-
-	return
 }
