@@ -5,6 +5,7 @@ import (
 	"log"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 var (
@@ -123,17 +124,46 @@ func _setPaths() {
 }
 
 func editPaths() {
+
+	var wg sync.WaitGroup
+
+	lenPathsToEdit := len(PathsToEdit)
+	wg.Add(lenPathsToEdit)
+	chanEdited := make(chan bool, lenPathsToEdit)
+
+	//http://jmoiron.net/blog/limiting-concurrency-in-go/
+	maxConcurrency := 1000
+	semaphore := make(chan bool, maxConcurrency)
+
 	for _, path := range PathsToEdit {
-		wasEdited, err := rp(path)
-		if err != nil {
-			log.Fatal(err)
-		}
+		semaphore <- true
 
-		if !wasEdited {
-			continue
-		}
+		go func(path string) {
 
-		TotalEdited += 1
-		progress(path)
+			defer func() { <-semaphore }()
+			defer wg.Done()
+
+			wasEdited, err := rp(path)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			if !wasEdited {
+				return
+			}
+
+			chanEdited <- wasEdited
+			progress(path)
+
+		}(path)
 	}
+
+	for i := 0; i < cap(semaphore); i++ {
+		semaphore <- true
+	}
+
+	wg.Wait()
+	close(chanEdited)
+
+	TotalEdited = len(chanEdited)
 }
