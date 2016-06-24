@@ -18,13 +18,13 @@ var (
 	DoQuiet     bool
 	DoShutUp    bool
 
-	Targets    []string
-	ToEdit     string
-	Exclude    string
-	Exclusions []string
-	DoExclude  bool
-	DoRegex    bool
-	ReToEdit   *regexp.Regexp
+	PathsToEdit []string
+	ToEdit      string
+	ToExclude   string
+	Exclusions  []string
+	DoExclude   bool
+	DoRegex     bool
+	ReToEdit    *regexp.Regexp
 )
 
 func init() {
@@ -41,7 +41,7 @@ func init() {
 		"o": &ToFind,
 		"n": &ToReplace,
 		"d": &Root,
-		"x": &Exclude,
+		"x": &ToExclude,
 	}
 
 	var noFlagVars []*string
@@ -65,22 +65,22 @@ func _setRoot() {
 }
 
 func _setExclusions() {
-	if Exclude == "" {
+	if ToExclude == "" {
 		return
 	}
 
 	DoExclude = true
-	Exclusions = strings.Split(Exclude, ",")
+	Exclusions = strings.Split(ToExclude, ",")
 }
 
 func _setTargets() {
-	switch len(Targets) {
+	switch len(PathsToEdit) {
 	case 0:
 		DoEditAll = true
 	case 1:
-		ToEdit = Targets[0]
+		ToEdit = PathsToEdit[0]
 	default:
-		ToEdit = Targets[0]
+		ToEdit = PathsToEdit[0]
 	}
 }
 
@@ -121,7 +121,7 @@ func chkMethod() {
 		return
 	}
 
-	rpFiles(Targets)
+	rpFiles(PathsToEdit)
 }
 
 func rpFiles(files []string) {
