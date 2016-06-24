@@ -89,13 +89,7 @@ func rp(path string) error {
 		return nil
 	}
 
-	file, err := os.Open(path)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	if err := bytesToFile(edited, file); err != nil {
+	if err := ioutil.WriteFile(path, edited, os.ModePerm); err != nil {
 		return err
 	}
 
@@ -103,13 +97,4 @@ func rp(path string) error {
 	progress(path)
 
 	return nil
-}
-
-func bytesToFile(contents []byte, file *os.File) error {
-
-	if _, err := file.Write(contents); err != nil {
-		return err
-	}
-
-	return file.Sync()
 }
