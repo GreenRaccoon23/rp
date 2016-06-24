@@ -100,6 +100,8 @@ func _setTargets() {
 
 func _setRegex() {
 
+	ReToFind = regexp.MustCompile(ToFind)
+
 	switch ToEdit {
 	case "":
 		return
@@ -113,15 +115,13 @@ func _setRegex() {
 		return
 	}
 
-	if strings.Contains(ToEdit, "*") {
-		DoRegex = true
-		var err error
-		ReToEdit, err = regexp.Compile(ToEdit)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return
+	DoRegex = true
+	var err error
+	ReToEdit, err = regexp.Compile(ToEdit)
+	if err != nil {
+		log.Fatal(err)
 	}
+	return
 }
 
 func chkMethod() {

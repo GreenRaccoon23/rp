@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"regexp"
 	"strings"
 )
 
@@ -251,21 +250,9 @@ func fmtDest(path string) (out string) {
 	return
 }
 
-func replace(s string) (replaced string) {
-	re, replacement := findReplacements(s)
-	if replacement == "" {
+func replace(s string) string {
+	if ToReplace == "" {
 		return
 	}
-	replaced = re.ReplaceAllString(s, replacement)
-	return
-}
-
-func findReplacements(s string) (re *regexp.Regexp, replacement string) {
-	if ToFind == "" {
-		return
-	}
-
-	re = regexp.MustCompile(ToFind)
-	replacement = ToReplace
-	return
+	return ReToFind.ReplaceAllString(s, ToReplace)
 }
