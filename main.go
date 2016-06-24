@@ -48,7 +48,7 @@ func init() {
 
 	noFlagVars := []*string{}
 
-	parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
+	PathsToEdit = parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
 
 	_setLogger()
 	_setRoot()
