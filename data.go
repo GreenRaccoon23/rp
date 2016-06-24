@@ -74,9 +74,9 @@ func isExclusion(fi os.FileInfo) bool {
 	return false
 }
 
-func rp(srcPath string, dstPath string) error {
+func rp(path string) error {
 
-	contents, err := ioutil.ReadFile(srcPath)
+	contents, err := ioutil.ReadFile(path)
 	if err != nil {
 		return err
 	}
@@ -89,18 +89,18 @@ func rp(srcPath string, dstPath string) error {
 		return nil
 	}
 
-	newFile, err := os.Create(dstPath)
+	file, err := os.Open(path)
 	if err != nil {
 		return err
 	}
-	defer newFile.Close()
+	defer file.Close()
 
-	if err := bytesToFile(edited, newFile); err != nil {
+	if err := bytesToFile(edited, file); err != nil {
 		return err
 	}
 
 	Total += 1
-	progress(dstPath)
+	progress(path)
 
 	return nil
 }
