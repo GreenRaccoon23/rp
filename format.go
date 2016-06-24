@@ -57,27 +57,3 @@ func fmtDir(dir string) (fmtd string) {
 
 	return
 }
-
-func fmtPath(path string) (fullpath string) {
-
-	fullpath = path
-
-	if path == "" {
-		return
-	}
-
-	if isFirstLtr(path, "~") {
-		fullpath = concat(pwd(), "/", path)
-		return
-	}
-
-	if isFirstLtr(path, "/") == false {
-		fullpath = concat(Root, "/", path)
-	}
-
-	if isLastLtr(fullpath, "/") {
-		fullpath = fullpath[:len(fullpath)-1]
-	}
-
-	return
-}
