@@ -52,6 +52,7 @@ func init() {
 	_setExclusions()
 	_verifyArgs()
 	_setRegex()
+	_setPaths()
 }
 
 func main() {
@@ -95,31 +96,35 @@ func _setRegex() {
 	ToReplaceBytes = []byte(ToReplace)
 }
 
-func editPaths() {
+func _setPaths() {
+
+	filesOnly := []string{}
 
 	for _, path := range PathsToEdit {
-		if isDir(path) && DoRecursive {
-			editRecursive(path)
-		} else {
-			editOne(path)
+
+		if !isDir(path) {
+			filesOnly = append(filesOnly, path)
+			continue
 		}
-	}
-}
 
-func editRecursive(dir string) {
+		if skipDirs := (!DoRecursive); skipDirs {
+			continue
+		}
 
-	paths, err := getPathsUnder(dir)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, path := range paths {
-		if err := rp(path); err != nil {
+		dirContents, err := getPathsUnder(path)
+		if err != nil {
 			log.Fatal(err)
 		}
 
-		TotalEdited += 1
-		progress(path)
+		filesOnly = append(filesOnly, dirContents...)
+	}
+
+	PathsToEdit = filesOnly
+}
+
+func editPaths() {
+	for _, path := range PathsToEdit {
+		editOne(path)
 	}
 }
 
