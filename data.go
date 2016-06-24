@@ -17,7 +17,7 @@ func pwd() string {
 	return pwd
 }
 
-func log(err error) {
+func Log(err error) {
 	if DoShutUp {
 		return
 	}
@@ -31,7 +31,7 @@ func logErr(err error) {
 	if err == nil {
 		return
 	}
-	log(err)
+	Log(err)
 }
 
 func isDir(filename string) bool {
@@ -110,7 +110,7 @@ func rp(in string, out string) {
 
 	newFile, err := os.Create(out)
 	if err != nil {
-		log(err)
+		Log(err)
 		return
 	}
 	defer newFile.Close()
@@ -124,7 +124,7 @@ func fileToString(fileName string) (fileString string, err error) {
 	var file []byte
 	file, err = ioutil.ReadFile(fileName)
 	if err != nil {
-		log(err)
+		Log(err)
 		return
 	}
 	fileString = string(file)
@@ -147,21 +147,21 @@ func copyFile(source, destination string) {
 
 	toRead, err := os.Open(source)
 	if err != nil {
-		log(err)
+		Log(err)
 		return
 	}
 	defer toRead.Close()
 
 	toWrite, err := os.Create(destination)
 	if err != nil {
-		log(err)
+		Log(err)
 		return
 	}
 	defer toWrite.Close()
 
 	_, err = io.Copy(toWrite, toRead)
 	if err != nil {
-		log(err)
+		Log(err)
 		return
 	}
 

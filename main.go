@@ -2,6 +2,7 @@ package main
 
 import (
 	"io/ioutil"
+	"log"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -86,11 +87,9 @@ func _setTargets() {
 
 func _setRegex() {
 
-	if ToEdit == "" {
-		return
-	}
-
 	switch ToEdit {
+	case "":
+		return
 	case "*", ".":
 		DoEditAll = true
 		return
@@ -105,7 +104,9 @@ func _setRegex() {
 		DoRegex = true
 		var err error
 		ReToEdit, err = regexp.Compile(ToEdit)
-		logErr(err)
+		if err != nil {
+			log.Fatal(err)
+		}
 		return
 	}
 }
