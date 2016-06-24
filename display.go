@@ -75,8 +75,6 @@ func printHelp() {
 		"      Edit matching files recursively [down to the bottom of the directory]",
 		"-d=", pwd(), ": (directory)",
 		"      Directory under which to edit files recursively",
-		"-a=false: (all)",
-		"      Edit all matching files in the target directory, NON-recursively",
 		"-c=false: (color)",
 		"      Colorize output",
 		"-q=false: (quiet)",
