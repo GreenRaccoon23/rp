@@ -75,16 +75,7 @@ func isMatch(fi os.FileInfo) bool {
 		return false
 	}
 
-	if DoEditAll {
-		return true
-	}
-
-	fileName := fi.Name()
-
-	if fileName == ToEdit {
-		return true
-	}
-	return false
+	return true
 }
 
 func isExclusion(fi os.FileInfo) bool {
