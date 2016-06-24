@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 )
 
 var (
@@ -41,6 +42,24 @@ func isSymlink(fi os.FileInfo) bool {
 	return false
 }
 
+func getPathsUnder(dir string) (paths []string, err error) {
+
+	err = filepath.Walk(dir, func(path string, fi os.FileInfo, err error) error {
+
+		if err != nil {
+			return err //will not happen
+		}
+
+		if isMatch(fi) {
+			paths = append(paths, path)
+		}
+
+		return nil
+	})
+
+	return
+}
+
 func walkRp(path string, fi os.FileInfo, err error) error {
 
 	if !isMatch(fi) {
@@ -52,8 +71,6 @@ func walkRp(path string, fi os.FileInfo, err error) error {
 
 func isMatch(fi os.FileInfo) bool {
 
-	fileName := fi.Name()
-
 	if fi.IsDir() || isSymlink(fi) || isExclusion(fi) {
 		return false
 	}
@@ -61,6 +78,8 @@ func isMatch(fi os.FileInfo) bool {
 	if DoEditAll {
 		return true
 	}
+
+	fileName := fi.Name()
 
 	if fileName == ToEdit {
 		return true

@@ -46,7 +46,7 @@ func init() {
 		"x": &ToExclude,
 	}
 
-	var noFlagVars []*string
+	noFlagVars := []*string{}
 
 	parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
 
@@ -168,7 +168,23 @@ func rpDir(dir string) {
 	}
 }
 
+// func rpRcrsv1(dir string) {
+//  err := filepath.Walk(dir, walkRp)
+//  Log(err)
+// }
+
 func rpRcrsv(dir string) {
-	err := filepath.Walk(dir, walkRp)
-	Log(err)
+
+	Log("here")
+
+	paths, err := getPathsUnder(dir)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, path := range paths {
+		if err := rp(path, path); err != nil {
+			log.Fatal(err)
+		}
+	}
 }
