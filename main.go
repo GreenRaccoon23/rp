@@ -12,11 +12,13 @@ import (
 
 var (
 	ToFind         string
+	ToFindBytes    []byte
 	ToReplace      string
 	ToReplaceBytes []byte
 	Root           string = pwd()
 
 	DoRecursive bool
+	DoRegex     bool
 	DoColor     bool
 	DoQuiet     bool
 	DoShutUp    bool
@@ -35,6 +37,7 @@ func init() {
 
 	boolFlagVars := map[string]*bool{
 		"r": &DoRecursive,
+		"e": &DoRegex,
 		"c": &DoColor,
 		"q": &DoQuiet,
 		"Q": &DoShutUp,
@@ -97,6 +100,7 @@ func _verifyArgs() {
 }
 
 func _setRegex() {
+	ToFindBytes = []byte(ToFind)
 	ReToFind = regexp.MustCompile(ToFind)
 	ToReplaceBytes = []byte(ToReplace)
 }

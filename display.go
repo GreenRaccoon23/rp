@@ -61,7 +61,7 @@ func report() {
 func printHelp() {
 	defer os.Exit(0)
 	fmt.Printf(
-		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v%v%v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n",
+		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v%v%v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n",
 		"rp <options> <file/directory>",
 		`-o="": (old)`,
 		"      string in file to replace",
@@ -69,6 +69,8 @@ func printHelp() {
 		"      string to replace old string with",
 		`-x="": (exclude)`,
 		"      Patterns to exclude from matches, separated by commas",
+		"-e=false: (expression)",
+		"      Treat '-o' and '-n' as regular expressions",
 		"-r=false: (recursive)",
 		"      Edit matching files recursively [down to the bottom of the directory]",
 		"-d=", pwd(), ": (directory)",

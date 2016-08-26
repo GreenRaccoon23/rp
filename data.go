@@ -123,7 +123,13 @@ func rp(path string) (bool, error) {
 		return false, err
 	}
 
-	edited := ReToFind.ReplaceAll(contents, ToReplaceBytes)
+	var edited []byte
+	if DoRegex {
+		edited = ReToFind.ReplaceAll(contents, ToReplaceBytes)
+	} else {
+		edited = bytes.Replace(contents, ToFindBytes, ToReplaceBytes, -1)
+	}
+
 	if len(edited) == 0 {
 		return false, nil
 	}
