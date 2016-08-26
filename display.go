@@ -61,7 +61,7 @@ func report() {
 func printHelp() {
 	defer os.Exit(0)
 	fmt.Printf(
-		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v%v%v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n",
+		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v%v%v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n",
 		"rp <options> <file/directory>",
 		`-o="": (old)`,
 		"      string in file to replace",
