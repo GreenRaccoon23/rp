@@ -1,11 +1,15 @@
 # rp
 Go program to replace strings within files.  
 
-Install:  
-`go install github.com/GreenRaccoon23/rp`  
-Clone:  
-`git clone https://github.com/GreenRaccoon23/rp.git`  
+####Install
 
+    go install github.com/GreenRaccoon23/rp
+
+####Clone:  
+
+    git clone https://github.com/GreenRaccoon23/rp.git
+
+####Description
     [hiro@nakamura ~]$ rp -h
     rp <options> <file/directory>
       -o="": (old)
