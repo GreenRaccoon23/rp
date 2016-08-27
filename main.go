@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -23,10 +24,12 @@ var (
 	DoQuiet     bool
 	DoShutUp    bool
 
-	PathsToEdit []string
-	ToExclude   string
-	Exclusions  []string
-	ReToFind    *regexp.Regexp
+	PathsToEdit         []string
+	ToExclude           string
+	Exclusions          []string
+	SemaphoreSizeString string
+	SemaphoreSize       int = 1000
+	ReToFind            *regexp.Regexp
 
 	TotalEdited int
 
@@ -48,12 +51,14 @@ func init() {
 		"n": &ToReplace,
 		"d": &Root,
 		"x": &ToExclude,
+		"s": &SemaphoreSizeString,
 	}
 
 	noFlagVars := []*string{}
 
 	PathsToEdit = parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
 
+	_setIntVars()
 	_setLogger()
 	_setRoot()
 	_setExclusions()
@@ -67,6 +72,16 @@ func main() {
 	StartTime = time.Now()
 	editPaths()
 	report()
+}
+
+func _setIntVars() {
+	var err error
+
+	if flagged := SemaphoreSizeString != ""; flagged {
+		if SemaphoreSize, err = strconv.Atoi(SemaphoreSizeString); err != nil {
+			log.Fatal(fmt.Errorf("%v is not a valid number for semaphore size", SemaphoreSizeString))
+		}
+	}
 }
 
 func _setLogger() {

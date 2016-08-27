@@ -80,8 +80,7 @@ func editPaths() {
 	chanEdited := make(chan bool, lenPathsToEdit)
 
 	//http://jmoiron.net/blog/limiting-concurrency-in-go/
-	maxConcurrency := 1000
-	semaphore := make(chan bool, maxConcurrency)
+	semaphore := make(chan bool, SemaphoreSize)
 
 	for _, path := range PathsToEdit {
 		semaphore <- true
