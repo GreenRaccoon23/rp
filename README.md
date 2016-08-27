@@ -6,7 +6,7 @@ Install:
 Clone:  
 `go get github.com/GreenRaccoon23/rp`  
 
-    [hiro@nakamura ~]$ rp -h                                                   [0]
+    [hiro@nakamura ~]$ rp -h
     rp <options> <file/directory>
       -o="": (old)
           string in file to replace
