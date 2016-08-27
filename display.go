@@ -61,7 +61,7 @@ func report() {
 func printHelp() {
 	defer os.Exit(0)
 	fmt.Printf(
-		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v%v%v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n",
+		"%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n  %v%v%v\n%v\n  %v%v%v\n%v\n  %v\n%v\n  %v\n%v\n  %v\n%v\n",
 		"rp <options> <file/directory>",
 		`-o="": (old)`,
 		"      string in file to replace",
@@ -75,6 +75,8 @@ func printHelp() {
 		"      Edit matching files recursively [down to the bottom of the directory]",
 		"-d=", pwd(), ": (directory)",
 		"      Directory under which to edit files recursively",
+		"-s=", SemaphoreSize, ": (semaphore-size)",
+		"      Max number of files to edit at the same time",
 		"-c=false: (color)",
 		"      Colorize output",
 		"-q=false: (quiet)",
