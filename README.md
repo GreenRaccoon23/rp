@@ -4,7 +4,7 @@ Go program to replace strings within files.
 Install:  
 `go install github.com/GreenRaccoon23/rp`  
 Clone:  
-`go get github.com/GreenRaccoon23/rp`  
+`git clone https://github.com/GreenRaccoon23/rp.git`  
 
     [hiro@nakamura ~]$ rp -h
     rp <options> <file/directory>
