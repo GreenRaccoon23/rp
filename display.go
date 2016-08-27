@@ -54,8 +54,8 @@ func report() {
 		return
 	}
 
-	fmt.Printf("Edited %d files in %v\n", TotalEdited, Root)
-	fmt.Printf("Total time: %v\n", time.Since(StartTime))
+	fmt.Printf("Total files edited: %d\n", TotalEdited)
+	fmt.Printf("Duration: %v\n", time.Since(StartTime))
 }
 
 func printHelp() {
