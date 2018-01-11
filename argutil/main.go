@@ -1,29 +1,13 @@
-package main
+package argutil
 
 import (
-	//"fmt"
-
 	"os"
 	"strings"
 
 	"github.com/GreenRaccoon23/slices"
 )
 
-func parseArgs(boolFlagVars map[string]*bool, stringFlagVars map[string]*string, noFlagVars []*string) (extraArgs []string) {
-
-	a := _argParser{
-		boolFlagVars:   boolFlagVars,
-		stringFlagVars: stringFlagVars,
-		noFlagVars:     noFlagVars,
-	}
-	a._init()
-	defer a._reset()
-
-	extraArgs = a._parseArgs()
-	return
-}
-
-func helpRequested() bool {
+func Help() bool {
 
 	if len(os.Args) < 2 {
 		return true
@@ -35,6 +19,20 @@ func helpRequested() bool {
 	}
 
 	return false
+}
+
+func Parse(boolFlagVars map[string]*bool, stringFlagVars map[string]*string, noFlagVars []*string) (extraArgs []string) {
+
+	a := _argParser{
+		boolFlagVars:   boolFlagVars,
+		stringFlagVars: stringFlagVars,
+		noFlagVars:     noFlagVars,
+	}
+	a._init()
+	defer a._reset()
+
+	extraArgs = a._parseArgs()
+	return
 }
 
 type _argParser struct {

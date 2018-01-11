@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/GreenRaccoon23/rp/argutil"
 	"github.com/GreenRaccoon23/rp/logger"
 
 	"github.com/fatih/color"
@@ -42,7 +43,7 @@ func init() {
 
 	_setLogger()
 
-	if helpRequested() {
+	if argutil.Help() {
 		logger.Help(Root, SemaphoreSize)
 		os.Exit(0)
 	}
@@ -64,7 +65,7 @@ func init() {
 
 	noFlagVars := []*string{}
 
-	PathsToEdit = parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
+	PathsToEdit = argutil.Parse(boolFlagVars, stringFlagVars, noFlagVars)
 
 	_setIntVars()
 	_setRoot()
