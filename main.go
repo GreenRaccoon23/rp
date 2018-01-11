@@ -3,10 +3,13 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/GreenRaccoon23/rp/logger"
 
 	"github.com/fatih/color"
 )
@@ -20,7 +23,6 @@ var (
 
 	DoRecursive bool
 	DoRegex     bool
-	DoColor     bool
 	DoQuiet     bool
 	DoShutUp    bool
 
@@ -38,10 +40,16 @@ var (
 
 func init() {
 
+	_setLogger()
+
+	if helpRequested() {
+		logger.Help(Root, SemaphoreSize)
+		os.Exit(0)
+	}
+
 	boolFlagVars := map[string]*bool{
 		"r": &DoRecursive,
 		"e": &DoRegex,
-		"c": &DoColor,
 		"q": &DoQuiet,
 		"Q": &DoShutUp,
 	}
@@ -59,7 +67,6 @@ func init() {
 	PathsToEdit = parseArgs(boolFlagVars, stringFlagVars, noFlagVars)
 
 	_setIntVars()
-	_setLogger()
 	_setRoot()
 	_setExclusions()
 	_verifyArgs()
@@ -71,7 +78,15 @@ func main() {
 	defer color.Unset()
 	StartTime = time.Now()
 	editPaths()
-	report()
+	if DoRecursive {
+		logger.Report(TotalEdited, StartTime)
+	}
+}
+
+func _setLogger() {
+
+	logger.Quiet = DoQuiet
+	logger.Muted = DoShutUp
 }
 
 func _setIntVars() {
@@ -81,17 +96,6 @@ func _setIntVars() {
 		if SemaphoreSize, err = strconv.Atoi(SemaphoreSizeString); err != nil {
 			log.Fatal(fmt.Errorf("%v is not a valid number for semaphore size", SemaphoreSizeString))
 		}
-	}
-}
-
-func _setLogger() {
-	if DoQuiet {
-		Log = LogNoop
-	}
-
-	if DoShutUp {
-		Log = LogNoop
-		LogErr = LogNoop
 	}
 }
 

@@ -11,10 +11,6 @@ import (
 
 func parseArgs(boolFlagVars map[string]*bool, stringFlagVars map[string]*string, noFlagVars []*string) (extraArgs []string) {
 
-	if _helpRequested() {
-		printHelp()
-	}
-
 	a := _argParser{
 		boolFlagVars:   boolFlagVars,
 		stringFlagVars: stringFlagVars,
@@ -27,7 +23,7 @@ func parseArgs(boolFlagVars map[string]*bool, stringFlagVars map[string]*string,
 	return
 }
 
-func _helpRequested() bool {
+func helpRequested() bool {
 
 	if len(os.Args) < 2 {
 		return true

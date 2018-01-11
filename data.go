@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+
+	"github.com/GreenRaccoon23/rp/logger"
 )
 
 func pwd() string {
@@ -112,7 +114,7 @@ func editOne(path string, wg *sync.WaitGroup, semaphore <-chan bool, chanEdited 
 	}
 
 	chanEdited <- wasEdited
-	showProgress(path)
+	logger.Progress(path)
 }
 
 func rp(path string) (bool, error) {
