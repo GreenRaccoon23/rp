@@ -48,14 +48,14 @@ func init() {
 		os.Exit(0)
 	}
 
-	boolFlagVars := map[string]*bool{
+	boolFlags := map[string]*bool{
 		"r": &DoRecursive,
 		"e": &DoRegex,
 		"q": &DoQuiet,
 		"Q": &DoShutUp,
 	}
 
-	stringFlagVars := map[string]*string{
+	stringFlags := map[string]*string{
 		"o": &ToFind,
 		"n": &ToReplace,
 		"d": &Root,
@@ -63,9 +63,9 @@ func init() {
 		"s": &SemaphoreSizeString,
 	}
 
-	noFlagVars := []*string{}
+	noFlags := []*string{}
 
-	PathsToEdit = argutil.Parse(boolFlagVars, stringFlagVars, noFlagVars)
+	PathsToEdit = argutil.Parse(boolFlags, stringFlags, noFlags)
 
 	_setIntVars()
 	_setRoot()

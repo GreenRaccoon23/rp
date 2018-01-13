@@ -21,36 +21,36 @@ func HelpRequested() bool {
 	return false
 }
 
-func Parse(boolFlagVars map[string]*bool, stringFlagVars map[string]*string, noFlagVars []*string) (extraArgs []string) {
+func Parse(boolFlags map[string]*bool, stringFlags map[string]*string, noFlags []*string) (extras []string) {
 
-	a := argParser{
-		boolFlagVars:   boolFlagVars,
-		stringFlagVars: stringFlagVars,
-		noFlagVars:     noFlagVars,
+	a := parser{
+		boolFlags:   boolFlags,
+		stringFlags: stringFlags,
+		noFlags:     noFlags,
 	}
 	a.init()
 	defer a.reset()
 
-	extraArgs = a.parseArgs()
+	extras = a.parse()
 	return
 }
 
-type argParser struct {
-	boolFlagVars   map[string]*bool
-	stringFlagVars map[string]*string
-	noFlagVars     []*string
+type parser struct {
+	boolFlags   map[string]*bool
+	stringFlags map[string]*string
+	noFlags     []*string
 
 	args    []string
 	iEndArg int
 
-	argsNotFlagged []string
+	notFlagged []string
 }
 
-func (a *argParser) init() {
+func (a *parser) init() {
 	a.setArgs()
 }
 
-func (a *argParser) setArgs() {
+func (a *parser) setArgs() {
 
 	osArgs := os.Args
 	lenOsArgs := len(osArgs)
@@ -65,15 +65,15 @@ func (a *argParser) setArgs() {
 	}
 }
 
-func (a *argParser) reset() {
-	go func() { a.boolFlagVars = nil }()
-	go func() { a.stringFlagVars = nil }()
-	go func() { a.noFlagVars = nil }()
+func (a *parser) reset() {
+	go func() { a.boolFlags = nil }()
+	go func() { a.stringFlags = nil }()
+	go func() { a.noFlags = nil }()
 	go func() { a.args = nil }()
-	go func() { a.argsNotFlagged = nil }()
+	go func() { a.notFlagged = nil }()
 }
 
-func (a *argParser) parseArgs() (extraArgs []string) {
+func (a *parser) parse() (extras []string) {
 
 	args := a.args
 	iEnd := len(args) - 1
@@ -82,24 +82,24 @@ func (a *argParser) parseArgs() (extraArgs []string) {
 	for i := 0; i <= iEnd; i++ {
 		arg := args[i]
 
-		if isFlag := a.parseArg(arg, &i); !isFlag {
-			a.argsNotFlagged = append(a.argsNotFlagged, arg)
+		if isFlag := a.parseOne(arg, &i); !isFlag {
+			a.notFlagged = append(a.notFlagged, arg)
 		}
 	}
 
-	extraArgs = a.setNoFlags()
+	extras = a.setNoFlags()
 	return
 }
 
-func (a *argParser) parseArg(arg string, i *int) bool {
+func (a *parser) parseOne(arg string, i *int) bool {
 
 	if beginsWithHyphen := (string(arg[0]) == "-"); !beginsWithHyphen {
 		return false
 	}
 
-	argTrimmed := strings.TrimLeft(arg, "-")
+	trimmed := strings.TrimLeft(arg, "-")
 
-	if hasBoolFlags := a.setBoolFlags(argTrimmed); hasBoolFlags {
+	if hasBoolFlags := a.setBoolFlags(trimmed); hasBoolFlags {
 		return true
 	}
 
@@ -107,21 +107,21 @@ func (a *argParser) parseArg(arg string, i *int) bool {
 		return false
 	}
 
-	if isStringFlag := a.setStringFlag(argTrimmed, i); isStringFlag {
+	if isStringFlag := a.setStringFlag(trimmed, i); isStringFlag {
 		return true
 	}
 
 	return false
 }
 
-func (a *argParser) setBoolFlags(argTrimmed string) (hasBoolFlags bool) {
+func (a *parser) setBoolFlags(trimmed string) (hasBoolFlags bool) {
 
-	iEnd := len(argTrimmed) - 1
+	iEnd := len(trimmed) - 1
 	for i := 0; i <= iEnd; i++ {
-		c := string(argTrimmed[i])
+		c := string(trimmed[i])
 
-		if isBoolFlag := (a.boolFlagVars[c] != nil); isBoolFlag {
-			*(a.boolFlagVars[c]) = true
+		if isBoolFlag := (a.boolFlags[c] != nil); isBoolFlag {
+			*(a.boolFlags[c]) = true
 			hasBoolFlags = true
 		}
 	}
@@ -129,34 +129,34 @@ func (a *argParser) setBoolFlags(argTrimmed string) (hasBoolFlags bool) {
 	return
 }
 
-func (a *argParser) setStringFlag(argTrimmed string, i *int) (isStringFlag bool) {
+func (a *parser) setStringFlag(trimmed string, i *int) (isStringFlag bool) {
 
-	if isStringFlag = (a.stringFlagVars[argTrimmed] != nil); isStringFlag {
+	if isStringFlag = (a.stringFlags[trimmed] != nil); isStringFlag {
 		*i++
 		nextArg := a.args[*i]
-		*(a.stringFlagVars[argTrimmed]) = nextArg
+		*(a.stringFlags[trimmed]) = nextArg
 	}
 
 	return
 }
 
-func (a *argParser) setNoFlags() (extraArgs []string) {
+func (a *parser) setNoFlags() (extras []string) {
 
-	argsNotFlagged := a.argsNotFlagged
-	lenArgsNotFlagged := len(argsNotFlagged)
+	notFlagged := a.notFlagged
+	lenNotFlagged := len(notFlagged)
 
-	noFlagVars := a.noFlagVars
-	lenNoFlagVars := len(noFlagVars)
+	noFlags := a.noFlags
+	lenNoFlags := len(noFlags)
 
-	iMax := lenNoFlagVars
-	if enoughArgs := (lenArgsNotFlagged > lenNoFlagVars); !enoughArgs {
-		iMax = lenArgsNotFlagged
+	iMax := lenNoFlags
+	if enough := (lenNotFlagged > lenNoFlags); !enough {
+		iMax = lenNotFlagged
 	}
 
 	for i := 0; i < iMax; i++ {
-		*noFlagVars[i] = argsNotFlagged[i]
+		*noFlags[i] = notFlagged[i]
 	}
 
-	extraArgs = slices.Cut(argsNotFlagged, iMax, -1)
+	extras = slices.Cut(notFlagged, iMax, -1)
 	return
 }
