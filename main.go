@@ -19,7 +19,7 @@ var (
 	ToFindBytes    []byte
 	ToReplace      string
 	ToReplaceBytes []byte
-	Root           string = pwd()
+	Root           string
 
 	DoRecursive bool
 	DoRegex     bool
@@ -30,7 +30,7 @@ var (
 	ToExclude           string
 	Exclusions          []string
 	SemaphoreSizeString string
-	SemaphoreSize       int = 1000
+	SemaphoreSize       int
 	ReToFind            *regexp.Regexp
 
 	TotalEdited int
