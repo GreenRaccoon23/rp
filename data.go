@@ -18,7 +18,7 @@ func editPaths(fpaths []string, semaphoreSize int) int {
 
 	for _, fpath := range fpaths {
 		g.Accelerate()
-		go editOne(fpath, &g, edited)
+		go goEdit(fpath, &g, edited)
 	}
 
 	err := g.Regulate()
@@ -32,9 +32,9 @@ func editPaths(fpaths []string, semaphoreSize int) int {
 	return totalEdited
 }
 
-func editOne(fpath string, g *governor.Governor, edited chan<- bool) {
+func goEdit(fpath string, g *governor.Governor, edited chan<- bool) {
 
-	wasEdited, err := rp(fpath)
+	wasEdited, err := edit(fpath)
 	if err != nil {
 		g.Decelerate(err)
 	}
@@ -49,7 +49,7 @@ func editOne(fpath string, g *governor.Governor, edited chan<- bool) {
 	g.Decelerate(nil)
 }
 
-func rp(fpath string) (bool, error) {
+func edit(fpath string) (bool, error) {
 
 	contents, err := ioutil.ReadFile(fpath)
 	if err != nil {
