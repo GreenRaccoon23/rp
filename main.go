@@ -30,7 +30,7 @@ var (
 	doQuiet  bool
 	doShutUp bool
 
-	pathsToEdit []string
+	fpathsToEdit []string
 	// PathsToEdit comment for goling
 	PathsToEdit   []string
 	toExclude     string
@@ -55,7 +55,7 @@ func init() {
 	flag.BoolVar(&doQuiet, "q", false, "do not list edited files")
 	flag.BoolVar(&doShutUp, "Q", false, "do not show any output at all")
 	flag.Parse()
-	pathsToEdit = flag.Args()
+	fpathsToEdit = flag.Args()
 
 	_setLogger()
 	_setRoot()
@@ -94,7 +94,7 @@ func _setExclusions() {
 }
 
 func _verifyArgs() {
-	if len(pathsToEdit) == 0 {
+	if len(fpathsToEdit) == 0 {
 		log.Fatal(fmt.Errorf("No paths specified"))
 	}
 }
@@ -107,10 +107,12 @@ func _setRegex() {
 
 func _setPaths() {
 
-	for _, fpath := range pathsToEdit {
+	expanded := []string{}
+
+	for _, fpath := range fpathsToEdit {
 
 		if !futil.IsDir(fpath) {
-			PathsToEdit = append(PathsToEdit, fpath)
+			expanded = append(expanded, fpath)
 			continue
 		}
 
@@ -125,6 +127,8 @@ func _setPaths() {
 
 		filtered := futil.Filter(dirContents, exclusions)
 
-		PathsToEdit = append(PathsToEdit, filtered...)
+		expanded = append(expanded, filtered...)
 	}
+
+	PathsToEdit = expanded
 }
