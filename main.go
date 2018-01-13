@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
@@ -108,6 +110,13 @@ func _setRegex() {
 
 func _setPaths() {
 
+	matches, err := filepath.Glob("futil/*.go")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("matches: %v\n", matches)
+	os.Exit(0)
+
 	for _, fpath := range pathsToEdit {
 
 		if !futil.IsDir(fpath) {
@@ -119,11 +128,13 @@ func _setPaths() {
 			continue
 		}
 
-		dirContents, err := getMatchingPathsUnder(fpath)
+		dirContents, err := futil.FilesUnder(fpath)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		PathsToEdit = append(PathsToEdit, dirContents...)
+		filtered := futil.Filter(dirContents, Exclusions)
+
+		PathsToEdit = append(PathsToEdit, filtered...)
 	}
 }

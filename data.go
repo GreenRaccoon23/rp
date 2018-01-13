@@ -5,51 +5,10 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
 	"sync"
 
-	"github.com/GreenRaccoon23/rp/futil"
 	"github.com/GreenRaccoon23/rp/logger"
 )
-
-func getMatchingPathsUnder(dir string) (fpaths []string, err error) {
-
-	err = filepath.Walk(dir, func(fpath string, fi os.FileInfo, err error) error {
-
-		if err != nil {
-			return err //will not happen
-		}
-
-		if isMatch(fi) {
-			fpaths = append(fpaths, fpath)
-		}
-
-		return nil
-	})
-
-	return
-}
-
-func isMatch(fi os.FileInfo) bool {
-
-	if fi.IsDir() || futil.IsSymlink(fi) || isExclusion(fi) {
-		return false
-	}
-
-	return true
-}
-
-func isExclusion(fi os.FileInfo) bool {
-
-	name := fi.Name()
-
-	for _, e := range Exclusions {
-		if e == name {
-			return true
-		}
-	}
-	return false
-}
 
 func editPaths(semaphoreSize int) {
 
