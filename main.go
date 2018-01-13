@@ -34,10 +34,9 @@ var (
 
 	pathsToEdit []string
 	// PathsToEdit comment for goling
-	PathsToEdit []string
-	toExclude   string
-	// Exclusions comment for goling
-	Exclusions    []string
+	PathsToEdit   []string
+	toExclude     string
+	exclusions    []string
 	semaphoreSize int
 	// ReToFind comment for goling
 	ReToFind *regexp.Regexp
@@ -93,7 +92,7 @@ func _setExclusions() {
 		return
 	}
 
-	Exclusions = strings.Split(toExclude, ",")
+	exclusions = strings.Split(toExclude, ",")
 }
 
 func _verifyArgs() {
@@ -133,7 +132,7 @@ func _setPaths() {
 			log.Fatal(err)
 		}
 
-		filtered := futil.Filter(dirContents, Exclusions)
+		filtered := futil.Filter(dirContents, exclusions)
 
 		PathsToEdit = append(PathsToEdit, filtered...)
 	}
