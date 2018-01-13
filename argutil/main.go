@@ -7,6 +7,7 @@ import (
 	"github.com/GreenRaccoon23/slices"
 )
 
+// HelpRequested checks whether a help flag was set
 func HelpRequested() bool {
 
 	if len(os.Args) < 2 {
@@ -21,6 +22,7 @@ func HelpRequested() bool {
 	return false
 }
 
+// Parse parses the args
 func Parse(boolFlags map[string]*bool, stringFlags map[string]*string, noFlags []*string) (extras []string) {
 
 	a := newParser(boolFlags, stringFlags, noFlags)
