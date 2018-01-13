@@ -108,12 +108,10 @@ func _setRegex() {
 
 func _setPaths() {
 
-	fpaths := []string{}
-
 	for _, fpath := range pathsToEdit {
 
 		if !futil.IsDir(fpath) {
-			fpaths = append(fpaths, fpath)
+			PathsToEdit = append(PathsToEdit, fpath)
 			continue
 		}
 
@@ -126,8 +124,6 @@ func _setPaths() {
 			log.Fatal(err)
 		}
 
-		fpaths = append(fpaths, dirContents...)
+		PathsToEdit = append(PathsToEdit, dirContents...)
 	}
-
-	PathsToEdit = fpaths
 }
