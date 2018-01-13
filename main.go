@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
@@ -53,7 +52,6 @@ func init() {
 	PathsToEdit = flag.Args()
 
 	_setLogger()
-	_setIntVars()
 	_setRoot()
 	_setExclusions()
 	_verifyArgs()
@@ -74,16 +72,6 @@ func _setLogger() {
 
 	logger.Quiet = DoQuiet
 	logger.Muted = DoShutUp
-}
-
-func _setIntVars() {
-	var err error
-
-	if flagged := SemaphoreSizeString != ""; flagged {
-		if SemaphoreSize, err = strconv.Atoi(SemaphoreSizeString); err != nil {
-			log.Fatal(fmt.Errorf("%v is not a valid number for semaphore size", SemaphoreSizeString))
-		}
-	}
 }
 
 func _setRoot() {
