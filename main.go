@@ -25,12 +25,11 @@ var (
 	doQuiet     bool
 	doShutUp    bool
 
-	PathsToEdit         []string
-	toExclude           string
-	Exclusions          []string
-	SemaphoreSizeString string
-	SemaphoreSize       int
-	ReToFind            *regexp.Regexp
+	PathsToEdit   []string
+	toExclude     string
+	Exclusions    []string
+	SemaphoreSize int
+	ReToFind      *regexp.Regexp
 
 	TotalEdited int
 )
