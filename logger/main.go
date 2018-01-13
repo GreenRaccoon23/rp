@@ -6,10 +6,13 @@ import (
 )
 
 var (
+	// Quiet prevents most logging
 	Quiet bool
+	// Muted prevents all logging
 	Muted bool
 )
 
+// Progress prints progress
 func Progress(path string) {
 	if Quiet || Muted {
 		return
@@ -18,6 +21,7 @@ func Progress(path string) {
 	fmt.Println(path)
 }
 
+// Report prints a report
 func Report(cnt int, min time.Time) {
 
 	if Muted {
