@@ -15,23 +15,31 @@ import (
 )
 
 var (
-	toFind         string
-	ToFindBytes    []byte
-	toReplace      string
+	toFind string
+	// ToFindBytes comment for goling
+	ToFindBytes []byte
+	toReplace   string
+	// ToReplaceBytes comment for goling
 	ToReplaceBytes []byte
-	Root           string
+	// Root comment for goling
+	Root string
 
 	doRecursive bool
-	DoRegex     bool
-	doQuiet     bool
-	doShutUp    bool
+	// DoRegex comment for goling
+	DoRegex  bool
+	doQuiet  bool
+	doShutUp bool
 
-	PathsToEdit   []string
-	toExclude     string
+	// PathsToEdit comment for goling
+	PathsToEdit []string
+	toExclude   string
+	// Exclusions comment for goling
 	Exclusions    []string
 	semaphoreSize int
-	ReToFind      *regexp.Regexp
+	// ReToFind comment for goling
+	ReToFind *regexp.Regexp
 
+	// TotalEdited comment for goling
 	TotalEdited int
 )
 
