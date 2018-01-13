@@ -45,11 +45,11 @@ func init() {
 	flag.Parse()
 	fpathsToEdit = flag.Args()
 
-	_setLogger()
-	_setExclusions()
-	_verifyArgs()
-	_setRegex()
-	_setPaths()
+	setLogger()
+	setExclusions()
+	verifyArgs()
+	setRegex()
+	setPaths()
 }
 
 func main() {
@@ -61,13 +61,13 @@ func main() {
 	}
 }
 
-func _setLogger() {
+func setLogger() {
 
 	logger.Quiet = doQuiet
 	logger.Muted = doShutUp
 }
 
-func _setExclusions() {
+func setExclusions() {
 
 	if toExclude == "" {
 		return
@@ -76,13 +76,13 @@ func _setExclusions() {
 	exclusions = strings.Split(toExclude, ",")
 }
 
-func _verifyArgs() {
+func verifyArgs() {
 	if len(fpathsToEdit) == 0 {
 		log.Fatal(fmt.Errorf("No paths specified"))
 	}
 }
 
-func _setRegex() {
+func setRegex() {
 	if doRegex {
 		reToFind = regexp.MustCompile(toFind)
 	} else {
@@ -91,7 +91,7 @@ func _setRegex() {
 	toReplaceBytes = []byte(toReplace)
 }
 
-func _setPaths() {
+func setPaths() {
 
 	expanded := []string{}
 
