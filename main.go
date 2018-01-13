@@ -4,8 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
@@ -108,13 +106,6 @@ func _setRegex() {
 }
 
 func _setPaths() {
-
-	matches, err := filepath.Glob("futil/*.go")
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("matches: %v\n", matches)
-	os.Exit(0)
 
 	for _, fpath := range pathsToEdit {
 
