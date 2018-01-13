@@ -34,7 +34,7 @@ var (
 
 	TotalEdited int
 
-	StartTime time.Time
+	startTime time.Time
 )
 
 func init() {
@@ -61,10 +61,10 @@ func init() {
 
 func main() {
 	defer color.Unset()
-	StartTime = time.Now()
+	startTime = time.Now()
 	editPaths()
 	if DoRecursive {
-		logger.Report(TotalEdited, StartTime)
+		logger.Report(TotalEdited, startTime)
 	}
 }
 
