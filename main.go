@@ -14,19 +14,19 @@ import (
 )
 
 var (
-	ToFind         string
+	toFind         string
 	ToFindBytes    []byte
-	ToReplace      string
+	toReplace      string
 	ToReplaceBytes []byte
 	Root           string
 
-	DoRecursive bool
+	doRecursive bool
 	DoRegex     bool
-	DoQuiet     bool
-	DoShutUp    bool
+	doQuiet     bool
+	doShutUp    bool
 
 	PathsToEdit         []string
-	ToExclude           string
+	toExclude           string
 	Exclusions          []string
 	SemaphoreSizeString string
 	SemaphoreSize       int
@@ -37,15 +37,15 @@ var (
 
 func init() {
 
-	flag.StringVar(&ToFind, "o", "", "string to find in file")
-	flag.StringVar(&ToReplace, "n", "", "string to replace old string with")
-	flag.StringVar(&ToExclude, "x", "", "Patterns to exclude from matches, separated by commas")
+	flag.StringVar(&toFind, "o", "", "string to find in file")
+	flag.StringVar(&toReplace, "n", "", "string to replace old string with")
+	flag.StringVar(&toExclude, "x", "", "Patterns to exclude from matches, separated by commas")
 	flag.BoolVar(&DoRegex, "e", false, "treat '-o' and '-n' as regular expressions")
-	flag.BoolVar(&DoRecursive, "r", false, "edit matching files recursively [down to the bottom of the directory]")
+	flag.BoolVar(&doRecursive, "r", false, "edit matching files recursively [down to the bottom of the directory]")
 	flag.StringVar(&Root, "d", pwd(), "Directory under which to edit files recursively\n   	")
 	flag.IntVar(&SemaphoreSize, "s", 1000, "Max number of files to edit at the same time\n    	WARNING: Setting this too high will cause the program to crash,\n    	corrupting the files it was editing")
-	flag.BoolVar(&DoQuiet, "q", false, "do not list edited files")
-	flag.BoolVar(&DoShutUp, "Q", false, "do not show any output at all")
+	flag.BoolVar(&doQuiet, "q", false, "do not list edited files")
+	flag.BoolVar(&doShutUp, "Q", false, "do not show any output at all")
 	flag.Parse()
 	PathsToEdit = flag.Args()
 
@@ -61,15 +61,15 @@ func main() {
 	defer color.Unset()
 	startTime := time.Now()
 	editPaths()
-	if DoRecursive {
+	if doRecursive {
 		logger.Report(TotalEdited, startTime)
 	}
 }
 
 func _setLogger() {
 
-	logger.Quiet = DoQuiet
-	logger.Muted = DoShutUp
+	logger.Quiet = doQuiet
+	logger.Muted = doShutUp
 }
 
 func _setRoot() {
@@ -78,11 +78,11 @@ func _setRoot() {
 
 func _setExclusions() {
 
-	if ToExclude == "" {
+	if toExclude == "" {
 		return
 	}
 
-	Exclusions = strings.Split(ToExclude, ",")
+	Exclusions = strings.Split(toExclude, ",")
 }
 
 func _verifyArgs() {
@@ -92,9 +92,9 @@ func _verifyArgs() {
 }
 
 func _setRegex() {
-	ToFindBytes = []byte(ToFind)
-	ReToFind = regexp.MustCompile(ToFind)
-	ToReplaceBytes = []byte(ToReplace)
+	ToFindBytes = []byte(toFind)
+	ReToFind = regexp.MustCompile(toFind)
+	ToReplaceBytes = []byte(toReplace)
 }
 
 func _setPaths() {
@@ -108,7 +108,7 @@ func _setPaths() {
 			continue
 		}
 
-		if skipDirs := (!DoRecursive); skipDirs {
+		if skipDirs := (!doRecursive); skipDirs {
 			continue
 		}
 
