@@ -16,12 +16,12 @@ func editPaths(fpaths []string, semaphoreSize int) {
 
 	lenFpaths := len(fpaths)
 	wg.Add(lenFpaths)
-	chanEdited := make(chan bool, lenFpaths)
+	edited := make(chan bool, lenFpaths)
 	semaphore := make(chan bool, semaphoreSize) // http://jmoiron.net/blog/limiting-concurrency-in-go/
 
 	for _, fpath := range fpaths {
 		semaphore <- true
-		go editOne(fpath, &wg, semaphore, chanEdited)
+		go editOne(fpath, &wg, semaphore, edited)
 	}
 
 	for i := 0; i < cap(semaphore); i++ {
@@ -29,12 +29,12 @@ func editPaths(fpaths []string, semaphoreSize int) {
 	}
 
 	wg.Wait()
-	close(chanEdited)
+	close(edited)
 
-	TotalEdited = len(chanEdited)
+	TotalEdited = len(edited)
 }
 
-func editOne(fpath string, wg *sync.WaitGroup, semaphore <-chan bool, chanEdited chan<- bool) {
+func editOne(fpath string, wg *sync.WaitGroup, semaphore <-chan bool, edited chan<- bool) {
 
 	defer func() { <-semaphore }()
 	defer wg.Done()
@@ -48,7 +48,7 @@ func editOne(fpath string, wg *sync.WaitGroup, semaphore <-chan bool, chanEdited
 		return
 	}
 
-	chanEdited <- wasEdited
+	edited <- wasEdited
 	logger.Progress(fpath)
 }
 
