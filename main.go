@@ -1,15 +1,14 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/GreenRaccoon23/rp/argutil"
 	"github.com/GreenRaccoon23/rp/logger"
 
 	"github.com/fatih/color"
@@ -41,32 +40,19 @@ var (
 
 func init() {
 
+	flag.StringVar(&ToFind, "o", "", "string to find in file")
+	flag.StringVar(&ToReplace, "n", "", "string to replace old string with")
+	flag.StringVar(&ToExclude, "x", "", "Patterns to exclude from matches, separated by commas")
+	flag.BoolVar(&DoRegex, "e", false, "treat '-o' and '-n' as regular expressions")
+	flag.BoolVar(&DoRecursive, "r", false, "edit matching files recursively [down to the bottom of the directory]")
+	flag.StringVar(&Root, "d", pwd(), "Directory under which to edit files recursively\n   	")
+	flag.IntVar(&SemaphoreSize, "s", 1000, "Max number of files to edit at the same time\n    	WARNING: Setting this too high will cause the program to crash,\n    	corrupting the files it was editing")
+	flag.BoolVar(&DoQuiet, "q", false, "do not list edited files")
+	flag.BoolVar(&DoShutUp, "Q", false, "do not show any output at all")
+	flag.Parse()
+	PathsToEdit = flag.Args()
+
 	_setLogger()
-
-	if argutil.HelpRequested() {
-		logger.Help(Root, SemaphoreSize)
-		os.Exit(0)
-	}
-
-	boolFlags := map[string]*bool{
-		"r": &DoRecursive,
-		"e": &DoRegex,
-		"q": &DoQuiet,
-		"Q": &DoShutUp,
-	}
-
-	stringFlags := map[string]*string{
-		"o": &ToFind,
-		"n": &ToReplace,
-		"d": &Root,
-		"x": &ToExclude,
-		"s": &SemaphoreSizeString,
-	}
-
-	noFlags := []*string{}
-
-	PathsToEdit = argutil.Parse(boolFlags, stringFlags, noFlags)
-
 	_setIntVars()
 	_setRoot()
 	_setExclusions()
