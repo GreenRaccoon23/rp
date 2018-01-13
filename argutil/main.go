@@ -7,7 +7,7 @@ import (
 	"github.com/GreenRaccoon23/slices"
 )
 
-func Help() bool {
+func HelpRequested() bool {
 
 	if len(os.Args) < 2 {
 		return true

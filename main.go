@@ -43,7 +43,7 @@ func init() {
 
 	_setLogger()
 
-	if argutil.Help() {
+	if argutil.HelpRequested() {
 		logger.Help(Root, SemaphoreSize)
 		os.Exit(0)
 	}
