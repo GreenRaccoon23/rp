@@ -11,7 +11,18 @@ import (
 	"github.com/GreenRaccoon23/rp/logger"
 )
 
-func editPaths(fpaths []string, toFind []byte, reToFind *regexp.Regexp, toReplace []byte, semaphoreSize int) int {
+func editPaths(fpaths []string, toFind string, toReplace string, regex bool, semaphoreSize int) int {
+
+	var reToFind *regexp.Regexp
+	var toFindBytes []byte
+
+	if regex {
+		reToFind = regexp.MustCompile(toFind)
+	} else {
+		toFindBytes = []byte(toFind)
+	}
+
+	toReplaceBytes := []byte(toReplace)
 
 	lenFpaths := len(fpaths)
 	g := governor.NewGovernor(lenFpaths, semaphoreSize)
@@ -19,7 +30,7 @@ func editPaths(fpaths []string, toFind []byte, reToFind *regexp.Regexp, toReplac
 
 	for _, fpath := range fpaths {
 		g.Accelerate()
-		go goEdit(fpath, toFind, reToFind, toReplace, &g, edited)
+		go goEdit(fpath, toFindBytes, reToFind, toReplaceBytes, &g, edited)
 	}
 
 	err := g.Regulate()

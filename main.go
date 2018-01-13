@@ -15,10 +15,8 @@ import (
 )
 
 var (
-	toFind         string
-	toFindBytes    []byte
-	toReplace      string
-	toReplaceBytes []byte
+	toFind    string
+	toReplace string
 
 	doRecursive bool
 	doRegex     bool
@@ -48,14 +46,13 @@ func init() {
 	setLogger()
 	setExclusions()
 	verifyArgs()
-	setRegex()
 	setPaths()
 }
 
 func main() {
 	defer color.Unset()
 	startTime := time.Now()
-	totalEdited := editPaths(fpathsToEdit, toFindBytes, reToFind, toReplaceBytes, semaphoreSize)
+	totalEdited := editPaths(fpathsToEdit, toFind, toReplace, doRegex, semaphoreSize)
 	if doRecursive {
 		logger.Report(totalEdited, startTime)
 	}
@@ -80,15 +77,6 @@ func verifyArgs() {
 	if len(fpathsToEdit) == 0 {
 		log.Fatal(fmt.Errorf("No paths specified"))
 	}
-}
-
-func setRegex() {
-	if doRegex {
-		reToFind = regexp.MustCompile(toFind)
-	} else {
-		toFindBytes = []byte(toFind)
-	}
-	toReplaceBytes = []byte(toReplace)
 }
 
 func setPaths() {
