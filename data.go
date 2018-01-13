@@ -56,23 +56,29 @@ func rp(fpath string) (bool, error) {
 		return false, err
 	}
 
-	var edited []byte
-	if DoRegex {
-		edited = ReToFind.ReplaceAll(contents, ToReplaceBytes)
-	} else {
-		edited = bytes.Replace(contents, ToFindBytes, ToReplaceBytes, -1)
-	}
+	replaced := replace(contents)
 
-	if len(edited) == 0 {
+	if len(replaced) == 0 {
 		return false, nil
 	}
-	if bytes.Equal(edited, contents) {
+	if bytes.Equal(replaced, contents) {
 		return false, nil
 	}
 
-	if err := ioutil.WriteFile(fpath, edited, os.ModePerm); err != nil {
+	if err := ioutil.WriteFile(fpath, replaced, os.ModePerm); err != nil {
 		return false, err
 	}
 
 	return true, nil
+}
+
+func replace(contents []byte) (replaced []byte) {
+
+	if DoRegex {
+		replaced = ReToFind.ReplaceAll(contents, ToReplaceBytes)
+	} else {
+		replaced = bytes.Replace(contents, ToFindBytes, ToReplaceBytes, -1)
+	}
+
+	return
 }
