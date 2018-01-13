@@ -10,6 +10,7 @@ import (
 
 	"github.com/GreenRaccoon23/rp/futil"
 	"github.com/GreenRaccoon23/rp/logger"
+	"github.com/GreenRaccoon23/rp/replacer"
 
 	"github.com/fatih/color"
 )
@@ -52,7 +53,8 @@ func init() {
 func main() {
 	defer color.Unset()
 	startTime := time.Now()
-	totalEdited := editPaths(fpathsToEdit, toFind, toReplace, doRegex, semaphoreSize)
+	r := replacer.NewReplacer(toFind, toReplace, doRegex)
+	totalEdited := r.EditPaths(fpathsToEdit, semaphoreSize)
 	if doRecursive {
 		logger.Report(totalEdited, startTime)
 	}
