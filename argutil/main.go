@@ -23,12 +23,7 @@ func HelpRequested() bool {
 
 func Parse(boolFlags map[string]*bool, stringFlags map[string]*string, noFlags []*string) (extras []string) {
 
-	a := parser{
-		boolFlags:   boolFlags,
-		stringFlags: stringFlags,
-		noFlags:     noFlags,
-	}
-	a.init()
+	a := newParser(boolFlags, stringFlags, noFlags)
 	defer a.reset()
 
 	extras = a.parse()
@@ -44,6 +39,19 @@ type parser struct {
 	iEndArg int
 
 	notFlagged []string
+}
+
+func newParser(boolFlags map[string]*bool, stringFlags map[string]*string, noFlags []*string) parser {
+
+	a := parser{
+		boolFlags:   boolFlags,
+		stringFlags: stringFlags,
+		noFlags:     noFlags,
+	}
+
+	a.init()
+
+	return a
 }
 
 func (a *parser) init() {
