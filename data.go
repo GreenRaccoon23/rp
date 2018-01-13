@@ -8,31 +8,9 @@ import (
 	"path/filepath"
 	"sync"
 
+	"github.com/GreenRaccoon23/rp/futil"
 	"github.com/GreenRaccoon23/rp/logger"
 )
-
-func pwd() string {
-	pwd, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err) // if the fs is screwed, so is this program
-	}
-	return pwd
-}
-
-func isDir(filename string) bool {
-	fi, err := os.Lstat(filename)
-	if err != nil {
-		return false
-	}
-	return fi.Mode().IsDir()
-}
-
-func isSymlink(fi os.FileInfo) bool {
-	if fi.Mode()&os.ModeSymlink != 0 {
-		return true
-	}
-	return false
-}
 
 func getMatchingPathsUnder(dir string) (paths []string, err error) {
 
@@ -54,7 +32,7 @@ func getMatchingPathsUnder(dir string) (paths []string, err error) {
 
 func isMatch(fi os.FileInfo) bool {
 
-	if fi.IsDir() || isSymlink(fi) || isExclusion(fi) {
+	if fi.IsDir() || futil.IsSymlink(fi) || isExclusion(fi) {
 		return false
 	}
 

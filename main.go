@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/GreenRaccoon23/rp/futil"
 	"github.com/GreenRaccoon23/rp/logger"
 
 	"github.com/fatih/color"
@@ -41,7 +42,7 @@ func init() {
 	flag.StringVar(&toExclude, "x", "", "Patterns to exclude from matches, separated by commas")
 	flag.BoolVar(&DoRegex, "e", false, "treat '-o' and '-n' as regular expressions")
 	flag.BoolVar(&doRecursive, "r", false, "edit matching files recursively [down to the bottom of the directory]")
-	flag.StringVar(&Root, "d", pwd(), "Directory under which to edit files recursively\n   	")
+	flag.StringVar(&Root, "d", futil.Pwd(), "Directory under which to edit files recursively\n   	")
 	flag.IntVar(&semaphoreSize, "s", 1000, "Max number of files to edit at the same time\n    	WARNING: Setting this too high will cause the program to crash,\n    	corrupting the files it was editing")
 	flag.BoolVar(&doQuiet, "q", false, "do not list edited files")
 	flag.BoolVar(&doShutUp, "Q", false, "do not show any output at all")
@@ -102,7 +103,7 @@ func _setPaths() {
 
 	for _, path := range PathsToEdit {
 
-		if !isDir(path) {
+		if !futil.IsDir(path) {
 			filesOnly = append(filesOnly, path)
 			continue
 		}
