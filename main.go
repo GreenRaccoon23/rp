@@ -36,9 +36,6 @@ var (
 	semaphoreSize int
 	// ReToFind comment for goling
 	ReToFind *regexp.Regexp
-
-	// TotalEdited comment for goling
-	TotalEdited int
 )
 
 func init() {
@@ -66,9 +63,9 @@ func init() {
 func main() {
 	defer color.Unset()
 	startTime := time.Now()
-	editPaths(fpathsToEdit, semaphoreSize)
+	totalEdited := editPaths(fpathsToEdit, semaphoreSize)
 	if doRecursive {
-		logger.Report(TotalEdited, startTime)
+		logger.Report(totalEdited, startTime)
 	}
 }
 

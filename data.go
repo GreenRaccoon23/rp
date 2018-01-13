@@ -10,7 +10,7 @@ import (
 	"github.com/GreenRaccoon23/rp/logger"
 )
 
-func editPaths(fpaths []string, semaphoreSize int) {
+func editPaths(fpaths []string, semaphoreSize int) int {
 
 	var wg sync.WaitGroup
 
@@ -31,7 +31,8 @@ func editPaths(fpaths []string, semaphoreSize int) {
 	wg.Wait()
 	close(edited)
 
-	TotalEdited = len(edited)
+	totalEdited := len(edited)
+	return totalEdited
 }
 
 func editOne(fpath string, wg *sync.WaitGroup, semaphore <-chan bool, edited chan<- bool) {
