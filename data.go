@@ -5,53 +5,92 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"sync"
 
+	"github.com/GreenRaccoon23/rp/governor"
 	"github.com/GreenRaccoon23/rp/logger"
 )
 
 func editPaths(fpaths []string, semaphoreSize int) int {
 
-	var wg sync.WaitGroup
-
 	lenFpaths := len(fpaths)
-	wg.Add(lenFpaths)
+	g := governor.NewGovernor(lenFpaths, semaphoreSize)
 	edited := make(chan bool, lenFpaths)
-	semaphore := make(chan bool, semaphoreSize) // http://jmoiron.net/blog/limiting-concurrency-in-go/
 
 	for _, fpath := range fpaths {
-		semaphore <- true
-		go editOne(fpath, &wg, semaphore, edited)
+		g.Accelerate()
+		go editOne(fpath, &g, edited)
 	}
 
-	for i := 0; i < cap(semaphore); i++ {
-		semaphore <- true
-	}
-
-	wg.Wait()
+	err := g.Regulate()
 	close(edited)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	totalEdited := len(edited)
 	return totalEdited
 }
 
-func editOne(fpath string, wg *sync.WaitGroup, semaphore <-chan bool, edited chan<- bool) {
-
-	defer func() { <-semaphore }()
-	defer wg.Done()
+func editOne(fpath string, g *governor.Governor, edited chan<- bool) {
 
 	wasEdited, err := rp(fpath)
 	if err != nil {
-		log.Fatal(err)
+		g.Decelerate(err)
 	}
 
 	if !wasEdited {
+		g.Decelerate(nil)
 		return
 	}
 
 	edited <- wasEdited
 	logger.Progress(fpath)
+	g.Decelerate(nil)
 }
+
+// func editPaths(fpaths []string, semaphoreSize int) int {
+//
+// 	var wg sync.WaitGroup
+//
+// 	lenFpaths := len(fpaths)
+// 	wg.Add(lenFpaths)
+// 	edited := make(chan bool, lenFpaths)
+// 	semaphore := make(chan bool, semaphoreSize) // http://jmoiron.net/blog/limiting-concurrency-in-go/
+//
+// 	for _, fpath := range fpaths {
+// 		semaphore <- true
+// 		go editOne(fpath, &wg, semaphore, edited)
+// 	}
+//
+// 	for i := 0; i < cap(semaphore); i++ {
+// 		semaphore <- true
+// 	}
+//
+// 	wg.Wait()
+// 	close(edited)
+//
+// 	totalEdited := len(edited)
+// 	return totalEdited
+// }
+//
+// func editOne(fpath string, wg *sync.WaitGroup, semaphore <-chan bool, edited chan<- bool) {
+//
+// 	defer func() { <-semaphore }()
+// 	defer wg.Done()
+//
+// 	wasEdited, err := rp(fpath)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+//
+// 	if !wasEdited {
+// 		return
+// 	}
+//
+// 	edited <- wasEdited
+// 	logger.Progress(fpath)
+// }
 
 func rp(fpath string) (bool, error) {
 
