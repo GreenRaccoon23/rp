@@ -12,16 +12,16 @@ import (
 	"github.com/GreenRaccoon23/rp/logger"
 )
 
-func getMatchingPathsUnder(dir string) (paths []string, err error) {
+func getMatchingPathsUnder(dir string) (fpaths []string, err error) {
 
-	err = filepath.Walk(dir, func(path string, fi os.FileInfo, err error) error {
+	err = filepath.Walk(dir, func(fpath string, fi os.FileInfo, err error) error {
 
 		if err != nil {
 			return err //will not happen
 		}
 
 		if isMatch(fi) {
-			paths = append(paths, path)
+			fpaths = append(fpaths, fpath)
 		}
 
 		return nil
@@ -62,9 +62,9 @@ func editPaths(semaphoreSize int) {
 	//http://jmoiron.net/blog/limiting-concurrency-in-go/
 	semaphore := make(chan bool, semaphoreSize)
 
-	for _, path := range PathsToEdit {
+	for _, fpath := range PathsToEdit {
 		semaphore <- true
-		go editOne(path, &wg, semaphore, chanEdited)
+		go editOne(fpath, &wg, semaphore, chanEdited)
 	}
 
 	for i := 0; i < cap(semaphore); i++ {
@@ -77,12 +77,12 @@ func editPaths(semaphoreSize int) {
 	TotalEdited = len(chanEdited)
 }
 
-func editOne(path string, wg *sync.WaitGroup, semaphore <-chan bool, chanEdited chan<- bool) {
+func editOne(fpath string, wg *sync.WaitGroup, semaphore <-chan bool, chanEdited chan<- bool) {
 
 	defer func() { <-semaphore }()
 	defer wg.Done()
 
-	wasEdited, err := rp(path)
+	wasEdited, err := rp(fpath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -92,12 +92,12 @@ func editOne(path string, wg *sync.WaitGroup, semaphore <-chan bool, chanEdited 
 	}
 
 	chanEdited <- wasEdited
-	logger.Progress(path)
+	logger.Progress(fpath)
 }
 
-func rp(path string) (bool, error) {
+func rp(fpath string) (bool, error) {
 
-	contents, err := ioutil.ReadFile(path)
+	contents, err := ioutil.ReadFile(fpath)
 	if err != nil {
 		return false, err
 	}
@@ -116,7 +116,7 @@ func rp(path string) (bool, error) {
 		return false, nil
 	}
 
-	if err := ioutil.WriteFile(path, edited, os.ModePerm); err != nil {
+	if err := ioutil.WriteFile(fpath, edited, os.ModePerm); err != nil {
 		return false, err
 	}
 

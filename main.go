@@ -99,12 +99,12 @@ func _setRegex() {
 
 func _setPaths() {
 
-	filesOnly := []string{}
+	fpaths := []string{}
 
-	for _, path := range PathsToEdit {
+	for _, fpath := range PathsToEdit {
 
-		if !futil.IsDir(path) {
-			filesOnly = append(filesOnly, path)
+		if !futil.IsDir(fpath) {
+			fpaths = append(fpaths, fpath)
 			continue
 		}
 
@@ -112,13 +112,13 @@ func _setPaths() {
 			continue
 		}
 
-		dirContents, err := getMatchingPathsUnder(path)
+		dirContents, err := getMatchingPathsUnder(fpath)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		filesOnly = append(filesOnly, dirContents...)
+		fpaths = append(fpaths, dirContents...)
 	}
 
-	PathsToEdit = filesOnly
+	PathsToEdit = fpaths
 }
