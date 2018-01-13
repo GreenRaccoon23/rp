@@ -10,18 +10,16 @@ import (
 	"github.com/GreenRaccoon23/rp/logger"
 )
 
-func editPaths(semaphoreSize int) {
+func editPaths(fpaths []string, semaphoreSize int) {
 
 	var wg sync.WaitGroup
 
-	lenPathsToEdit := len(PathsToEdit)
-	wg.Add(lenPathsToEdit)
-	chanEdited := make(chan bool, lenPathsToEdit)
+	lenFpaths := len(fpaths)
+	wg.Add(lenFpaths)
+	chanEdited := make(chan bool, lenFpaths)
+	semaphore := make(chan bool, semaphoreSize) // http://jmoiron.net/blog/limiting-concurrency-in-go/
 
-	//http://jmoiron.net/blog/limiting-concurrency-in-go/
-	semaphore := make(chan bool, semaphoreSize)
-
-	for _, fpath := range PathsToEdit {
+	for _, fpath := range fpaths {
 		semaphore <- true
 		go editOne(fpath, &wg, semaphore, chanEdited)
 	}

@@ -30,9 +30,7 @@ var (
 	doQuiet  bool
 	doShutUp bool
 
-	fpathsToEdit []string
-	// PathsToEdit comment for goling
-	PathsToEdit   []string
+	fpathsToEdit  []string
 	toExclude     string
 	exclusions    []string
 	semaphoreSize int
@@ -68,7 +66,7 @@ func init() {
 func main() {
 	defer color.Unset()
 	startTime := time.Now()
-	editPaths(semaphoreSize)
+	editPaths(fpathsToEdit, semaphoreSize)
 	if doRecursive {
 		logger.Report(TotalEdited, startTime)
 	}
@@ -130,5 +128,5 @@ func _setPaths() {
 		expanded = append(expanded, filtered...)
 	}
 
-	PathsToEdit = expanded
+	fpathsToEdit = expanded
 }
