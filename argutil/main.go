@@ -23,34 +23,34 @@ func HelpRequested() bool {
 
 func Parse(boolFlagVars map[string]*bool, stringFlagVars map[string]*string, noFlagVars []*string) (extraArgs []string) {
 
-	a := _argParser{
+	a := argParser{
 		boolFlagVars:   boolFlagVars,
 		stringFlagVars: stringFlagVars,
 		noFlagVars:     noFlagVars,
 	}
-	a._init()
-	defer a._reset()
+	a.init()
+	defer a.reset()
 
-	extraArgs = a._parseArgs()
+	extraArgs = a.parseArgs()
 	return
 }
 
-type _argParser struct {
+type argParser struct {
 	boolFlagVars   map[string]*bool
 	stringFlagVars map[string]*string
 	noFlagVars     []*string
 
-	_args    []string
-	_iEndArg int
+	args    []string
+	iEndArg int
 
-	_argsNotFlagged []string
+	argsNotFlagged []string
 }
 
-func (a *_argParser) _init() {
-	a._setArgs()
+func (a *argParser) init() {
+	a.setArgs()
 }
 
-func (a *_argParser) _setArgs() {
+func (a *argParser) setArgs() {
 
 	osArgs := os.Args
 	lenOsArgs := len(osArgs)
@@ -61,37 +61,37 @@ func (a *_argParser) _setArgs() {
 			continue
 		}
 
-		a._args = append(a._args, arg)
+		a.args = append(a.args, arg)
 	}
 }
 
-func (a *_argParser) _reset() {
+func (a *argParser) reset() {
 	go func() { a.boolFlagVars = nil }()
 	go func() { a.stringFlagVars = nil }()
 	go func() { a.noFlagVars = nil }()
-	go func() { a._args = nil }()
-	go func() { a._argsNotFlagged = nil }()
+	go func() { a.args = nil }()
+	go func() { a.argsNotFlagged = nil }()
 }
 
-func (a *_argParser) _parseArgs() (extraArgs []string) {
+func (a *argParser) parseArgs() (extraArgs []string) {
 
-	args := a._args
+	args := a.args
 	iEnd := len(args) - 1
-	a._iEndArg = iEnd
+	a.iEndArg = iEnd
 
 	for i := 0; i <= iEnd; i++ {
 		arg := args[i]
 
-		if isFlag := a._parseArg(arg, &i); !isFlag {
-			a._argsNotFlagged = append(a._argsNotFlagged, arg)
+		if isFlag := a.parseArg(arg, &i); !isFlag {
+			a.argsNotFlagged = append(a.argsNotFlagged, arg)
 		}
 	}
 
-	extraArgs = a._setNoFlags()
+	extraArgs = a.setNoFlags()
 	return
 }
 
-func (a *_argParser) _parseArg(arg string, i *int) bool {
+func (a *argParser) parseArg(arg string, i *int) bool {
 
 	if beginsWithHyphen := (string(arg[0]) == "-"); !beginsWithHyphen {
 		return false
@@ -99,22 +99,22 @@ func (a *_argParser) _parseArg(arg string, i *int) bool {
 
 	argTrimmed := strings.TrimLeft(arg, "-")
 
-	if hasBoolFlags := a._setBoolFlags(argTrimmed); hasBoolFlags {
+	if hasBoolFlags := a.setBoolFlags(argTrimmed); hasBoolFlags {
 		return true
 	}
 
-	if isLastArg := (*i == a._iEndArg); isLastArg {
+	if isLastArg := (*i == a.iEndArg); isLastArg {
 		return false
 	}
 
-	if isStringFlag := a._setStringFlag(argTrimmed, i); isStringFlag {
+	if isStringFlag := a.setStringFlag(argTrimmed, i); isStringFlag {
 		return true
 	}
 
 	return false
 }
 
-func (a *_argParser) _setBoolFlags(argTrimmed string) (hasBoolFlags bool) {
+func (a *argParser) setBoolFlags(argTrimmed string) (hasBoolFlags bool) {
 
 	iEnd := len(argTrimmed) - 1
 	for i := 0; i <= iEnd; i++ {
@@ -129,20 +129,20 @@ func (a *_argParser) _setBoolFlags(argTrimmed string) (hasBoolFlags bool) {
 	return
 }
 
-func (a *_argParser) _setStringFlag(argTrimmed string, i *int) (isStringFlag bool) {
+func (a *argParser) setStringFlag(argTrimmed string, i *int) (isStringFlag bool) {
 
 	if isStringFlag = (a.stringFlagVars[argTrimmed] != nil); isStringFlag {
 		*i++
-		nextArg := a._args[*i]
+		nextArg := a.args[*i]
 		*(a.stringFlagVars[argTrimmed]) = nextArg
 	}
 
 	return
 }
 
-func (a *_argParser) _setNoFlags() (extraArgs []string) {
+func (a *argParser) setNoFlags() (extraArgs []string) {
 
-	argsNotFlagged := a._argsNotFlagged
+	argsNotFlagged := a.argsNotFlagged
 	lenArgsNotFlagged := len(argsNotFlagged)
 
 	noFlagVars := a.noFlagVars
