@@ -15,27 +15,23 @@ import (
 )
 
 var (
-	toFind string
-	// ToFindBytes comment for goling
-	ToFindBytes []byte
-	toReplace   string
-	// ToReplaceBytes comment for goling
-	ToReplaceBytes []byte
+	toFind         string
+	toFindBytes    []byte
+	toReplace      string
+	toReplaceBytes []byte
 	// Root comment for goling
 	Root string
 
 	doRecursive bool
-	// DoRegex comment for goling
-	DoRegex  bool
-	doQuiet  bool
-	doShutUp bool
+	doRegex     bool
+	doQuiet     bool
+	doShutUp    bool
 
 	fpathsToEdit  []string
 	toExclude     string
 	exclusions    []string
 	semaphoreSize int
-	// ReToFind comment for goling
-	ReToFind *regexp.Regexp
+	reToFind      *regexp.Regexp
 )
 
 func init() {
@@ -43,7 +39,7 @@ func init() {
 	flag.StringVar(&toFind, "o", "", "string to find in file")
 	flag.StringVar(&toReplace, "n", "", "string to replace old string with")
 	flag.StringVar(&toExclude, "x", "", "Patterns to exclude from matches, separated by commas")
-	flag.BoolVar(&DoRegex, "e", false, "treat '-o' and '-n' as regular expressions")
+	flag.BoolVar(&doRegex, "e", false, "treat '-o' and '-n' as regular expressions")
 	flag.BoolVar(&doRecursive, "r", false, "edit matching files recursively [down to the bottom of the directory]")
 	flag.StringVar(&Root, "d", futil.Pwd(), "Directory under which to edit files recursively\n   	")
 	flag.IntVar(&semaphoreSize, "s", 1000, "Max number of files to edit at the same time\n    	WARNING: Setting this too high will cause the program to crash,\n    	corrupting the files it was editing")
@@ -63,7 +59,7 @@ func init() {
 func main() {
 	defer color.Unset()
 	startTime := time.Now()
-	totalEdited := editPaths(fpathsToEdit, semaphoreSize)
+	totalEdited := editPaths(fpathsToEdit, toFindBytes, reToFind, toReplaceBytes, semaphoreSize)
 	if doRecursive {
 		logger.Report(totalEdited, startTime)
 	}
@@ -95,9 +91,12 @@ func _verifyArgs() {
 }
 
 func _setRegex() {
-	ToFindBytes = []byte(toFind)
-	ReToFind = regexp.MustCompile(toFind)
-	ToReplaceBytes = []byte(toReplace)
+	if doRegex {
+		reToFind = regexp.MustCompile(toFind)
+	} else {
+		toFindBytes = []byte(toFind)
+	}
+	toReplaceBytes = []byte(toReplace)
 }
 
 func _setPaths() {
