@@ -33,8 +33,6 @@ var (
 	ReToFind            *regexp.Regexp
 
 	TotalEdited int
-
-	startTime time.Time
 )
 
 func init() {
@@ -61,7 +59,7 @@ func init() {
 
 func main() {
 	defer color.Unset()
-	startTime = time.Now()
+	startTime := time.Now()
 	editPaths()
 	if DoRecursive {
 		logger.Report(TotalEdited, startTime)
