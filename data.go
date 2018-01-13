@@ -73,7 +73,7 @@ func isExclusion(fi os.FileInfo) bool {
 	return false
 }
 
-func editPaths() {
+func editPaths(semaphoreSize int) {
 
 	var wg sync.WaitGroup
 
@@ -82,7 +82,7 @@ func editPaths() {
 	chanEdited := make(chan bool, lenPathsToEdit)
 
 	//http://jmoiron.net/blog/limiting-concurrency-in-go/
-	semaphore := make(chan bool, SemaphoreSize)
+	semaphore := make(chan bool, semaphoreSize)
 
 	for _, path := range PathsToEdit {
 		semaphore <- true

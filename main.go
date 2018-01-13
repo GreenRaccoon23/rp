@@ -28,7 +28,7 @@ var (
 	PathsToEdit   []string
 	toExclude     string
 	Exclusions    []string
-	SemaphoreSize int
+	semaphoreSize int
 	ReToFind      *regexp.Regexp
 
 	TotalEdited int
@@ -42,7 +42,7 @@ func init() {
 	flag.BoolVar(&DoRegex, "e", false, "treat '-o' and '-n' as regular expressions")
 	flag.BoolVar(&doRecursive, "r", false, "edit matching files recursively [down to the bottom of the directory]")
 	flag.StringVar(&Root, "d", pwd(), "Directory under which to edit files recursively\n   	")
-	flag.IntVar(&SemaphoreSize, "s", 1000, "Max number of files to edit at the same time\n    	WARNING: Setting this too high will cause the program to crash,\n    	corrupting the files it was editing")
+	flag.IntVar(&semaphoreSize, "s", 1000, "Max number of files to edit at the same time\n    	WARNING: Setting this too high will cause the program to crash,\n    	corrupting the files it was editing")
 	flag.BoolVar(&doQuiet, "q", false, "do not list edited files")
 	flag.BoolVar(&doShutUp, "Q", false, "do not show any output at all")
 	flag.Parse()
@@ -59,7 +59,7 @@ func init() {
 func main() {
 	defer color.Unset()
 	startTime := time.Now()
-	editPaths()
+	editPaths(semaphoreSize)
 	if doRecursive {
 		logger.Report(TotalEdited, startTime)
 	}
