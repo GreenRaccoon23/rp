@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"regexp"
 	"strings"
 	"time"
 
@@ -29,7 +28,6 @@ var (
 	exclusions    []string
 	semaphoreSize int
 	fpaths        []string
-	reToFind      *regexp.Regexp
 )
 
 func init() {
