@@ -46,12 +46,12 @@ func Progress(path string) {
 }
 
 // Report prints a report
-func Report(cnt int, min time.Time) {
+func Report(edited int, start time.Time) {
 
 	if Muted {
 		return
 	}
 
-	fmt.Printf("Total files edited: %d\n", cnt)
-	fmt.Printf("Duration: %v\n", time.Since(min))
+	fmt.Printf("Total files edited: %d\n", edited)
+	fmt.Printf("Duration: %v\n", time.Since(start))
 }

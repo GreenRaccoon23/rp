@@ -40,11 +40,13 @@ func init() {
 }
 
 func main() {
-	startTime := time.Now()
+
 	r := replacer.NewReplacer(toFind, toReplace, regex)
-	totalEdited := r.EditPaths(fpaths, concurrency)
+	start := time.Now()
+	edited := r.EditPaths(fpaths, concurrency)
+
 	if recursive {
-		logger.Report(totalEdited, startTime)
+		logger.Report(edited, start)
 	}
 }
 
