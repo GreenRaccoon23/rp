@@ -26,7 +26,9 @@ func New(toFindStr string, toReplaceStr string, regex bool) Replacer {
 
 	if regex {
 		toFindRe = regexp.MustCompile(toFindStr)
+		toFind = nil
 	} else {
+		toFindRe = nil
 		toFind = []byte(toFind)
 	}
 
