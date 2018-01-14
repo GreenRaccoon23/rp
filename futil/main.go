@@ -35,11 +35,20 @@ func IsSymlink(fi os.FileInfo) bool {
 // GlobBatch runs filepath.Glob, and it does this recursively if requested.
 func GlobBatch(patterns []string, recursive bool) (fpaths []string, err error) {
 
+	if recursive {
+		return globBatchRecursive(patterns)
+	}
+
+	return globBatch(patterns)
+}
+
+func globBatch(patterns []string) (fpaths []string, err error) {
+
 	matches := []string{}
 
 	for _, pattern := range patterns {
 
-		matches2, err := glob(pattern, recursive)
+		matches2, err := filepath.Glob(pattern)
 		if err != nil {
 			return nil, err
 		}
@@ -50,20 +59,9 @@ func GlobBatch(patterns []string, recursive bool) (fpaths []string, err error) {
 	return matches, nil
 }
 
-// glob runs filepath.Glob, and it does this recursively if requested.
-func glob(pattern string, recursive bool) (fpaths []string, err error) {
+func globBatchRecursive(patterns []string) ([]string, error) {
 
-	if recursive {
-		return globRecursive(pattern)
-	}
-
-	return filepath.Glob(pattern)
-}
-
-// globRecursive runs filepath.Glob recursively
-func globRecursive(pattern string) ([]string, error) {
-
-	matches, err := filepath.Glob(pattern)
+	matches, err := globBatch(patterns)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +82,7 @@ func globRecursive(pattern string) ([]string, error) {
 			return nil
 		}
 
-		matches2, err := globDir(fpath, pattern)
+		matches2, err := globDir(fpath, patterns)
 		if err != nil {
 			return err
 		}
@@ -100,7 +98,7 @@ func globRecursive(pattern string) ([]string, error) {
 	return matches, nil
 }
 
-func globDir(dpath string, pattern string) ([]string, error) {
+func globDir(dpath string, patterns []string) ([]string, error) {
 
 	rpath, err := os.Getwd()
 	if err != nil {
@@ -114,7 +112,7 @@ func globDir(dpath string, pattern string) ([]string, error) {
 		return nil, err
 	}
 
-	matches, err := filepath.Glob(pattern)
+	matches, err := globBatch(patterns)
 	if err != nil {
 		return nil, err
 	}
