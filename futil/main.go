@@ -124,7 +124,7 @@ func globHere(inclusions []string, exclusions []string) ([]string, error) {
 	return matches, nil
 }
 
-func glob(patterns []string) (fpaths []string, err error) {
+func glob(patterns []string) ([]string, error) {
 
 	matches := []string{}
 
