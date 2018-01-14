@@ -22,11 +22,14 @@ var (
 	doQuiet     bool
 	doShutUp    bool
 
-	inclusions    []string
-	fpaths        []string
+	roots         []string
+	root          string
+	toInclude     string
 	toExclude     string
+	inclusions    []string
 	exclusions    []string
 	semaphoreSize int
+	fpaths        []string
 	reToFind      *regexp.Regexp
 )
 
@@ -34,6 +37,7 @@ func init() {
 
 	flag.StringVar(&toFind, "o", "", "string to find in file")
 	flag.StringVar(&toReplace, "n", "", "string to replace old string with")
+	flag.StringVar(&toInclude, "i", "", "Patterns to include in matches, separated by commas")
 	flag.StringVar(&toExclude, "x", "", "Patterns to exclude from matches, separated by commas")
 	flag.BoolVar(&doRegex, "e", false, "treat '-o' and '-n' as regular expressions")
 	flag.BoolVar(&doRecursive, "r", false, "edit matching files recursively [down to the bottom of the directory]")
@@ -41,11 +45,13 @@ func init() {
 	flag.BoolVar(&doQuiet, "q", false, "do not list edited files")
 	flag.BoolVar(&doShutUp, "Q", false, "do not show any output at all")
 	flag.Parse()
-	inclusions = flag.Args()
+	roots = flag.Args()
 
 	setLogger()
-	setExclusions()
 	verifyArgs()
+	setRoot()
+	setInclusions()
+	setExclusions()
 	setFpaths()
 }
 
@@ -64,6 +70,19 @@ func setLogger() {
 	logger.Muted = doShutUp
 }
 
+func setRoot() {
+	root = roots[0]
+}
+
+func setInclusions() {
+
+	if toInclude == "" {
+		return
+	}
+
+	inclusions = strings.Split(toInclude, ",")
+}
+
 func setExclusions() {
 
 	if toExclude == "" {
@@ -74,14 +93,14 @@ func setExclusions() {
 }
 
 func verifyArgs() {
-	if len(inclusions) == 0 {
+	if len(roots) == 0 {
 		log.Fatal(fmt.Errorf("No paths specified"))
 	}
 }
 
 func setFpaths() {
 
-	matches, err := futil.Glob(inclusions, exclusions, doRecursive)
+	matches, err := futil.Glob(root, inclusions, exclusions, doRecursive)
 	if err != nil {
 		log.Fatal(err)
 	}
