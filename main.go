@@ -70,6 +70,21 @@ func setLogger() {
 	logger.Muted = doShutUp
 }
 
+func verifyArgs() {
+
+	if len(roots) == 0 {
+		log.Fatal(fmt.Errorf("No paths specified"))
+	}
+
+	if len(roots) > 0 {
+		log.Fatal(fmt.Errorf("Too many paths specified"))
+	}
+
+	if !doRecursive && toInclude != "" {
+		log.Fatal(fmt.Errorf("-i option only allowed with -r option"))
+	}
+}
+
 func setRoot() {
 	root = roots[0]
 }
@@ -90,12 +105,6 @@ func setExclusions() {
 	}
 
 	exclusions = strings.Split(toExclude, ",")
-}
-
-func verifyArgs() {
-	if len(roots) == 0 {
-		log.Fatal(fmt.Errorf("No paths specified"))
-	}
 }
 
 func setFpaths() {
