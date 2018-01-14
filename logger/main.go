@@ -32,7 +32,8 @@ func Usage() {
     	WARNING: Setting this too high will cause the program to crash,
     	corrupting the files it was editing
   -q	Hide most output
-  -Q	Hide all output`,
+  -Q	Hide all output%v`,
+		"\n",
 	)
 }
 
