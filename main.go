@@ -41,7 +41,7 @@ func init() {
 
 func main() {
 
-	r := replacer.NewReplacer(toFind, toReplace, regex)
+	r := replacer.New(toFind, toReplace, regex)
 	start := time.Now()
 	edited := r.EditPaths(fpaths, concurrency)
 

@@ -18,8 +18,8 @@ type Replacer struct {
 	toReplace []byte
 }
 
-// NewReplacer returns a new replacer
-func NewReplacer(toFindStr string, toReplaceStr string, regex bool) Replacer {
+// New returns a new replacer
+func New(toFindStr string, toReplaceStr string, regex bool) Replacer {
 
 	var toFindRe *regexp.Regexp
 	var toFind []byte
