@@ -29,7 +29,7 @@ func New(toFindStr string, toReplaceStr string, regex bool) Replacer {
 		toFind = nil
 	} else {
 		toFindRe = nil
-		toFind = []byte(toFind)
+		toFind = []byte(toFindStr)
 	}
 
 	toReplace := []byte(toReplaceStr)
