@@ -32,15 +32,15 @@ var (
 func init() {
 
 	flag.Usage = logger.Usage
-	flag.StringVar(&toFind, "o", "", "string to find in file")
-	flag.StringVar(&toReplace, "n", "", "string to replace old string with")
-	flag.StringVar(&inclusionsBunch, "i", "", "Patterns to include in matches, separated by commas")
-	flag.StringVar(&exclusionsBunch, "x", "", "Patterns to exclude from matches, separated by commas")
-	flag.BoolVar(&regex, "e", true, "treat '-o' and '-n' as regular expressions")
-	flag.BoolVar(&recursive, "r", false, "edit matching files recursively [down to the bottom of the directory]")
-	flag.IntVar(&concurrency, "c", 0, "Max number of files to edit at the same time\n    	WARNING: Setting this too high will cause the program to crash,\n    	corrupting the files it was editing")
-	flag.BoolVar(&quiet, "q", false, "do not list edited files")
-	flag.BoolVar(&muted, "Q", false, "do not show any output at all")
+	flag.StringVar(&toFind, "o", "", "")
+	flag.StringVar(&toReplace, "n", "", "")
+	flag.StringVar(&inclusionsBunch, "i", "", "")
+	flag.StringVar(&exclusionsBunch, "x", "", "")
+	flag.BoolVar(&regex, "e", true, "")
+	flag.BoolVar(&recursive, "r", false, "")
+	flag.IntVar(&concurrency, "c", 0, "")
+	flag.BoolVar(&quiet, "q", false, "")
+	flag.BoolVar(&muted, "Q", false, "")
 	flag.Parse()
 	rpaths = flag.Args()
 
