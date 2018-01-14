@@ -45,7 +45,7 @@ func New(toFindStr string, toReplaceStr string, regex bool) Replacer {
 func (r *Replacer) EditPaths(fpaths []string, concurrency int) int {
 
 	lenFpaths := len(fpaths)
-	g := governor.NewGovernor(lenFpaths, concurrency)
+	g := governor.New(lenFpaths, concurrency)
 	edited := make(chan bool, lenFpaths)
 
 	for _, fpath := range fpaths {

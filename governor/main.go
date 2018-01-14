@@ -15,10 +15,10 @@ type Governor struct {
 	errs        chan error
 }
 
-// NewGovernor creates and initializes a new Governor.
+// New creates and initializes a new Governor.
 // It will control `size` total goroutines
 // by allowing only `concurrency` goroutines to run at the same time.
-func NewGovernor(size int, concurrency int) Governor {
+func New(size int, concurrency int) Governor {
 
 	var wg sync.WaitGroup
 	semaphore := make(chan bool, concurrency)
