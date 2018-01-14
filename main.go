@@ -11,8 +11,6 @@ import (
 	"github.com/GreenRaccoon23/rp/futil"
 	"github.com/GreenRaccoon23/rp/logger"
 	"github.com/GreenRaccoon23/rp/replacer"
-
-	"github.com/fatih/color"
 )
 
 var (
@@ -52,7 +50,6 @@ func init() {
 }
 
 func main() {
-	defer color.Unset()
 	startTime := time.Now()
 	r := replacer.NewReplacer(toFind, toReplace, doRegex)
 	totalEdited := r.EditPaths(fpaths, semaphoreSize)
