@@ -11,7 +11,7 @@ _populate() {
 };
 
 _test() {
-    go test "futil/main_test.go";
+    go test "./futil";
 };
 
 _cleanup() {

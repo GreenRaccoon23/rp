@@ -2,8 +2,6 @@ package futil
 
 import (
 	"testing"
-
-	"github.com/GreenRaccoon23/rp/futil"
 )
 
 var ()
@@ -18,7 +16,7 @@ func TestGlobNonRecursive(t *testing.T) {
 	expected := []string{"main.go", "main_test.go"}
 
 	t.Run("Glob (non-recursive)", func(t *testing.T) {
-		matches, err := futil.Glob(rpaths, inclusions, exclusions, recursive)
+		matches, err := Glob(rpaths, inclusions, exclusions, recursive)
 		if err != nil {
 			t.Error(err)
 			return
@@ -55,7 +53,7 @@ func TestGlobRecursive(t *testing.T) {
 	expected := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/dir2/file2-link.svg", "../.test_tmp/dir1/dir2/file2.svg"}
 
 	t.Run("Glob (recursive)", func(t *testing.T) {
-		matches, err := futil.Glob(rpaths, inclusions, exclusions, recursive)
+		matches, err := Glob(rpaths, inclusions, exclusions, recursive)
 		if err != nil {
 			t.Error(err)
 			return
@@ -74,7 +72,7 @@ func TestFilterSymlinks(t *testing.T) {
 	expected := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/file1.svg", "../.test_tmp/dir1/dir2/file2.svg"}
 
 	t.Run("Glob (recursive)", func(t *testing.T) {
-		filtered := futil.FilterSymlinks(matches)
+		filtered := FilterSymlinks(matches)
 		if !slcEquals(filtered, expected) {
 			t.Errorf("Expected `filtered` to be %v but got %v.\n", expected, filtered)
 			return
