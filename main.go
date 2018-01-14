@@ -24,7 +24,8 @@ var (
 	doQuiet     bool
 	doShutUp    bool
 
-	fpathsToEdit  []string
+	inclusions    []string
+	fpaths        []string
 	toExclude     string
 	exclusions    []string
 	semaphoreSize int
@@ -42,19 +43,19 @@ func init() {
 	flag.BoolVar(&doQuiet, "q", false, "do not list edited files")
 	flag.BoolVar(&doShutUp, "Q", false, "do not show any output at all")
 	flag.Parse()
-	fpathsToEdit = flag.Args()
+	inclusions = flag.Args()
 
 	setLogger()
 	setExclusions()
 	verifyArgs()
-	setPaths()
+	setFpaths()
 }
 
 func main() {
 	defer color.Unset()
 	startTime := time.Now()
 	r := replacer.NewReplacer(toFind, toReplace, doRegex)
-	totalEdited := r.EditPaths(fpathsToEdit, semaphoreSize)
+	totalEdited := r.EditPaths(fpaths, semaphoreSize)
 	if doRecursive {
 		logger.Report(totalEdited, startTime)
 	}
@@ -76,19 +77,19 @@ func setExclusions() {
 }
 
 func verifyArgs() {
-	if len(fpathsToEdit) == 0 {
+	if len(inclusions) == 0 {
 		log.Fatal(fmt.Errorf("No paths specified"))
 	}
 }
 
-func setPaths() {
+func setFpaths() {
 
-	matches, err := futil.Glob(fpathsToEdit, exclusions, doRecursive)
+	matches, err := futil.Glob(inclusions, exclusions, doRecursive)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	filtered := futil.FilterSymlinks(matches)
 
-	fpathsToEdit = filtered
+	fpaths = filtered
 }
