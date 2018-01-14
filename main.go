@@ -13,21 +13,20 @@ import (
 )
 
 var (
-	toFind    string
-	toReplace string
-
-	doRecursive bool
-	doRegex     bool
-	doQuiet     bool
-	doShutUp    bool
-
-	rpaths          []string
+	toFind          string
+	toReplace       string
 	inclusionsBunch string
 	exclusionsBunch string
-	inclusions      []string
-	exclusions      []string
+	doRegex         bool
+	doRecursive     bool
 	semaphoreSize   int
-	fpaths          []string
+	doQuiet         bool
+	doShutUp        bool
+	rpaths          []string
+
+	inclusions []string
+	exclusions []string
+	fpaths     []string
 )
 
 func init() {
