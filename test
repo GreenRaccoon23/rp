@@ -12,6 +12,7 @@ _populate() {
 
 _test() {
     go test "./futil";
+    go test "./replacer";
 };
 
 _cleanup() {
