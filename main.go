@@ -92,10 +92,9 @@ func setPaths() {
 			log.Fatal(err)
 		}
 
-		filtered := futil.Filter(matches, exclusions)
-
-		expanded = append(expanded, filtered...)
+		expanded = append(expanded, matches...)
 	}
 
-	fpathsToEdit = expanded
+	filtered := futil.Filter(expanded, exclusions)
+	fpathsToEdit = filtered
 }
