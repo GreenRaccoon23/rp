@@ -21,13 +21,13 @@ var (
 	doQuiet     bool
 	doShutUp    bool
 
-	rpaths        []string
-	toInclude     string
-	toExclude     string
-	inclusions    []string
-	exclusions    []string
-	semaphoreSize int
-	fpaths        []string
+	rpaths          []string
+	inclusionsBunch string
+	exclusionsBunch string
+	inclusions      []string
+	exclusions      []string
+	semaphoreSize   int
+	fpaths          []string
 )
 
 func init() {
@@ -35,8 +35,8 @@ func init() {
 	flag.Usage = logger.Usage
 	flag.StringVar(&toFind, "o", "", "string to find in file")
 	flag.StringVar(&toReplace, "n", "", "string to replace old string with")
-	flag.StringVar(&toInclude, "i", "", "Patterns to include in matches, separated by commas")
-	flag.StringVar(&toExclude, "x", "", "Patterns to exclude from matches, separated by commas")
+	flag.StringVar(&inclusionsBunch, "i", "", "Patterns to include in matches, separated by commas")
+	flag.StringVar(&exclusionsBunch, "x", "", "Patterns to exclude from matches, separated by commas")
 	flag.BoolVar(&doRegex, "e", true, "treat '-o' and '-n' as regular expressions")
 	flag.BoolVar(&doRecursive, "r", false, "edit matching files recursively [down to the bottom of the directory]")
 	flag.IntVar(&semaphoreSize, "s", 0, "Max number of files to edit at the same time\n    	WARNING: Setting this too high will cause the program to crash,\n    	corrupting the files it was editing")
@@ -77,27 +77,27 @@ func verifyArgs() {
 		log.Fatal(fmt.Errorf("Too many paths specified"))
 	}
 
-	if !doRecursive && toInclude != "" {
+	if !doRecursive && inclusionsBunch != "" {
 		log.Fatal(fmt.Errorf("-i option only allowed with -r option"))
 	}
 }
 
 func setInclusions() {
 
-	if toInclude == "" {
+	if inclusionsBunch == "" {
 		return
 	}
 
-	inclusions = strings.Split(toInclude, ",")
+	inclusions = strings.Split(inclusionsBunch, ",")
 }
 
 func setExclusions() {
 
-	if toExclude == "" {
+	if exclusionsBunch == "" {
 		return
 	}
 
-	exclusions = strings.Split(toExclude, ",")
+	exclusions = strings.Split(exclusionsBunch, ",")
 }
 
 func setFpaths() {
