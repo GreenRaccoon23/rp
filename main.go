@@ -85,23 +85,14 @@ func setPaths() {
 
 	expanded := []string{}
 
-	for _, fpath := range fpathsToEdit {
+	for _, pattern := range fpathsToEdit {
 
-		if !futil.IsDir(fpath) {
-			expanded = append(expanded, fpath)
-			continue
-		}
-
-		if skipDirs := (!doRecursive); skipDirs {
-			continue
-		}
-
-		dirContents, err := futil.FilesUnder(fpath)
+		matches, err := futil.Glob(pattern, doRecursive)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		filtered := futil.Filter(dirContents, exclusions)
+		filtered := futil.Filter(matches, exclusions)
 
 		expanded = append(expanded, filtered...)
 	}
