@@ -9,26 +9,26 @@ import (
 // time.
 // It also pauses control flow until all of the goroutines have finished.
 type Governor struct {
-	wg        *sync.WaitGroup
-	throttle  int
-	semaphore chan bool
-	errs      chan error
+	wg          *sync.WaitGroup
+	concurrency int
+	semaphore   chan bool
+	errs        chan error
 }
 
 // NewGovernor creates and initializes a new Governor.
 // It will control `size` total goroutines
-// by allowing only `throttle` goroutines to run at the same time.
-func NewGovernor(size int, throttle int) Governor {
+// by allowing only `concurrency` goroutines to run at the same time.
+func NewGovernor(size int, concurrency int) Governor {
 
 	var wg sync.WaitGroup
-	semaphore := make(chan bool, throttle)
+	semaphore := make(chan bool, concurrency)
 	errs := make(chan error, size)
 
 	g := Governor{
-		wg:        &wg,
-		throttle:  throttle,
-		semaphore: semaphore,
-		errs:      errs,
+		wg:          &wg,
+		concurrency: concurrency,
+		semaphore:   semaphore,
+		errs:        errs,
 	}
 
 	return g
@@ -63,7 +63,7 @@ func (g *Governor) Regulate() error {
 
 func (g *Governor) spin() {
 
-	for govolution := 0; govolution < g.throttle; govolution++ {
+	for govolution := 0; govolution < g.concurrency; govolution++ {
 		g.semaphore <- true
 	}
 }

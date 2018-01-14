@@ -42,10 +42,10 @@ func NewReplacer(toFindStr string, toReplaceStr string, regex bool) Replacer {
 }
 
 // EditPaths edits each file in fpaths, running "find and replace" on each one.
-func (r *Replacer) EditPaths(fpaths []string, semaphoreSize int) int {
+func (r *Replacer) EditPaths(fpaths []string, concurrency int) int {
 
 	lenFpaths := len(fpaths)
-	g := governor.NewGovernor(lenFpaths, semaphoreSize)
+	g := governor.NewGovernor(lenFpaths, concurrency)
 	edited := make(chan bool, lenFpaths)
 
 	for _, fpath := range fpaths {
