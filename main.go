@@ -83,7 +83,7 @@ func verifyArgs() {
 
 func setPaths() {
 
-	matches, err := futil.GlobBatch(fpathsToEdit, doRecursive)
+	matches, err := futil.Glob(fpathsToEdit, doRecursive)
 	if err != nil {
 		log.Fatal(err)
 	}

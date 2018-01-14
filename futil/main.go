@@ -32,17 +32,17 @@ func IsSymlink(fi os.FileInfo) bool {
 	return false
 }
 
-// GlobBatch runs filepath.Glob, and it does this recursively if requested.
-func GlobBatch(patterns []string, recursive bool) (fpaths []string, err error) {
+// Glob runs filepath.Glob, and it does this recursively if requested.
+func Glob(patterns []string, recursive bool) (fpaths []string, err error) {
 
 	if recursive {
-		return globBatchRecursive(patterns)
+		return globRecursive(patterns)
 	}
 
-	return globBatch(patterns)
+	return glob(patterns)
 }
 
-func globBatch(patterns []string) (fpaths []string, err error) {
+func glob(patterns []string) (fpaths []string, err error) {
 
 	matches := []string{}
 
@@ -59,9 +59,9 @@ func globBatch(patterns []string) (fpaths []string, err error) {
 	return matches, nil
 }
 
-func globBatchRecursive(patterns []string) ([]string, error) {
+func globRecursive(patterns []string) ([]string, error) {
 
-	matches, err := globBatch(patterns)
+	matches, err := glob(patterns)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +112,7 @@ func globDir(dpath string, patterns []string) ([]string, error) {
 		return nil, err
 	}
 
-	matches, err := globBatch(patterns)
+	matches, err := glob(patterns)
 	if err != nil {
 		return nil, err
 	}
