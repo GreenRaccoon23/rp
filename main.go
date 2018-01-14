@@ -31,19 +31,7 @@ var (
 
 func init() {
 
-	flag.Usage = logger.Usage
-	flag.StringVar(&toFind, "o", "", "")
-	flag.StringVar(&toReplace, "n", "", "")
-	flag.StringVar(&inclusionsBunch, "i", "", "")
-	flag.StringVar(&exclusionsBunch, "x", "", "")
-	flag.BoolVar(&regex, "e", true, "")
-	flag.BoolVar(&recursive, "r", false, "")
-	flag.IntVar(&concurrency, "c", 0, "")
-	flag.BoolVar(&quiet, "q", false, "")
-	flag.BoolVar(&muted, "Q", false, "")
-	flag.Parse()
-	rpaths = flag.Args()
-
+	parseArgs()
 	setLogger()
 	verifyArgs()
 	setInclusions()
@@ -64,6 +52,22 @@ func setLogger() {
 
 	logger.Quiet = quiet
 	logger.Muted = muted
+}
+
+func parseArgs() {
+
+	flag.Usage = logger.Usage
+	flag.StringVar(&toFind, "o", "", "")
+	flag.StringVar(&toReplace, "n", "", "")
+	flag.StringVar(&inclusionsBunch, "i", "", "")
+	flag.StringVar(&exclusionsBunch, "x", "", "")
+	flag.BoolVar(&regex, "e", true, "")
+	flag.BoolVar(&recursive, "r", false, "")
+	flag.IntVar(&concurrency, "c", 0, "")
+	flag.BoolVar(&quiet, "q", false, "")
+	flag.BoolVar(&muted, "Q", false, "")
+	flag.Parse()
+	rpaths = flag.Args()
 }
 
 func verifyArgs() {
