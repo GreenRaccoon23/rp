@@ -32,7 +32,13 @@ func Usage() {
     	WARNING: Setting this too high will cause the program to crash,
     	corrupting the files it was editing
   -q	Hide most output
-  -Q	Hide all output%v`,
+  -Q	Hide all output
+
+  The syntax of the regular expressions accepted is the same general syntax
+  used by Perl, Python, and other languages. More precisely, it is the syntax
+  accepted by RE2 and described at https://golang.org/s/re2syntax,
+  except for \C.
+  For an overview of the syntax, run 'go doc regexp/syntax'%v`,
 		"\n",
 	)
 }
