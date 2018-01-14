@@ -32,25 +32,6 @@ func IsSymlink(fi os.FileInfo) bool {
 	return false
 }
 
-// FilesUnder gets all files under a directory recursively
-func FilesUnder(dir string) (fpaths []string, err error) {
-
-	err = filepath.Walk(dir, func(fpath string, fi os.FileInfo, err error) error {
-
-		if err != nil {
-			return err // will not happen though
-		}
-
-		if isFile := (!fi.IsDir() && !IsSymlink(fi)); isFile {
-			fpaths = append(fpaths, fpath)
-		}
-
-		return nil
-	})
-
-	return
-}
-
 // Glob runs filepath.Glob, and it does this recursively if requested.
 func Glob(pattern string, recursive bool) (fpaths []string, err error) {
 
