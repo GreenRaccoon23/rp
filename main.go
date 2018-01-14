@@ -88,5 +88,7 @@ func setPaths() {
 		log.Fatal(err)
 	}
 
-	fpathsToEdit = matches
+	filtered := futil.FilterSymlinks(matches)
+
+	fpathsToEdit = filtered
 }
