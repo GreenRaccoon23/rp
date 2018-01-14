@@ -63,7 +63,7 @@ func parseArgs() {
 	flag.StringVar(&toReplace, "n", "", "")
 	flag.StringVar(&inclusionsBunch, "i", "", "")
 	flag.StringVar(&exclusionsBunch, "x", "", "")
-	flag.BoolVar(&regex, "e", true, "")
+	flag.BoolVar(&regex, "e", false, "")
 	flag.BoolVar(&recursive, "r", false, "")
 	flag.IntVar(&concurrency, "c", 0, "")
 	flag.BoolVar(&quiet, "q", false, "")
