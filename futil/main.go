@@ -42,66 +42,6 @@ func Glob(inclusions []string, exclusions []string, recursive bool) ([]string, e
 	return globHere(inclusions, exclusions)
 }
 
-func globHere(inclusions []string, exclusions []string) ([]string, error) {
-
-	included, err := glob(inclusions)
-	if err != nil {
-		return nil, err
-	}
-
-	excluded, err := glob(exclusions)
-	if err != nil {
-		return nil, err
-	}
-
-	matches := difference(included, excluded)
-
-	return matches, nil
-}
-
-func glob(patterns []string) (fpaths []string, err error) {
-
-	matches := []string{}
-
-	for _, pattern := range patterns {
-
-		matches2, err := filepath.Glob(pattern)
-		if err != nil {
-			return nil, err
-		}
-
-		matches = append(matches, matches2...)
-	}
-
-	return matches, nil
-}
-
-func difference(inclusions []string, exclusions []string) (diff []string) {
-
-	for _, inclusion := range inclusions {
-
-		if contains(exclusions, inclusion) {
-			continue
-		}
-
-		diff = append(diff, inclusion)
-	}
-
-	return diff
-}
-
-func contains(exclusions []string, inclusion string) bool {
-
-	for _, exclusion := range exclusions {
-
-		if inclusion == exclusion {
-			return true
-		}
-	}
-
-	return false
-}
-
 func globRecursive(inclusions []string, exclusions []string) ([]string, error) {
 
 	matches, err := globHere(inclusions, exclusions)
@@ -165,4 +105,64 @@ func globThere(dpath string, inclusions []string, exclusions []string) ([]string
 	}
 
 	return matches, nil
+}
+
+func globHere(inclusions []string, exclusions []string) ([]string, error) {
+
+	included, err := glob(inclusions)
+	if err != nil {
+		return nil, err
+	}
+
+	excluded, err := glob(exclusions)
+	if err != nil {
+		return nil, err
+	}
+
+	matches := difference(included, excluded)
+
+	return matches, nil
+}
+
+func glob(patterns []string) (fpaths []string, err error) {
+
+	matches := []string{}
+
+	for _, pattern := range patterns {
+
+		matches2, err := filepath.Glob(pattern)
+		if err != nil {
+			return nil, err
+		}
+
+		matches = append(matches, matches2...)
+	}
+
+	return matches, nil
+}
+
+func difference(inclusions []string, exclusions []string) (diff []string) {
+
+	for _, inclusion := range inclusions {
+
+		if contains(exclusions, inclusion) {
+			continue
+		}
+
+		diff = append(diff, inclusion)
+	}
+
+	return diff
+}
+
+func contains(exclusions []string, inclusion string) bool {
+
+	for _, exclusion := range exclusions {
+
+		if inclusion == exclusion {
+			return true
+		}
+	}
+
+	return false
 }
