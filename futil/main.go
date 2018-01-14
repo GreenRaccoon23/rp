@@ -166,28 +166,3 @@ func globThere(dpath string, inclusions []string, exclusions []string) ([]string
 
 	return matches, nil
 }
-
-// Filter receives two lists of filepaths and returns the difference
-func Filter(fpaths []string, exclusions []string) (filtered []string) {
-
-	for _, fpath := range fpaths {
-
-		if anyMatch(exclusions, fpath) {
-			continue
-		}
-
-		filtered = append(filtered, fpath)
-	}
-
-	return
-}
-
-func anyMatch(exclusions []string, fpath string) bool {
-
-	for _, exclusion := range exclusions {
-		if fpath == exclusion {
-			return true
-		}
-	}
-	return false
-}
