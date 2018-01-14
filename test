@@ -2,7 +2,7 @@
 
 _populate() {
     mkdir -p ".test_tmp/dir1/dir2";
-    touch "test_tmp_file.svg";
+    touch ".test_tmp_file.svg";
     touch ".test_tmp/battery-050-charging.svg";
     touch ".test_tmp/dir1/file1.svg";
     touch ".test_tmp/dir1/dir2/file2.svg";
@@ -16,6 +16,7 @@ _test() {
 
 _cleanup() {
     rm -r ".test_tmp";
+    rm ".test_tmp_file.svg";
 };
 
 _populate;
