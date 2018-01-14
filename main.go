@@ -22,7 +22,7 @@ var (
 	doQuiet     bool
 	doShutUp    bool
 
-	roots         []string
+	rpaths        []string
 	toInclude     string
 	toExclude     string
 	inclusions    []string
@@ -45,7 +45,7 @@ func init() {
 	flag.BoolVar(&doQuiet, "q", false, "do not list edited files")
 	flag.BoolVar(&doShutUp, "Q", false, "do not show any output at all")
 	flag.Parse()
-	roots = flag.Args()
+	rpaths = flag.Args()
 
 	setLogger()
 	verifyArgs()
@@ -71,11 +71,11 @@ func setLogger() {
 
 func verifyArgs() {
 
-	if len(roots) == 0 {
+	if len(rpaths) == 0 {
 		log.Fatal(fmt.Errorf("No paths specified"))
 	}
 
-	if len(roots) > 0 {
+	if len(rpaths) > 0 {
 		log.Fatal(fmt.Errorf("Too many paths specified"))
 	}
 
@@ -104,7 +104,7 @@ func setExclusions() {
 
 func setFpaths() {
 
-	matches, err := futil.Glob(roots, inclusions, exclusions, doRecursive)
+	matches, err := futil.Glob(rpaths, inclusions, exclusions, doRecursive)
 	if err != nil {
 		log.Fatal(err)
 	}
