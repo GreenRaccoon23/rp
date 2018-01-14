@@ -38,7 +38,7 @@ func init() {
 	flag.StringVar(&exclusionsBunch, "x", "", "Patterns to exclude from matches, separated by commas")
 	flag.BoolVar(&regex, "e", true, "treat '-o' and '-n' as regular expressions")
 	flag.BoolVar(&recursive, "r", false, "edit matching files recursively [down to the bottom of the directory]")
-	flag.IntVar(&concurrency, "s", 0, "Max number of files to edit at the same time\n    	WARNING: Setting this too high will cause the program to crash,\n    	corrupting the files it was editing")
+	flag.IntVar(&concurrency, "c", 0, "Max number of files to edit at the same time\n    	WARNING: Setting this too high will cause the program to crash,\n    	corrupting the files it was editing")
 	flag.BoolVar(&quiet, "q", false, "do not list edited files")
 	flag.BoolVar(&muted, "Q", false, "do not show any output at all")
 	flag.Parse()

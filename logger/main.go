@@ -27,8 +27,8 @@ func Usage() {
     	Patterns to include in matches, separated by commas
   -x string
     	Patterns to exclude from matches, separated by commas
-  -s int
-    	Max number of files to edit at the same time (semaphore)
+  -c int
+    	Max number of files to edit at the same time (concurrency)
     	WARNING: Setting this too high will cause the program to crash,
     	corrupting the files it was editing
   -q	Hide most output
