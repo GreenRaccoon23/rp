@@ -72,10 +72,6 @@ func verifyArgs() {
 		log.Fatal(fmt.Errorf("No paths specified"))
 	}
 
-	if len(rpaths) > 0 {
-		log.Fatal(fmt.Errorf("Too many paths specified"))
-	}
-
 	if !recursive && inclusionsBunch != "" {
 		log.Fatal(fmt.Errorf("-i option only allowed with -r option"))
 	}
