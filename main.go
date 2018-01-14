@@ -83,18 +83,11 @@ func verifyArgs() {
 
 func setPaths() {
 
-	expanded := []string{}
-
-	for _, pattern := range fpathsToEdit {
-
-		matches, err := futil.Glob(pattern, doRecursive)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		expanded = append(expanded, matches...)
+	matches, err := futil.GlobBatch(fpathsToEdit, doRecursive)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	filtered := futil.Filter(expanded, exclusions)
+	filtered := futil.Filter(matches, exclusions)
 	fpathsToEdit = filtered
 }

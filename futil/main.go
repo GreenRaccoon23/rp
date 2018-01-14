@@ -32,8 +32,26 @@ func IsSymlink(fi os.FileInfo) bool {
 	return false
 }
 
-// Glob runs filepath.Glob, and it does this recursively if requested.
-func Glob(pattern string, recursive bool) (fpaths []string, err error) {
+// GlobBatch runs filepath.Glob, and it does this recursively if requested.
+func GlobBatch(patterns []string, recursive bool) (fpaths []string, err error) {
+
+	matches := []string{}
+
+	for _, pattern := range patterns {
+
+		matches2, err := glob(pattern, recursive)
+		if err != nil {
+			return nil, err
+		}
+
+		matches = append(matches, matches2...)
+	}
+
+	return matches, nil
+}
+
+// glob runs filepath.Glob, and it does this recursively if requested.
+func glob(pattern string, recursive bool) (fpaths []string, err error) {
 
 	if recursive {
 		return globRecursive(pattern)
