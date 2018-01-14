@@ -24,14 +24,6 @@ func IsDir(fpath string) bool {
 	return fi.Mode().IsDir()
 }
 
-// IsSymlink indicates whether a file is a symlink by using its FileInfo
-func IsSymlink(fi os.FileInfo) bool {
-	if fi.Mode()&os.ModeSymlink != 0 {
-		return true
-	}
-	return false
-}
-
 // Glob runs filepath.Glob, and it does this recursively if requested.
 func Glob(inclusions []string, exclusions []string, recursive bool) ([]string, error) {
 
