@@ -23,7 +23,6 @@ var (
 	doShutUp    bool
 
 	roots         []string
-	root          string
 	toInclude     string
 	toExclude     string
 	inclusions    []string
@@ -49,7 +48,6 @@ func init() {
 
 	setLogger()
 	verifyArgs()
-	setRoot()
 	setInclusions()
 	setExclusions()
 	setFpaths()
@@ -85,10 +83,6 @@ func verifyArgs() {
 	}
 }
 
-func setRoot() {
-	root = roots[0]
-}
-
 func setInclusions() {
 
 	if toInclude == "" {
@@ -109,7 +103,7 @@ func setExclusions() {
 
 func setFpaths() {
 
-	matches, err := futil.Glob(root, inclusions, exclusions, doRecursive)
+	matches, err := futil.Glob(roots, inclusions, exclusions, doRecursive)
 	if err != nil {
 		log.Fatal(err)
 	}

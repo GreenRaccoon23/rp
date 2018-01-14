@@ -25,14 +25,31 @@ func IsDir(fpath string) bool {
 }
 
 // Glob runs filepath.Glob, and it does this recursively if requested.
-func Glob(rpath string, inclusions []string, exclusions []string, recursive bool) ([]string, error) {
+func Glob(rpaths []string, inclusions []string, exclusions []string, recursive bool) ([]string, error) {
 
 	if recursive {
-		return globRecursive(rpath, inclusions, exclusions)
+		return globRecursiveBatch(rpaths, inclusions, exclusions)
 	}
 
-	inclusions = []string{rpath}
+	inclusions = rpaths
 	return globHere(inclusions, exclusions)
+}
+
+func globRecursiveBatch(rpaths []string, inclusions []string, exclusions []string) ([]string, error) {
+
+	matches := []string{}
+
+	for _, rpath := range rpaths {
+
+		matches2, err := globRecursive(rpath, inclusions, exclusions)
+		if err != nil {
+			return nil, err
+		}
+
+		matches = append(matches, matches2...)
+	}
+
+	return matches, nil
 }
 
 func globRecursive(rpath string, inclusions []string, exclusions []string) ([]string, error) {
