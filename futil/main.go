@@ -33,13 +33,30 @@ func IsSymlink(fi os.FileInfo) bool {
 }
 
 // Glob runs filepath.Glob, and it does this recursively if requested.
-func Glob(patterns []string, recursive bool) (fpaths []string, err error) {
+func Glob(inclusions []string, exclusions []string, recursive bool) ([]string, error) {
 
 	if recursive {
-		return globRecursive(patterns)
+		return globRecursive(inclusions, exclusions)
 	}
 
-	return glob(patterns)
+	return globHere(inclusions, exclusions)
+}
+
+func globHere(inclusions []string, exclusions []string) ([]string, error) {
+
+	included, err := glob(inclusions)
+	if err != nil {
+		return nil, err
+	}
+
+	excluded, err := glob(exclusions)
+	if err != nil {
+		return nil, err
+	}
+
+	matches := difference(included, excluded)
+
+	return matches, nil
 }
 
 func glob(patterns []string) (fpaths []string, err error) {
@@ -59,9 +76,35 @@ func glob(patterns []string) (fpaths []string, err error) {
 	return matches, nil
 }
 
-func globRecursive(patterns []string) ([]string, error) {
+func difference(inclusions []string, exclusions []string) (diff []string) {
 
-	matches, err := glob(patterns)
+	for _, inclusion := range inclusions {
+
+		if contains(exclusions, inclusion) {
+			continue
+		}
+
+		diff = append(diff, inclusion)
+	}
+
+	return diff
+}
+
+func contains(exclusions []string, inclusion string) bool {
+
+	for _, exclusion := range exclusions {
+
+		if inclusion == exclusion {
+			return true
+		}
+	}
+
+	return false
+}
+
+func globRecursive(inclusions []string, exclusions []string) ([]string, error) {
+
+	matches, err := globHere(inclusions, exclusions)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +125,7 @@ func globRecursive(patterns []string) ([]string, error) {
 			return nil
 		}
 
-		matches2, err := globDir(fpath, patterns)
+		matches2, err := globThere(fpath, inclusions, exclusions)
 		if err != nil {
 			return err
 		}
@@ -98,7 +141,7 @@ func globRecursive(patterns []string) ([]string, error) {
 	return matches, nil
 }
 
-func globDir(dpath string, patterns []string) ([]string, error) {
+func globThere(dpath string, inclusions []string, exclusions []string) ([]string, error) {
 
 	rpath, err := os.Getwd()
 	if err != nil {
@@ -112,7 +155,7 @@ func globDir(dpath string, patterns []string) ([]string, error) {
 		return nil, err
 	}
 
-	matches, err := glob(patterns)
+	matches, err := globHere(inclusions, exclusions)
 	if err != nil {
 		return nil, err
 	}
