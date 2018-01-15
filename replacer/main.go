@@ -15,10 +15,11 @@ type Replacer struct {
 	toFind    []byte
 	toFindRe  *regexp.Regexp
 	toReplace []byte
+	commit    bool
 }
 
 // New returns a new replacer
-func New(toFindStr string, toReplaceStr string, regex bool) Replacer {
+func New(toFindStr string, toReplaceStr string, regex bool, commit bool) Replacer {
 
 	var toFindRe *regexp.Regexp
 	var toFind []byte
@@ -37,13 +38,14 @@ func New(toFindStr string, toReplaceStr string, regex bool) Replacer {
 		toFind:    toFind,
 		toFindRe:  toFindRe,
 		toReplace: toReplace,
+		commit:    commit,
 	}
 
 	return r
 }
 
 // Edit edits each file in fpaths, running "find and replace" on each one.
-func (r *Replacer) Edit(fpaths []string, concurrency int, commit bool) (int, error) {
+func (r *Replacer) Edit(fpaths []string, concurrency int) (int, error) {
 
 	size := len(fpaths)
 	g := governor.New(size, concurrency)
@@ -51,7 +53,7 @@ func (r *Replacer) Edit(fpaths []string, concurrency int, commit bool) (int, err
 
 	for _, fpath := range fpaths {
 		g.Accelerate()
-		go r.goEdit(fpath, commit, &g, counter)
+		go r.goEdit(fpath, &g, counter)
 	}
 
 	err := g.Regulate()
@@ -66,9 +68,9 @@ func (r *Replacer) Edit(fpaths []string, concurrency int, commit bool) (int, err
 	return edited, nil
 }
 
-func (r *Replacer) goEdit(fpath string, commit bool, g *governor.Governor, counter chan<- bool) {
+func (r *Replacer) goEdit(fpath string, g *governor.Governor, counter chan<- bool) {
 
-	edited, err := r.editOne(fpath, commit)
+	edited, err := r.editOne(fpath)
 	if err != nil {
 		g.Decelerate(err)
 		return
@@ -84,7 +86,7 @@ func (r *Replacer) goEdit(fpath string, commit bool, g *governor.Governor, count
 	g.Decelerate(nil)
 }
 
-func (r *Replacer) editOne(fpath string, commit bool) (bool, error) {
+func (r *Replacer) editOne(fpath string) (bool, error) {
 
 	contents, err := ioutil.ReadFile(fpath)
 	if err != nil {
@@ -100,7 +102,7 @@ func (r *Replacer) editOne(fpath string, commit bool) (bool, error) {
 		return false, nil
 	}
 
-	if !commit {
+	if !r.commit {
 		return true, nil
 	}
 

@@ -26,10 +26,10 @@ func main() {
 	// debug()
 	// os.Exit(0)
 
-	r := replacer.New(cmd.ToFind, cmd.ToReplace, cmd.Regex)
 	commit := !cmd.List
+	r := replacer.New(cmd.ToFind, cmd.ToReplace, cmd.Regex, commit)
 	start := time.Now()
-	edited, err := r.Edit(fpaths, cmd.Concurrency, commit)
+	edited, err := r.Edit(fpaths, cmd.Concurrency)
 	if err != nil {
 		log.Fatal(err)
 	}
