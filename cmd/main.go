@@ -118,6 +118,10 @@ func validate() {
 		complain("-i option only compatible with -r option")
 	}
 
+	if !Recursive && exclusionsBunch != "" {
+		complain("-x option only compatible with -r option")
+	}
+
 	if Quiet && Silent {
 		complain("-q option incompatible with -s option")
 	}
