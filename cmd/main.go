@@ -130,10 +130,6 @@ func validate() {
 		complain("-v option incompatible with -q option")
 	}
 
-	if List && Verbose {
-		complain("-l option incompatible with -v option")
-	}
-
 	if List && Quiet {
 		complain("-l option incompatible with -q option")
 	}
