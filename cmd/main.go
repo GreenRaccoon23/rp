@@ -42,6 +42,7 @@ func Parse() {
 
 	parse()
 	validate()
+	setConcurrency()
 	setInclusions()
 	setExclusions()
 }
@@ -55,7 +56,7 @@ func parse() {
 	pflag.BoolVarP(&Recursive, "recursive", "r", false, "Match files recursively")
 	pflag.StringVarP(&inclusionsBunch, "include", "i", "", "Patterns to include in matches, separated by commas")
 	pflag.StringVarP(&exclusionsBunch, "exclude", "x", "", "Patterns to exclude from matches, separated by commas")
-	pflag.IntVarP(&Concurrency, "concurrency", "c", 0, "Max number of files to edit at the same time")
+	pflag.IntVarP(&Concurrency, "concurrency", "c", 1, "Max number of files to edit simultaneously")
 	pflag.BoolVarP(&Quiet, "quiet", "q", false, "Hide most output")
 	pflag.BoolVarP(&Muted, "silent", "Q", false, "Hide all output")
 	pflag.CommandLine.SortFlags = false
@@ -90,6 +91,13 @@ func validate() {
 
 	if !Recursive && inclusionsBunch != "" {
 		log.Fatal(fmt.Errorf("-i option only allowed with -r option"))
+	}
+}
+
+func setConcurrency() {
+
+	if Concurrency <= 0 {
+		Concurrency = 1
 	}
 }
 
