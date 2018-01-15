@@ -28,7 +28,7 @@ func TestReplace(t *testing.T) {
 	})
 
 	t.Run("r.replace (regex)", func(t *testing.T) {
-		toFind := `(fill=").*?(")`
+		toFind := `(fill=")[a-zA-Z0-9]{6}(")`
 		toReplace := `$1#f44336$2`
 		regex := true
 		r := New(toFind, toReplace, regex, commit)
@@ -95,7 +95,7 @@ func TestEditOne(t *testing.T) {
 	})
 
 	t.Run("r.editOne (regex)", func(t *testing.T) {
-		toFind := `(fill=").*?(")`
+		toFind := `(fill=")[a-zA-Z0-9]{6}(")`
 		toReplace := `$1#f44336$2`
 		regex := true
 		r := New(toFind, toReplace, regex, commit)
@@ -196,7 +196,7 @@ func TestEdit(t *testing.T) {
 	})
 
 	t.Run("r.Edit (regex)", func(t *testing.T) {
-		toFind := `(fill=").*?(")`
+		toFind := `(fill=")[a-zA-Z0-9]{6}(")`
 		toReplace := `$1#f44336$2`
 		regex := true
 		r := New(toFind, toReplace, regex, commit)
