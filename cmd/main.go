@@ -92,6 +92,10 @@ func validate() {
 	if !Recursive && inclusionsBunch != "" {
 		log.Fatal(fmt.Errorf("-i option only allowed with -r option"))
 	}
+
+	if Verbose && Quiet {
+		log.Fatal(fmt.Errorf("-v option incompatible with -q option"))
+	}
 }
 
 func setConcurrency() {
