@@ -71,6 +71,7 @@ func (r *Replacer) goEdit(fpath string, g *governor.Governor, counter chan<- boo
 	edited, err := r.editOne(fpath)
 	if err != nil {
 		g.Decelerate(err)
+		return
 	}
 
 	if !edited {
