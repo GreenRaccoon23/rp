@@ -14,7 +14,7 @@ var (
 
 // Progress prints progress
 func Progress(path string) {
-	if !Verbose || Quiet {
+	if !Verbose {
 		return
 	}
 
