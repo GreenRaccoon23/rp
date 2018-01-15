@@ -42,7 +42,6 @@ func Parse() {
 
 	parse()
 	validate()
-	setConcurrency()
 	setInclusions()
 	setExclusions()
 }
@@ -96,12 +95,9 @@ func validate() {
 	if Verbose && Quiet {
 		log.Fatal(fmt.Errorf("-v option incompatible with -q option"))
 	}
-}
-
-func setConcurrency() {
 
 	if Concurrency <= 0 {
-		Concurrency = 1
+		log.Fatal(fmt.Errorf("-c (concurrency) must be above 0"))
 	}
 }
 
