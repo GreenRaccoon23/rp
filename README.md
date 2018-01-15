@@ -28,7 +28,7 @@ rp <options> <path>...
   -o, --old string        old string/pattern to find
   -n, --new string        new string/pattern to replace old one with
   -e, --regex             Treat '-o' and '-n' as regular expressions
-  -r, --recursive         Edit all files under each <path>
+  -r, --recursive         Edit files under each <path>
   -i, --include string    File patterns to include, separated by commas
   -x, --exclude string    File patterns to exclude, separated by commas
   -c, --concurrency int   Max number of files to edit simultaneously (default 1)
