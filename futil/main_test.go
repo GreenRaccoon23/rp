@@ -50,7 +50,7 @@ func TestGlobRecursive(t *testing.T) {
 	inclusions := []string{"*.svg"}
 	exclusions := []string{"*1.svg"}
 	recursive := true
-	expected := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/dir2/file2-link.svg", "../.test_tmp/dir1/dir2/file2.svg"}
+	expected := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/dir2/file2-link.svg", "../.test_tmp/dir1/dir2/file2.svg", "../.test_tmp/dir1/dir2/terminal.svg"}
 
 	t.Run("Glob (recursive)", func(t *testing.T) {
 		matches, err := Glob(rpaths, inclusions, exclusions, recursive)
@@ -68,8 +68,8 @@ func TestGlobRecursive(t *testing.T) {
 // TestFilterSymlinks tests FilterSymlinks
 func TestFilterSymlinks(t *testing.T) {
 
-	matches := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/file1.svg", "../.test_tmp/dir1/dir2/file2-link.svg", "../.test_tmp/dir1/dir2/file2.svg"}
-	expected := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/file1.svg", "../.test_tmp/dir1/dir2/file2.svg"}
+	matches := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/file1.svg", "../.test_tmp/dir1/dir2/file2-link.svg", "../.test_tmp/dir1/dir2/file2.svg", "../.test_tmp/dir1/dir2/terminal.svg"}
+	expected := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/file1.svg", "../.test_tmp/dir1/dir2/file2.svg", "../.test_tmp/dir1/dir2/terminal.svg"}
 
 	t.Run("Glob (recursive)", func(t *testing.T) {
 		filtered := FilterSymlinks(matches)

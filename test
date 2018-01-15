@@ -6,8 +6,20 @@ _populate() {
     touch ".test_tmp/battery-050-charging.svg";
     touch ".test_tmp/dir1/file1.svg";
     touch ".test_tmp/dir1/dir2/file2.svg";
+    touch ".test_tmp/dir1/dir2/terminal.svg";
     ln -sr ".test_tmp/dir1/dir2/file2.svg" ".test_tmp/dir1/dir2/file2-link.svg";
-    echo '<svg fill="#4caf50" height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg"><path d="M28.93 27L22 40V29h-4l1.07-2H14v14.33C14 42.8 15.19 44 16.67 44h14.67c1.47 0 2.67-1.19 2.67-2.67V27h-5.08z" fill="#4caf50"/><path d="M31.33 8H28V4h-8v4h-3.33C15.19 8 14 9.19 14 10.67V27h5.07L26 14v11h4l-1.07 2H34V10.67C34 9.19 32.81 8 31.33 8z" fill-opacity=".3" fill="#4caf50"/></svg>' > ".test_tmp/battery-050-charging.svg";
+    /bin/cat <<EOM > ".test_tmp/battery-050-charging.svg"
+<svg fill="#4caf50" height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg"><path d="M28.93 27L22 40V29h-4l1.07-2H14v14.33C14 42.8 15.19 44 16.67 44h14.67c1.47 0 2.67-1.19 2.67-2.67V27h-5.08z" fill="#4caf50"/><path d="M31.33 8H28V4h-8v4h-3.33C15.19 8 14 9.19 14 10.67V27h5.07L26 14v11h4l-1.07 2H34V10.67C34 9.19 32.81 8 31.33 8z" fill-opacity=".3" fill="#4caf50"/></svg>
+EOM
+    /bin/cat <<EOM > ".test_tmp/dir1/dir2/terminal.svg"
+<svg fill="#4caf50" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+	<rect fill="#4caf50" height="36" rx="4" width="40" x="4" y="6"/>
+	<path d="m8 10h32v28h-32z" fill="#000"/>
+	<text style="font-family:Inconsolata;font-size:20;font-weight:bold;letter-spacing:0;word-spacing:0;fill:#4caf50" x="11.26" y="25.64">
+		<tspan fill="#4caf50" x="11.26" y="25.64">&gt;_</tspan>
+	</text>
+</svg>
+EOM
 };
 
 _test() {
