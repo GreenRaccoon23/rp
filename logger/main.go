@@ -44,6 +44,6 @@ func Report(edited int, start time.Time) {
 		return
 	}
 
-	fmt.Printf("Total files: %d\n", edited)
+	fmt.Printf("Files: %d\n", edited)
 	fmt.Printf("Duration: %v\n", time.Since(start))
 }
