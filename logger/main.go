@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	// Verbose enables more logging
-	Verbose bool
+	// Quiet enables more logging
+	Quiet bool
 	// Silent prevents all logging
 	Silent bool
 )
@@ -15,7 +15,7 @@ var (
 // Progress prints progress
 func Progress(path string) {
 
-	if !Verbose {
+	if Quiet {
 		return
 	}
 
