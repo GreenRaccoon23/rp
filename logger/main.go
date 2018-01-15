@@ -8,13 +8,13 @@ import (
 var (
 	// Verbose enables more logging
 	Verbose bool
-	// Muted prevents all logging
-	Muted bool
+	// Quiet prevents all logging
+	Quiet bool
 )
 
 // Progress prints progress
 func Progress(path string) {
-	if !Verbose || Muted {
+	if !Verbose || Quiet {
 		return
 	}
 
@@ -24,7 +24,7 @@ func Progress(path string) {
 // Report prints a report
 func Report(edited int, start time.Time) {
 
-	if Muted {
+	if Quiet {
 		return
 	}
 

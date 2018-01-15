@@ -33,7 +33,7 @@ rp <options> <path>...
   -x, --exclude string    File patterns to exclude, separated by commas
   -c, --concurrency int   Max number of files to edit simultaneously (default 1)
   -v, --verbose           Show more output
-  -Q, --silent            Hide all output
+  -q, --quiet             Hide all output
 
 WARNING: Setting concurrency too high will cause the program to crash,
 corrupting the files it was editing

@@ -26,8 +26,8 @@ var (
 	Concurrency int
 	// Verbose description under parse
 	Verbose bool
-	// Muted description under parse
-	Muted bool
+	// Quiet description under parse
+	Quiet bool
 	// Rpaths description under parse
 	Rpaths []string
 
@@ -58,7 +58,7 @@ func parse() {
 	pflag.StringVarP(&exclusionsBunch, "exclude", "x", "", "File patterns to exclude, separated by commas")
 	pflag.IntVarP(&Concurrency, "concurrency", "c", 1, "Max number of files to edit simultaneously")
 	pflag.BoolVarP(&Verbose, "verbose", "v", false, "Show more output")
-	pflag.BoolVarP(&Muted, "silent", "Q", false, "Hide all output")
+	pflag.BoolVarP(&Quiet, "quiet", "q", false, "Hide all output")
 	pflag.CommandLine.SortFlags = false
 	pflag.Parse()
 	Rpaths = pflag.Args()

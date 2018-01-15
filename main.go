@@ -35,7 +35,7 @@ func main() {
 func setLogger() {
 
 	logger.Verbose = cmd.Verbose
-	logger.Muted = cmd.Muted
+	logger.Quiet = cmd.Quiet
 }
 
 func setFpaths() {
