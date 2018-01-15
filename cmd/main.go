@@ -23,6 +23,8 @@ var (
 	Recursive bool
 	// Concurrency description under parse
 	Concurrency int
+	// List description under parse
+	List bool
 	// Verbose description under parse
 	Verbose bool
 	// Quiet description under parse
@@ -57,6 +59,7 @@ func parse() {
 	pflag.StringVarP(&inclusionsBunch, "include", "i", "", "File patterns to include, separated by commas")
 	pflag.StringVarP(&exclusionsBunch, "exclude", "x", "", "File patterns to exclude, separated by commas")
 	pflag.IntVarP(&Concurrency, "concurrency", "c", 1, "Max number of files to edit simultaneously")
+	pflag.BoolVarP(&List, "list", "l", false, "List which files would be edited but do not edit them")
 	pflag.BoolVarP(&Verbose, "verbose", "v", false, "Show more output")
 	pflag.BoolVarP(&Quiet, "quiet", "q", false, "Hide all output")
 	pflag.CommandLine.SortFlags = false
@@ -73,6 +76,7 @@ func parse() {
 // 	fmt.Printf("inclusionsBunch: %v\n", inclusionsBunch)
 // 	fmt.Printf("exclusionsBunch: %v\n", exclusionsBunch)
 // 	fmt.Printf("Concurrency: %v\n", Concurrency)
+// 	fmt.Printf("List: %v\n", List)
 // 	fmt.Printf("Verbose: %v\n", Verbose)
 // 	fmt.Printf("Quiet: %v\n", Quiet)
 // }

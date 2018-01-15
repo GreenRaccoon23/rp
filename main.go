@@ -27,8 +27,9 @@ func main() {
 	// os.Exit(0)
 
 	r := replacer.New(cmd.ToFind, cmd.ToReplace, cmd.Regex)
+	commit := !cmd.List
 	start := time.Now()
-	edited, err := r.Edit(fpaths, cmd.Concurrency)
+	edited, err := r.Edit(fpaths, cmd.Concurrency, commit)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -62,10 +63,11 @@ func setFpaths() {
 // 	fmt.Printf("cmd.ToReplace: %v\n", cmd.ToReplace)
 // 	fmt.Printf("cmd.Regex: %v\n", cmd.Regex)
 // 	fmt.Printf("cmd.Recursive: %v\n", cmd.Recursive)
-// 	fmt.Printf("cmd.Concurrency: %v\n", cmd.Concurrency)
-// 	fmt.Printf("cmd.Verbose: %v\n", cmd.Verbose)
-// 	fmt.Printf("cmd.Quiet: %v\n", cmd.Quiet)
 // 	fmt.Printf("cmd.Inclusions: %v\n", cmd.Inclusions)
 // 	fmt.Printf("cmd.Exclusions: %v\n", cmd.Exclusions)
+// 	fmt.Printf("cmd.Concurrency: %v\n", cmd.Concurrency)
+// 	fmt.Printf("cmd.List: %v\n", cmd.List)
+// 	fmt.Printf("cmd.Verbose: %v\n", cmd.Verbose)
+// 	fmt.Printf("cmd.Quiet: %v\n", cmd.Quiet)
 // 	fmt.Printf("fpaths: %v\n", fpaths)
 // }

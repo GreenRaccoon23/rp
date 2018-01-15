@@ -43,7 +43,7 @@ func New(toFindStr string, toReplaceStr string, regex bool) Replacer {
 }
 
 // Edit edits each file in fpaths, running "find and replace" on each one.
-func (r *Replacer) Edit(fpaths []string, concurrency int) (int, error) {
+func (r *Replacer) Edit(fpaths []string, concurrency int, commit bool) (int, error) {
 
 	size := len(fpaths)
 	g := governor.New(size, concurrency)
@@ -51,7 +51,7 @@ func (r *Replacer) Edit(fpaths []string, concurrency int) (int, error) {
 
 	for _, fpath := range fpaths {
 		g.Accelerate()
-		go r.goEdit(fpath, &g, counter)
+		go r.goEdit(fpath, commit, &g, counter)
 	}
 
 	err := g.Regulate()
@@ -66,9 +66,9 @@ func (r *Replacer) Edit(fpaths []string, concurrency int) (int, error) {
 	return edited, nil
 }
 
-func (r *Replacer) goEdit(fpath string, g *governor.Governor, counter chan<- bool) {
+func (r *Replacer) goEdit(fpath string, commit bool, g *governor.Governor, counter chan<- bool) {
 
-	edited, err := r.editOne(fpath)
+	edited, err := r.editOne(fpath, commit)
 	if err != nil {
 		g.Decelerate(err)
 		return
@@ -84,7 +84,7 @@ func (r *Replacer) goEdit(fpath string, g *governor.Governor, counter chan<- boo
 	g.Decelerate(nil)
 }
 
-func (r *Replacer) editOne(fpath string) (bool, error) {
+func (r *Replacer) editOne(fpath string, commit bool) (bool, error) {
 
 	contents, err := ioutil.ReadFile(fpath)
 	if err != nil {
@@ -98,6 +98,10 @@ func (r *Replacer) editOne(fpath string) (bool, error) {
 	}
 	if bytes.Equal(replaced, contents) {
 		return false, nil
+	}
+
+	if !commit {
+		return true, nil
 	}
 
 	err = ioutil.WriteFile(fpath, replaced, os.ModePerm)
