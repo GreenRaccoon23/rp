@@ -88,7 +88,7 @@ func usage() {
 	fmt.Fprintf(os.Stderr,
 		`
 WARNING: Setting concurrency too high will cause the program to crash,
-corrupting the files it was editing
+corrupting the files it was editing.
 
 The syntax of the regular expressions accepted is the same general
 syntax used by Perl, Python, and other languages. More precisely, it
