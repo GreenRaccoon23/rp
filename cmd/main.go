@@ -102,11 +102,11 @@ func validate() {
 		complain("No paths specified")
 	}
 
-	if ToFind != "" {
+	if ToFind == "" {
 		complain("-o option required")
 	}
 
-	if ToReplace != "" {
+	if ToReplace == "" {
 		complain("-n option required")
 	}
 
