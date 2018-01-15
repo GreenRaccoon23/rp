@@ -6,15 +6,15 @@ import (
 )
 
 var (
-	// Quiet prevents most logging
-	Quiet bool
+	// Verbose enables more logging
+	Verbose bool
 	// Muted prevents all logging
 	Muted bool
 )
 
 // Progress prints progress
 func Progress(path string) {
-	if Quiet || Muted {
+	if !Verbose || Muted {
 		return
 	}
 

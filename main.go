@@ -34,7 +34,7 @@ func main() {
 
 func setLogger() {
 
-	logger.Quiet = cmd.Quiet
+	logger.Verbose = cmd.Verbose
 	logger.Muted = cmd.Muted
 }
 
