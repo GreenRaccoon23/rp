@@ -153,7 +153,11 @@ func TestEdit(t *testing.T) {
 
 		// run
 		expected := 2
-		edited := r.Edit(fpaths, concurrency)
+		edited, err := r.Edit(fpaths, concurrency)
+		if err != nil {
+			t.Error(err)
+			return
+		}
 		if edited != expected {
 			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
 			return
@@ -161,7 +165,11 @@ func TestEdit(t *testing.T) {
 
 		// repeat
 		expected = 0
-		edited = r.Edit(fpaths, concurrency)
+		edited, err = r.Edit(fpaths, concurrency)
+		if err != nil {
+			t.Error(err)
+			return
+		}
 		if edited != expected {
 			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
 			return
@@ -173,7 +181,11 @@ func TestEdit(t *testing.T) {
 		r2 := New(toFind2, toReplace2, regex)
 
 		expected = 2
-		edited = r2.Edit(fpaths, concurrency)
+		edited, err = r2.Edit(fpaths, concurrency)
+		if err != nil {
+			t.Error(err)
+			return
+		}
 		if edited != expected {
 			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
 			return
@@ -188,7 +200,11 @@ func TestEdit(t *testing.T) {
 
 		// run
 		expected := 2
-		edited := r.Edit(fpaths, concurrency)
+		edited, err := r.Edit(fpaths, concurrency)
+		if err != nil {
+			t.Error(err)
+			return
+		}
 		if edited != expected {
 			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
 			return
@@ -196,7 +212,11 @@ func TestEdit(t *testing.T) {
 
 		// repeat
 		expected = 0
-		edited = r.Edit(fpaths, concurrency)
+		edited, err = r.Edit(fpaths, concurrency)
+		if err != nil {
+			t.Error(err)
+			return
+		}
 		if edited != expected {
 			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
 			return
@@ -207,7 +227,11 @@ func TestEdit(t *testing.T) {
 		r2 := New(toFind, toReplace2, regex)
 
 		expected = 2
-		edited = r2.Edit(fpaths, concurrency)
+		edited, err = r2.Edit(fpaths, concurrency)
+		if err != nil {
+			t.Error(err)
+			return
+		}
 		if edited != expected {
 			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
 			return
