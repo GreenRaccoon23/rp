@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -11,6 +10,7 @@ import (
 	"github.com/GreenRaccoon23/rp/futil"
 	"github.com/GreenRaccoon23/rp/logger"
 	"github.com/GreenRaccoon23/rp/replacer"
+	"github.com/spf13/pflag"
 )
 
 var (
@@ -33,6 +33,8 @@ var (
 func init() {
 
 	parseArgs()
+	// printArgs()
+	// os.Exit(0)
 	setLogger()
 	verifyArgs()
 	setInclusions()
@@ -59,18 +61,31 @@ func setLogger() {
 
 func parseArgs() {
 
-	flag.Usage = logger.Usage
-	flag.StringVar(&toFind, "o", "", "")
-	flag.StringVar(&toReplace, "n", "", "")
-	flag.StringVar(&inclusionsBunch, "i", "", "")
-	flag.StringVar(&exclusionsBunch, "x", "", "")
-	flag.BoolVar(&regex, "e", false, "")
-	flag.BoolVar(&recursive, "r", false, "")
-	flag.IntVar(&concurrency, "c", 0, "")
-	flag.BoolVar(&quiet, "q", false, "")
-	flag.BoolVar(&muted, "Q", false, "")
-	flag.Parse()
-	rpaths = flag.Args()
+	// pflag.Usage = logger.Usage
+	pflag.StringVarP(&toFind, "old", "o", "", "")
+	pflag.StringVarP(&toReplace, "new", "n", "", "")
+	pflag.StringVarP(&inclusionsBunch, "include", "i", "", "")
+	pflag.StringVarP(&exclusionsBunch, "exclude", "x", "", "")
+	pflag.BoolVarP(&regex, "regex", "e", false, "")
+	pflag.BoolVarP(&recursive, "recursive", "r", false, "")
+	pflag.IntVarP(&concurrency, "concurrency", "c", 0, "")
+	pflag.BoolVarP(&quiet, "quiet", "q", false, "")
+	pflag.BoolVarP(&muted, "silent", "Q", false, "")
+	pflag.Parse()
+	rpaths = pflag.Args()
+}
+
+func printArgs() {
+	fmt.Printf("toFind: %v\n", toFind)
+	fmt.Printf("toReplace: %v\n", toReplace)
+	fmt.Printf("inclusionsBunch: %v\n", inclusionsBunch)
+	fmt.Printf("exclusionsBunch: %v\n", exclusionsBunch)
+	fmt.Printf("regex: %v\n", regex)
+	fmt.Printf("recursive: %v\n", recursive)
+	fmt.Printf("concurrency: %v\n", concurrency)
+	fmt.Printf("quiet: %v\n", quiet)
+	fmt.Printf("muted: %v\n", muted)
+	fmt.Printf("rpaths: %v\n", rpaths)
 }
 
 func verifyArgs() {
