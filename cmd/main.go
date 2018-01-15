@@ -40,6 +40,8 @@ var (
 func Parse() {
 
 	parse()
+	// debug()
+	// os.Exit(0)
 	validate()
 	setInclusions()
 	setExclusions()
@@ -61,6 +63,19 @@ func parse() {
 	pflag.Parse()
 	Rpaths = pflag.Args()
 }
+
+// func debug() {
+//
+// 	fmt.Printf("ToFind: %v\n", ToFind)
+// 	fmt.Printf("ToReplace: %v\n", ToReplace)
+// 	fmt.Printf("Regex: %v\n", Regex)
+// 	fmt.Printf("Recursive: %v\n", Recursive)
+// 	fmt.Printf("inclusionsBunch: %v\n", inclusionsBunch)
+// 	fmt.Printf("exclusionsBunch: %v\n", exclusionsBunch)
+// 	fmt.Printf("Concurrency: %v\n", Concurrency)
+// 	fmt.Printf("Verbose: %v\n", Verbose)
+// 	fmt.Printf("Quiet: %v\n", Quiet)
+// }
 
 // usage overrides pflag.Usage
 func usage() {
