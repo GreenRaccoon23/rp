@@ -25,7 +25,7 @@ func main() {
 
 	r := replacer.New(cmd.ToFind, cmd.ToReplace, cmd.Regex)
 	start := time.Now()
-	edited, err := r.EditPaths(fpaths, cmd.Concurrency)
+	edited, err := r.Edit(fpaths, cmd.Concurrency)
 	if err != nil {
 		log.Fatal(err)
 	}

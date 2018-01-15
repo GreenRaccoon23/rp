@@ -40,12 +40,12 @@ func TestReplace(t *testing.T) {
 	})
 }
 
-// TestEdit tests r.edit
-func TestEdit(t *testing.T) {
+// TestEditOne tests r.editOne
+func TestEditOne(t *testing.T) {
 
 	fpath := "../.test_tmp/battery-050-charging.svg"
 
-	t.Run("r.edit (non-regex)", func(t *testing.T) {
+	t.Run("r.editOne (non-regex)", func(t *testing.T) {
 		toFind := "#4caf50"
 		toReplace := "#f44336"
 		regex := false
@@ -53,7 +53,7 @@ func TestEdit(t *testing.T) {
 
 		// run
 		expected := true
-		edited, err := r.edit(fpath)
+		edited, err := r.editOne(fpath)
 		if err != nil {
 			t.Error(err)
 			return
@@ -65,7 +65,7 @@ func TestEdit(t *testing.T) {
 
 		// repeat
 		expected = false
-		edited, err = r.edit(fpath)
+		edited, err = r.editOne(fpath)
 		if err != nil {
 			t.Error(err)
 			return
@@ -81,7 +81,7 @@ func TestEdit(t *testing.T) {
 		r2 := New(toFind2, toReplace2, regex)
 
 		expected = true
-		edited, err = r2.edit(fpath)
+		edited, err = r2.editOne(fpath)
 		if err != nil {
 			t.Error(err)
 			return
@@ -92,7 +92,7 @@ func TestEdit(t *testing.T) {
 		}
 	})
 
-	t.Run("r.edit (regex)", func(t *testing.T) {
+	t.Run("r.editOne (regex)", func(t *testing.T) {
 		toFind := `(fill=").*?(")`
 		toReplace := `$1#f44336$2`
 		regex := true
@@ -100,7 +100,7 @@ func TestEdit(t *testing.T) {
 
 		// run
 		expected := true
-		edited, err := r.edit(fpath)
+		edited, err := r.editOne(fpath)
 		if err != nil {
 			t.Error(err)
 			return
@@ -112,7 +112,7 @@ func TestEdit(t *testing.T) {
 
 		// repeat
 		expected = false
-		edited, err = r.edit(fpath)
+		edited, err = r.editOne(fpath)
 		if err != nil {
 			t.Error(err)
 			return
@@ -127,7 +127,7 @@ func TestEdit(t *testing.T) {
 		r2 := New(toFind, toReplace2, regex)
 
 		expected = true
-		edited, err = r2.edit(fpath)
+		edited, err = r2.editOne(fpath)
 		if err != nil {
 			t.Error(err)
 			return
@@ -139,13 +139,13 @@ func TestEdit(t *testing.T) {
 	})
 }
 
-// TestEditPaths tests r.EditPaths
-func TestEditPaths(t *testing.T) {
+// TestEdit tests r.Edit
+func TestEdit(t *testing.T) {
 
 	fpaths := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/dir2/terminal.svg"}
 	concurrency := 1000
 
-	t.Run("r.EditPaths (non-regex)", func(t *testing.T) {
+	t.Run("r.Edit (non-regex)", func(t *testing.T) {
 		toFind := "#4caf50"
 		toReplace := "#f44336"
 		regex := false
@@ -153,7 +153,7 @@ func TestEditPaths(t *testing.T) {
 
 		// run
 		expected := 2
-		edited := r.EditPaths(fpaths, concurrency)
+		edited := r.Edit(fpaths, concurrency)
 		if edited != expected {
 			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
 			return
@@ -161,7 +161,7 @@ func TestEditPaths(t *testing.T) {
 
 		// repeat
 		expected = 0
-		edited = r.EditPaths(fpaths, concurrency)
+		edited = r.Edit(fpaths, concurrency)
 		if edited != expected {
 			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
 			return
@@ -173,14 +173,14 @@ func TestEditPaths(t *testing.T) {
 		r2 := New(toFind2, toReplace2, regex)
 
 		expected = 2
-		edited = r2.EditPaths(fpaths, concurrency)
+		edited = r2.Edit(fpaths, concurrency)
 		if edited != expected {
 			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
 			return
 		}
 	})
 
-	t.Run("r.EditPaths (regex)", func(t *testing.T) {
+	t.Run("r.Edit (regex)", func(t *testing.T) {
 		toFind := `(fill=").*?(")`
 		toReplace := `$1#f44336$2`
 		regex := true
@@ -188,7 +188,7 @@ func TestEditPaths(t *testing.T) {
 
 		// run
 		expected := 2
-		edited := r.EditPaths(fpaths, concurrency)
+		edited := r.Edit(fpaths, concurrency)
 		if edited != expected {
 			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
 			return
@@ -196,7 +196,7 @@ func TestEditPaths(t *testing.T) {
 
 		// repeat
 		expected = 0
-		edited = r.EditPaths(fpaths, concurrency)
+		edited = r.Edit(fpaths, concurrency)
 		if edited != expected {
 			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
 			return
@@ -207,7 +207,7 @@ func TestEditPaths(t *testing.T) {
 		r2 := New(toFind, toReplace2, regex)
 
 		expected = 2
-		edited = r2.EditPaths(fpaths, concurrency)
+		edited = r2.Edit(fpaths, concurrency)
 		if edited != expected {
 			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
 			return

@@ -42,8 +42,8 @@ func New(toFindStr string, toReplaceStr string, regex bool) Replacer {
 	return r
 }
 
-// EditPaths edits each file in fpaths, running "find and replace" on each one.
-func (r *Replacer) EditPaths(fpaths []string, concurrency int) (int, error) {
+// Edit edits each file in fpaths, running "find and replace" on each one.
+func (r *Replacer) Edit(fpaths []string, concurrency int) (int, error) {
 
 	size := len(fpaths)
 	g := governor.New(size, concurrency)
@@ -68,7 +68,7 @@ func (r *Replacer) EditPaths(fpaths []string, concurrency int) (int, error) {
 
 func (r *Replacer) goEdit(fpath string, g *governor.Governor, counter chan<- bool) {
 
-	edited, err := r.edit(fpath)
+	edited, err := r.editOne(fpath)
 	if err != nil {
 		g.Decelerate(err)
 	}
@@ -83,7 +83,7 @@ func (r *Replacer) goEdit(fpath string, g *governor.Governor, counter chan<- boo
 	g.Decelerate(nil)
 }
 
-func (r *Replacer) edit(fpath string) (bool, error) {
+func (r *Replacer) editOne(fpath string) (bool, error) {
 
 	contents, err := ioutil.ReadFile(fpath)
 	if err != nil {
