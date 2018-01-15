@@ -16,10 +16,11 @@ _test() {
 };
 
 _cleanup() {
-    rm -r ".test_tmp";
-    rm ".test_tmp_file.svg";
+    [ -d ".test_tmp" ] && rm -r ".test_tmp";
+    [ -d ".test_tmp_file.svg" ] && rm ".test_tmp_file.svg";
 };
 
+_cleanup;
 _populate;
 _test;
 _cleanup;
