@@ -32,11 +32,12 @@ rp <options> <path>...
   -i, --include string    File patterns to include, separated by commas
   -x, --exclude string    File patterns to exclude, separated by commas
   -c, --concurrency int   Max number of files to edit simultaneously (default 1)
+  -l, --list              List which files would be edited but do not edit them
   -v, --verbose           Show more output
-  -q, --quiet             Hide all output
+  -q, --quiet             Hide all output except errors
 
 WARNING: Setting concurrency too high will cause the program to crash,
-corrupting the files it was editing
+corrupting the files it was editing.
 
 The syntax of the regular expressions accepted is the same general
 syntax used by Perl, Python, and other languages. More precisely, it
@@ -61,7 +62,7 @@ Kill me now. I needed to read a manual every time I needed to write something li
 I wanted something less rocket science like this:
 
 ```bash
-rp -re -o '(fill="#).*?(")' -n '$1ff0000$2' -i '*.svg' .;
+rp -re -o '(fill="#).*?(")' -n '${1}ff0000${2}' -i '*.svg' .;
 ```
 
 So I made it happen.
