@@ -23,6 +23,9 @@ func init() {
 
 func main() {
 
+	// debug()
+	// os.Exit(0)
+
 	r := replacer.New(cmd.ToFind, cmd.ToReplace, cmd.Regex)
 	start := time.Now()
 	edited, err := r.Edit(fpaths, cmd.Concurrency)
@@ -52,3 +55,17 @@ func setFpaths() {
 
 	fpaths = filtered
 }
+
+// func debug() {
+//
+// 	fmt.Printf("cmd.ToFind: %v\n", cmd.ToFind)
+// 	fmt.Printf("cmd.ToReplace: %v\n", cmd.ToReplace)
+// 	fmt.Printf("cmd.Regex: %v\n", cmd.Regex)
+// 	fmt.Printf("cmd.Recursive: %v\n", cmd.Recursive)
+// 	fmt.Printf("cmd.Concurrency: %v\n", cmd.Concurrency)
+// 	fmt.Printf("cmd.Verbose: %v\n", cmd.Verbose)
+// 	fmt.Printf("cmd.Quiet: %v\n", cmd.Quiet)
+// 	fmt.Printf("cmd.Inclusions: %v\n", cmd.Inclusions)
+// 	fmt.Printf("cmd.Exclusions: %v\n", cmd.Exclusions)
+// 	fmt.Printf("fpaths: %v\n", fpaths)
+// }
