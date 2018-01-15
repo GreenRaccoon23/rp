@@ -40,16 +40,18 @@ func TestReplace(t *testing.T) {
 	})
 }
 
-// TestEditNonRegex tests r.edit without regex
-func TestEditNonRegex(t *testing.T) {
+// TestEdit tests r.edit
+func TestEdit(t *testing.T) {
+
+	fpath := "../.test_tmp/battery-050-charging.svg"
 
 	t.Run("r.edit (non-regex)", func(t *testing.T) {
-		fpath := "../.test_tmp/battery-050-charging.svg"
 		toFind := "#4caf50"
 		toReplace := "#f44336"
 		regex := false
 		r := New(toFind, toReplace, regex)
 
+		// run
 		expected := true
 		edited, err := r.edit(fpath)
 		if err != nil {
@@ -61,6 +63,7 @@ func TestEditNonRegex(t *testing.T) {
 			return
 		}
 
+		// repeat
 		expected = false
 		edited, err = r.edit(fpath)
 		if err != nil {
@@ -72,14 +75,59 @@ func TestEditNonRegex(t *testing.T) {
 			return
 		}
 
-		// cleanup
+		// revert
 		toFind2 := toReplace
-		toReplace = toFind
-		toFind = toFind2
-		r = New(toFind, toReplace, regex)
+		toReplace2 := toFind
+		r2 := New(toFind2, toReplace2, regex)
 
 		expected = true
+		edited, err = r2.edit(fpath)
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		if edited != expected {
+			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
+			return
+		}
+	})
+
+	t.Run("r.edit (regex)", func(t *testing.T) {
+		toFind := `(fill=").*?(")`
+		toReplace := `$1#f44336$2`
+		regex := true
+		r := New(toFind, toReplace, regex)
+
+		// run
+		expected := true
+		edited, err := r.edit(fpath)
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		if edited != expected {
+			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
+			return
+		}
+
+		// repeat
+		expected = false
 		edited, err = r.edit(fpath)
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		if edited != expected {
+			t.Errorf("Expected `edited` to be %v but got %v.\n", expected, edited)
+			return
+		}
+
+		// revert
+		toReplace2 := `$1#4caf50$2`
+		r2 := New(toFind, toReplace2, regex)
+
+		expected = true
+		edited, err = r2.edit(fpath)
 		if err != nil {
 			t.Error(err)
 			return
