@@ -57,7 +57,7 @@ Look at this:
 find . -type f -name="*.svg" -exec sed -i 's/\(fill="#\).*\("\)/\1ff0000\2/g' {}\; ;
 ```
 
-Kill me now. I needed to read a manual every time I needed to write something like this. Plus, since `sed` does not support the non-greedy `.*?`, this command with the greedy `.*` would erase most of the file content. This also most likely would not work on MacOS's version of `sed`.
+I needed to read a manual every time I needed to write something like this. Plus, since `sed` does not support the non-greedy `.*?`, this command with the greedy `.*` would erase most of the file content. This also most likely would not work on MacOS's version of `sed`.
 
 I wanted something less rocket science like this:
 
