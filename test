@@ -30,6 +30,7 @@ _test() {
 _cleanup() {
     [ -d ".test_tmp" ] && rm -r ".test_tmp";
     [ -d ".test_tmp_file.svg" ] && rm ".test_tmp_file.svg";
+    return 0;
 };
 
 _cleanup;
