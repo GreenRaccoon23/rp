@@ -79,17 +79,6 @@ func validate() {
 	if !Recursive && inclusionsBunch != "" {
 		log.Fatal(fmt.Errorf("-i option only allowed with -r option"))
 	}
-
-	flags := []string{"-o", "-n", "-i", "-x", "-e", "-r", "-c", "-q", "-Q"}
-	for _, f := range flags {
-		for _, rpath := range Rpaths {
-			if rpath == f {
-				fmt.Println("Options must be set before paths")
-				usage()
-				os.Exit(2)
-			}
-		}
-	}
 }
 
 func setInclusions() {
