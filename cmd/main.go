@@ -60,8 +60,8 @@ func parse() {
 	pflag.StringVarP(&exclusionsBunch, "exclude", "x", "", "File patterns to exclude, separated by commas")
 	pflag.IntVarP(&Concurrency, "concurrency", "c", 1, "Max number of files to edit simultaneously")
 	pflag.BoolVarP(&List, "list", "l", false, "List which files would be edited but do not edit them")
-	pflag.BoolVarP(&Quiet, "verbose", "v", true, "Show more output")
-	pflag.BoolVarP(&Silent, "quiet", "q", false, "Hide all output")
+	pflag.BoolVarP(&Quiet, "quiet", "q", false, "Show less output")
+	pflag.BoolVarP(&Silent, "silent", "s", false, "Hide all output except errors")
 	pflag.CommandLine.SortFlags = false
 	pflag.Parse()
 	Rpaths = pflag.Args()
@@ -119,7 +119,7 @@ func validate() {
 	}
 
 	if Quiet && Silent {
-		complain("-v option incompatible with -q option")
+		complain("-q option incompatible with -s option")
 	}
 
 	if Concurrency <= 0 {
