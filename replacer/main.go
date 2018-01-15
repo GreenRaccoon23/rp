@@ -3,7 +3,6 @@ package replacer
 import (
 	"bytes"
 	"io/ioutil"
-	"log"
 	"os"
 	"regexp"
 
@@ -44,7 +43,7 @@ func New(toFindStr string, toReplaceStr string, regex bool) Replacer {
 }
 
 // EditPaths edits each file in fpaths, running "find and replace" on each one.
-func (r *Replacer) EditPaths(fpaths []string, concurrency int) int {
+func (r *Replacer) EditPaths(fpaths []string, concurrency int) (int, error) {
 
 	size := len(fpaths)
 	g := governor.New(size, concurrency)
@@ -59,11 +58,12 @@ func (r *Replacer) EditPaths(fpaths []string, concurrency int) int {
 	close(counter)
 
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 
 	edited := len(counter)
-	return edited
+
+	return edited, nil
 }
 
 func (r *Replacer) goEdit(fpath string, g *governor.Governor, counter chan<- bool) {

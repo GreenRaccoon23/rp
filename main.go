@@ -25,7 +25,10 @@ func main() {
 
 	r := replacer.New(cmd.ToFind, cmd.ToReplace, cmd.Regex)
 	start := time.Now()
-	edited := r.EditPaths(fpaths, cmd.Concurrency)
+	edited, err := r.EditPaths(fpaths, cmd.Concurrency)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if cmd.Recursive {
 		logger.Report(edited, start)
