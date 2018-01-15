@@ -10,18 +10,30 @@ import (
 )
 
 var (
-	ToFind          string
-	ToReplace       string
+	// ToFind description under parse
+	ToFind string
+	// ToReplace description under parse
+	ToReplace string
+	// inclusionsBunch description under parse
 	inclusionsBunch string
+	// exclusionsBunch description under parse
 	exclusionsBunch string
-	Regex           bool
-	Recursive       bool
-	Concurrency     int
-	Quiet           bool
-	Muted           bool
-	Rpaths          []string
+	// Regex description under parse
+	Regex bool
+	// Recursive description under parse
+	Recursive bool
+	// Concurrency description under parse
+	Concurrency int
+	// Quiet description under parse
+	Quiet bool
+	// Muted description under parse
+	Muted bool
+	// Rpaths description under parse
+	Rpaths []string
 
+	// Inclusions is inclusionsBunch split by ','
 	Inclusions []string
+	// Exclusions is inclusionsBunch split by ','
 	Exclusions []string
 )
 
