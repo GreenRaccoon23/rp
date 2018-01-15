@@ -99,7 +99,8 @@ func (r *Replacer) edit(fpath string) (bool, error) {
 		return false, nil
 	}
 
-	if err := ioutil.WriteFile(fpath, replaced, os.ModePerm); err != nil {
+	err = ioutil.WriteFile(fpath, replaced, os.ModePerm)
+	if err != nil {
 		return false, err
 	}
 
