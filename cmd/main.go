@@ -129,6 +129,14 @@ func validate() {
 	if Quiet && Silent {
 		complain("-q option incompatible with -Q option")
 	}
+
+	if List && Quiet {
+		complain("-l option incompatible with -q option")
+	}
+
+	if List && Silent {
+		complain("-l option incompatible with -Q option")
+	}
 }
 
 func complain(complaint string) {
