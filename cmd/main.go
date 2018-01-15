@@ -137,9 +137,9 @@ func validate() {
 
 func complain(complaint string) {
 
-	fmt.Fprintf(os.Stderr, "%v\n", complaint)
+	fmt.Fprintf(os.Stderr, "%v\n\n", complaint)
 	usage()
-	fmt.Fprintf(os.Stderr, "%v\n", complaint)
+	fmt.Fprintf(os.Stderr, "\n%v\n", complaint)
 	os.Exit(2)
 }
 
