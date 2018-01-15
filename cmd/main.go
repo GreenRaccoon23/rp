@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
@@ -85,20 +84,27 @@ For an overview of the syntax, run:
 func validate() {
 
 	if len(Rpaths) == 0 {
-		log.Fatal(fmt.Errorf("No paths specified"))
+		complain("No paths specified")
 	}
 
 	if !Recursive && inclusionsBunch != "" {
-		log.Fatal(fmt.Errorf("-i option only allowed with -r option"))
+		complain("-i option only allowed with -r option")
 	}
 
 	if Verbose && Quiet {
-		log.Fatal(fmt.Errorf("-v option incompatible with -q option"))
+		complain("-v option incompatible with -q option")
 	}
 
 	if Concurrency <= 0 {
-		log.Fatal(fmt.Errorf("-c (concurrency) must be above 0"))
+		complain("-c (concurrency) must be above 0")
 	}
+}
+
+func complain(complaint string) {
+
+	fmt.Fprintf(os.Stderr, "%v\n\n", complaint)
+	usage()
+	os.Exit(2)
 }
 
 func setInclusions() {
