@@ -87,6 +87,14 @@ func validate() {
 		complain("No paths specified")
 	}
 
+	if ToFind != "" {
+		complain("-o option required")
+	}
+
+	if ToReplace != "" {
+		complain("-n option required")
+	}
+
 	if !Recursive && inclusionsBunch != "" {
 		complain("-i option only compatible with -r option")
 	}
