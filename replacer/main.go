@@ -106,13 +106,10 @@ func (r *Replacer) edit(fpath string) (bool, error) {
 	return true, nil
 }
 
-func (r *Replacer) replace(contents []byte) (replaced []byte) {
+func (r *Replacer) replace(contents []byte) []byte {
 
 	if r.toFindRe != nil {
-		replaced = r.toFindRe.ReplaceAll(contents, r.toReplace)
-	} else {
-		replaced = bytes.Replace(contents, r.toFind, r.toReplace, -1)
+		return r.toFindRe.ReplaceAll(contents, r.toReplace)
 	}
-
-	return
+	return bytes.Replace(contents, r.toFind, r.toReplace, -1)
 }
