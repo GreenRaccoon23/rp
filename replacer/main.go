@@ -46,39 +46,39 @@ func New(toFindStr string, toReplaceStr string, regex bool) Replacer {
 // EditPaths edits each file in fpaths, running "find and replace" on each one.
 func (r *Replacer) EditPaths(fpaths []string, concurrency int) int {
 
-	lenFpaths := len(fpaths)
-	g := governor.New(lenFpaths, concurrency)
-	edited := make(chan bool, lenFpaths)
+	size := len(fpaths)
+	g := governor.New(size, concurrency)
+	editedChan := make(chan bool, size)
 
 	for _, fpath := range fpaths {
 		g.Accelerate()
-		go r.goEdit(fpath, &g, edited)
+		go r.goEdit(fpath, &g, editedChan)
 	}
 
 	err := g.Regulate()
-	close(edited)
+	close(editedChan)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	totalEdited := len(edited)
-	return totalEdited
+	edited := len(editedChan)
+	return edited
 }
 
-func (r *Replacer) goEdit(fpath string, g *governor.Governor, edited chan<- bool) {
+func (r *Replacer) goEdit(fpath string, g *governor.Governor, editedChan chan<- bool) {
 
-	wasEdited, err := r.edit(fpath)
+	edited, err := r.edit(fpath)
 	if err != nil {
 		g.Decelerate(err)
 	}
 
-	if !wasEdited {
+	if !edited {
 		g.Decelerate(nil)
 		return
 	}
 
-	edited <- wasEdited
+	editedChan <- edited
 	logger.Progress(fpath)
 	g.Decelerate(nil)
 }
