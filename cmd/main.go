@@ -25,10 +25,10 @@ var (
 	Concurrency int
 	// List description under parse
 	List bool
+	// Verbose description under parse
+	Verbose bool
 	// Quiet description under parse
 	Quiet bool
-	// Silent description under parse
-	Silent bool
 	// Rpaths description under parse
 	Rpaths []string
 
@@ -59,8 +59,8 @@ func parse() {
 	pflag.StringVarP(&exclusionsBunch, "exclude", "x", "", "File patterns to exclude, separated by commas")
 	pflag.IntVarP(&Concurrency, "concurrency", "c", 1, "Max number of files to edit simultaneously")
 	pflag.BoolVarP(&List, "list", "l", false, "List which files would be edited but do not edit them")
-	pflag.BoolVarP(&Quiet, "quiet", "q", false, "Show less output")
-	pflag.BoolVarP(&Silent, "silent", "Q", false, "Hide all output except errors")
+	pflag.BoolVarP(&Verbose, "verbose", "v", false, "Show more output")
+	pflag.BoolVarP(&Quiet, "quiet", "q", false, "Hide all output except errors")
 	pflag.Usage = usage
 	pflag.CommandLine.SortFlags = false
 	pflag.Parse()
@@ -77,8 +77,8 @@ func parse() {
 // 	fmt.Printf("exclusionsBunch: %v\n", exclusionsBunch)
 // 	fmt.Printf("Concurrency: %v\n", Concurrency)
 // 	fmt.Printf("List: %v\n", List)
+// 	fmt.Printf("Verbose: %v\n", Verbose)
 // 	fmt.Printf("Quiet: %v\n", Quiet)
-// 	fmt.Printf("Silent: %v\n", Silent)
 // }
 
 // usage overrides pflag.Usage
@@ -126,16 +126,16 @@ func validate() {
 		complain("-c (concurrency) must be above 0")
 	}
 
-	if Quiet && Silent {
-		complain("-q option incompatible with -Q option")
+	if Verbose && Quiet {
+		complain("-v option incompatible with -q option")
+	}
+
+	if List && Verbose {
+		complain("-l option incompatible with -v option")
 	}
 
 	if List && Quiet {
 		complain("-l option incompatible with -q option")
-	}
-
-	if List && Silent {
-		complain("-l option incompatible with -Q option")
 	}
 }
 

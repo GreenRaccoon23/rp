@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	silent = iota
-	quiet
+	quiet = iota
 	normal
+	verbose
 )
 
 var (
@@ -16,10 +16,10 @@ var (
 )
 
 // SetIntensity sets logging intensity, i.e., how much output to log
-func SetIntensity(q bool, s bool) {
+func SetIntensity(v bool, q bool) {
 
-	if s {
-		intensity = silent
+	if v {
+		intensity = verbose
 	} else if q {
 		intensity = quiet
 	} else {
@@ -40,7 +40,7 @@ func Progress(path string) {
 // Report prints a report
 func Report(edited int, start time.Time) {
 
-	if intensity < quiet {
+	if intensity < verbose {
 		return
 	}
 
