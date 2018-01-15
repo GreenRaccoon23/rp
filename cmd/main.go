@@ -27,8 +27,8 @@ var (
 	List bool
 	// Verbose description under parse
 	Verbose bool
-	// Quiet description under parse
-	Quiet bool
+	// Silent description under parse
+	Silent bool
 	// Rpaths description under parse
 	Rpaths []string
 
@@ -61,7 +61,7 @@ func parse() {
 	pflag.IntVarP(&Concurrency, "concurrency", "c", 1, "Max number of files to edit simultaneously")
 	pflag.BoolVarP(&List, "list", "l", false, "List which files would be edited but do not edit them")
 	pflag.BoolVarP(&Verbose, "verbose", "v", false, "Show more output")
-	pflag.BoolVarP(&Quiet, "quiet", "q", false, "Hide all output")
+	pflag.BoolVarP(&Silent, "quiet", "q", false, "Hide all output")
 	pflag.CommandLine.SortFlags = false
 	pflag.Parse()
 	Rpaths = pflag.Args()
@@ -78,7 +78,7 @@ func parse() {
 // 	fmt.Printf("Concurrency: %v\n", Concurrency)
 // 	fmt.Printf("List: %v\n", List)
 // 	fmt.Printf("Verbose: %v\n", Verbose)
-// 	fmt.Printf("Quiet: %v\n", Quiet)
+// 	fmt.Printf("Silent: %v\n", Silent)
 // }
 
 // usage overrides pflag.Usage
@@ -118,7 +118,7 @@ func validate() {
 		complain("-i option only compatible with -r option")
 	}
 
-	if Verbose && Quiet {
+	if Verbose && Silent {
 		complain("-v option incompatible with -q option")
 	}
 

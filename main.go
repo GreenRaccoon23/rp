@@ -42,7 +42,7 @@ func main() {
 func setLogger() {
 
 	logger.Verbose = cmd.Verbose
-	logger.Quiet = cmd.Quiet
+	logger.Silent = cmd.Silent
 }
 
 func setFpaths() {
@@ -68,6 +68,6 @@ func setFpaths() {
 // 	fmt.Printf("cmd.Concurrency: %v\n", cmd.Concurrency)
 // 	fmt.Printf("cmd.List: %v\n", cmd.List)
 // 	fmt.Printf("cmd.Verbose: %v\n", cmd.Verbose)
-// 	fmt.Printf("cmd.Quiet: %v\n", cmd.Quiet)
+// 	fmt.Printf("cmd.Silent: %v\n", cmd.Silent)
 // 	fmt.Printf("fpaths: %v\n", fpaths)
 // }
