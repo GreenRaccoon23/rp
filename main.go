@@ -61,16 +61,16 @@ func setLogger() {
 
 func parseArgs() {
 
-	// pflag.Usage = logger.Usage
-	pflag.StringVarP(&toFind, "old", "o", "", "")
-	pflag.StringVarP(&toReplace, "new", "n", "", "")
-	pflag.StringVarP(&inclusionsBunch, "include", "i", "", "")
-	pflag.StringVarP(&exclusionsBunch, "exclude", "x", "", "")
-	pflag.BoolVarP(&regex, "regex", "e", false, "")
-	pflag.BoolVarP(&recursive, "recursive", "r", false, "")
-	pflag.IntVarP(&concurrency, "concurrency", "c", 0, "")
-	pflag.BoolVarP(&quiet, "quiet", "q", false, "")
-	pflag.BoolVarP(&muted, "silent", "Q", false, "")
+	pflag.Usage = logger.Usage
+	pflag.StringVarP(&toFind, "old", "o", "", "old string/pattern to find")
+	pflag.StringVarP(&toReplace, "new", "n", "", "new string/pattern to replace old one with")
+	pflag.BoolVarP(&regex, "regex", "e", false, "Treat '-o' and '-n' as regular expressions")
+	pflag.BoolVarP(&recursive, "recursive", "r", false, "Match files recursively")
+	pflag.StringVarP(&inclusionsBunch, "include", "i", "", "Patterns to include in matches, separated by commas")
+	pflag.StringVarP(&exclusionsBunch, "exclude", "x", "", "Patterns to exclude from matches, separated by commas")
+	pflag.IntVarP(&concurrency, "concurrency", "c", 0, "Max number of files to edit at the same time")
+	pflag.BoolVarP(&quiet, "quiet", "q", false, "Hide most output")
+	pflag.BoolVarP(&muted, "silent", "Q", false, "Hide all output")
 	pflag.CommandLine.SortFlags = false
 	pflag.Parse()
 	rpaths = pflag.Args()

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/spf13/pflag"
 )
 
 var (
@@ -13,33 +15,22 @@ var (
 	Muted bool
 )
 
-// Usage overrides flag.Usage
+// Usage overrides pflag.Usage
 func Usage() {
+	fmt.Fprintf(os.Stderr, "rp <options> <path>...\n")
+	pflag.PrintDefaults()
 	fmt.Fprintf(os.Stderr,
-		`rp <options> <path>...
-  -o string
-    	old string/pattern to find
-  -n string
-    	new string/pattern to replace old one with
-  -e 	Treat '-o' and '-n' as regular expressions
-  -r 	Match files recursively
-  -i string
-    	Patterns to include in matches, separated by commas
-  -x string
-    	Patterns to exclude from matches, separated by commas
-  -c int
-    	Max number of files to edit at the same time (concurrency)
-    	WARNING: Setting this too high will cause the program to crash,
-    	corrupting the files it was editing
-  -q	Hide most output
-  -Q	Hide all output
+		`
+WARNING: Setting concurrency too high will cause the program to crash,
+corrupting the files it was editing
 
-  The syntax of the regular expressions accepted is the same general syntax
-  used by Perl, Python, and other languages. More precisely, it is the syntax
-  accepted by RE2 and described at https://golang.org/s/re2syntax,
-  except for \C.
-  For an overview of the syntax, run 'go doc regexp/syntax'%v`,
-		"\n",
+The syntax of the regular expressions accepted is the same general
+syntax used by Perl, Python, and other languages. More precisely, it
+is the syntax accepted by RE2 and described at
+https://golang.org/s/re2syntax, except for \C.
+For an overview of the syntax, run:
+	go doc regexp/syntax
+`,
 	)
 }
 
