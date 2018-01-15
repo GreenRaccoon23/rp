@@ -71,6 +71,7 @@ func parseArgs() {
 	pflag.IntVarP(&concurrency, "concurrency", "c", 0, "")
 	pflag.BoolVarP(&quiet, "quiet", "q", false, "")
 	pflag.BoolVarP(&muted, "silent", "Q", false, "")
+	pflag.CommandLine.SortFlags = false
 	pflag.Parse()
 	rpaths = pflag.Args()
 }
