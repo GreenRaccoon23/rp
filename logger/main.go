@@ -14,6 +14,7 @@ var (
 
 // Progress prints progress
 func Progress(path string) {
+
 	if !Verbose {
 		return
 	}
@@ -28,6 +29,6 @@ func Report(edited int, start time.Time) {
 		return
 	}
 
-	fmt.Printf("Total files edited: %d\n", edited)
+	fmt.Printf("Total files: %d\n", edited)
 	fmt.Printf("Duration: %v\n", time.Since(start))
 }
