@@ -51,7 +51,6 @@ func Parse() {
 
 func parse() {
 
-	pflag.Usage = usage
 	pflag.StringVarP(&ToFind, "old", "o", "", "old string/pattern to find")
 	pflag.StringVarP(&ToReplace, "new", "n", "", "new string/pattern to replace old one with")
 	pflag.BoolVarP(&Regex, "regex", "e", false, "Treat '-o' and '-n' as regular expressions")
@@ -62,6 +61,7 @@ func parse() {
 	pflag.BoolVarP(&List, "list", "l", false, "List which files would be edited but do not edit them")
 	pflag.BoolVarP(&Quiet, "quiet", "q", false, "Show less output")
 	pflag.BoolVarP(&Silent, "silent", "s", false, "Hide all output except errors")
+	pflag.Usage = usage
 	pflag.CommandLine.SortFlags = false
 	pflag.Parse()
 	Rpaths = pflag.Args()
