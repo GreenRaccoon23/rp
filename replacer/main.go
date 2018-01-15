@@ -48,25 +48,25 @@ func (r *Replacer) EditPaths(fpaths []string, concurrency int) int {
 
 	size := len(fpaths)
 	g := governor.New(size, concurrency)
-	editedChan := make(chan bool, size)
+	counter := make(chan bool, size)
 
 	for _, fpath := range fpaths {
 		g.Accelerate()
-		go r.goEdit(fpath, &g, editedChan)
+		go r.goEdit(fpath, &g, counter)
 	}
 
 	err := g.Regulate()
-	close(editedChan)
+	close(counter)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	edited := len(editedChan)
+	edited := len(counter)
 	return edited
 }
 
-func (r *Replacer) goEdit(fpath string, g *governor.Governor, editedChan chan<- bool) {
+func (r *Replacer) goEdit(fpath string, g *governor.Governor, counter chan<- bool) {
 
 	edited, err := r.edit(fpath)
 	if err != nil {
@@ -78,7 +78,7 @@ func (r *Replacer) goEdit(fpath string, g *governor.Governor, editedChan chan<- 
 		return
 	}
 
-	editedChan <- edited
+	counter <- edited
 	logger.Progress(fpath)
 	g.Decelerate(nil)
 }
