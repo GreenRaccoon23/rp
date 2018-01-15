@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"time"
 
@@ -80,6 +81,17 @@ func verifyArgs() {
 
 	if !recursive && inclusionsBunch != "" {
 		log.Fatal(fmt.Errorf("-i option only allowed with -r option"))
+	}
+
+	flags := []string{"-o", "-n", "-i", "-x", "-e", "-r", "-c", "-q", "-Q"}
+	for _, f := range flags {
+		for _, rpath := range rpaths {
+			if rpath == f {
+				fmt.Println("Options must be set before paths")
+				logger.Usage()
+				os.Exit(2)
+			}
+		}
 	}
 }
 
