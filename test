@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 _populate() {
+
     mkdir -p ".test_tmp/dir1/dir2";
     touch ".test_tmp_file.svg";
     touch ".test_tmp/battery-050-charging.svg";
@@ -8,6 +9,7 @@ _populate() {
     touch ".test_tmp/dir1/dir2/file2.svg";
     touch ".test_tmp/dir1/dir2/terminal.svg";
     ln -sr ".test_tmp/dir1/dir2/file2.svg" ".test_tmp/dir1/dir2/file2-link.svg";
+
     /bin/cat <<EOM > ".test_tmp/battery-050-charging.svg"
 <svg fill="#4caf50" height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg"><path d="M28.93 27L22 40V29h-4l1.07-2H14v14.33C14 42.8 15.19 44 16.67 44h14.67c1.47 0 2.67-1.19 2.67-2.67V27h-5.08z" fill="#4caf50"/><path d="M31.33 8H28V4h-8v4h-3.33C15.19 8 14 9.19 14 10.67V27h5.07L26 14v11h4l-1.07 2H34V10.67C34 9.19 32.81 8 31.33 8z" fill-opacity=".3" fill="#4caf50"/></svg>
 EOM
@@ -22,9 +24,39 @@ EOM
 EOM
 };
 
-_test() {
+_gotest() {
     go test "./futil";
     go test "./replacer";
+};
+
+_cmdtest() {
+
+    go run main.go -req -o '(fill="#)[a-zA-Z0-9]{6}(")' -n '${1}ff0000${2}' -i '*.svg' ".test_tmp";
+
+    ! _md5chk ".test_tmp/battery-050-charging.svg" "0525e4fbe72fc2c3e2edf930dcb1d663" && return 1;
+    ! _md5chk ".test_tmp/dir1/dir2/terminal.svg" "3e2365963bb2a9da8adbb5bec679c63c" && return 1;
+};
+
+_md5sum() {
+    local -r f="${1}";
+    local sum;
+    sum="$(md5sum "${f}")";
+    sum="${sum%  *}";
+    echo "${sum}";
+};
+
+_md5chk() {
+    local -r f="${1}";
+    local -r expected="${2}";
+    local got;
+    got="$(_md5sum "${f}")";
+
+    if [ "${got}" != "${expected}" ]; then
+        echo "md5sum check for '${f}' did not pass";
+        return 1;
+    else
+        return 0;
+    fi;
 };
 
 _cleanup() {
@@ -35,5 +67,6 @@ _cleanup() {
 
 _cleanup;
 _populate;
-_test;
+_gotest;
+_cmdtest;
 _cleanup;
