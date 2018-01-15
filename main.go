@@ -41,8 +41,7 @@ func main() {
 
 func setLogger() {
 
-	logger.Quiet = cmd.Quiet
-	logger.Silent = cmd.Silent
+	logger.SetIntensity(cmd.Quiet, cmd.Silent)
 }
 
 func setFpaths() {
