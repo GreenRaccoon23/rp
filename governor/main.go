@@ -20,6 +20,10 @@ type Governor struct {
 // by allowing only `concurrency` goroutines to run at the same time.
 func New(size int, concurrency int) Governor {
 
+	if concurrency > size {
+		concurrency = size
+	}
+
 	var wg sync.WaitGroup
 	semaphore := make(chan bool, concurrency)
 	errs := make(chan error, size)
