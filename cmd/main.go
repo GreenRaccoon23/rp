@@ -88,7 +88,7 @@ func validate() {
 	}
 
 	if !Recursive && inclusionsBunch != "" {
-		complain("-i option only allowed with -r option")
+		complain("-i option only compatible with -r option")
 	}
 
 	if Verbose && Quiet {
