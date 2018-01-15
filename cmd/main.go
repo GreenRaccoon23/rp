@@ -122,12 +122,12 @@ func validate() {
 		complain("-x option only compatible with -r option")
 	}
 
-	if Quiet && Silent {
-		complain("-q option incompatible with -s option")
-	}
-
 	if Concurrency <= 0 {
 		complain("-c (concurrency) must be above 0")
+	}
+
+	if Quiet && Silent {
+		complain("-q option incompatible with -s option")
 	}
 }
 
