@@ -60,7 +60,7 @@ func parse() {
 	pflag.IntVarP(&Concurrency, "concurrency", "c", 1, "Max number of files to edit simultaneously")
 	pflag.BoolVarP(&List, "list", "l", false, "List which files would be edited but do not edit them")
 	pflag.BoolVarP(&Quiet, "quiet", "q", false, "Show less output")
-	pflag.BoolVarP(&Silent, "silent", "s", false, "Hide all output except errors")
+	pflag.BoolVarP(&Silent, "silent", "Q", false, "Hide all output except errors")
 	pflag.Usage = usage
 	pflag.CommandLine.SortFlags = false
 	pflag.Parse()
@@ -127,7 +127,7 @@ func validate() {
 	}
 
 	if Quiet && Silent {
-		complain("-q option incompatible with -s option")
+		complain("-q option incompatible with -Q option")
 	}
 }
 
