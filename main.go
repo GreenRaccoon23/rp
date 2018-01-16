@@ -38,12 +38,20 @@ func main() {
 
 func setLogger() {
 
-	logger.SetIntensity(cmd.Verbose, cmd.Quiet)
+	verbose := cmd.Verbose
+	quiet := cmd.Quiet
+
+	logger.SetIntensity(verbose, quiet)
 }
 
 func setFpaths() {
 
-	g := globber.New(cmd.Rpaths, cmd.Inclusions, cmd.Exclusions, cmd.Recursive)
+	rpaths := cmd.Rpaths
+	inclusions := cmd.Inclusions
+	exclusions := cmd.Exclusions
+	recursive := cmd.Recursive
+
+	g := globber.New(rpaths, inclusions, exclusions, recursive)
 	matches, err := g.Glob()
 	if err != nil {
 		log.Fatal(err)
@@ -56,9 +64,15 @@ func setFpaths() {
 
 func rp() (int, error) {
 
-	commit := !cmd.List
-	r := replacer.New(cmd.ToFind, cmd.ToReplace, cmd.Regex, commit)
-	edited, err := r.Edit(fpaths, cmd.Concurrency)
+	toFind := cmd.ToFind
+	toReplace := cmd.ToReplace
+	regex := cmd.Regex
+	concurrency := cmd.Concurrency
+	list := cmd.List
+	commit := !list
+
+	r := replacer.New(toFind, toReplace, regex, commit)
+	edited, err := r.Edit(fpaths, concurrency)
 	if err != nil {
 		return 0, err
 	}
