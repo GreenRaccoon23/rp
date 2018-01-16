@@ -43,6 +43,11 @@ _gotest() {
 
 _cmdtest() {
 
+    go run main.go -eq -o '(fill="#)[a-zA-Z0-9]{6}(")' -n '${1}0000ff${2}' ".test_tmp_application-pgp-keys.svg" ".test_tmp/dir1/audio-x-mpeg.svg";
+
+    ! _md5chk ".test_tmp_application-pgp-keys.svg" "d90b61134d161e3c3ad86baddce0a7c7" && return 1;
+    ! _md5chk ".test_tmp/dir1/audio-x-mpeg.svg" "1c11eae4ebb4a6564ae07845fe4f6c84" && return 1;
+
     go run main.go -req -o '(fill="#)[a-zA-Z0-9]{6}(")' -n '${1}ff0000${2}' -i '*.svg' ".test_tmp";
 
     ! _md5chk ".test_tmp/battery-050-charging.svg" "0525e4fbe72fc2c3e2edf930dcb1d663" && return 1;
