@@ -172,11 +172,11 @@ func difference(slc1 []string, slc2 []string) (diff []string) {
 	return diff
 }
 
-func contains(slc []string, str string) bool {
+func contains(haystack []string, needle string) bool {
 
-	for _, str2 := range slc {
+	for _, straw := range haystack {
 
-		if str == str2 {
+		if straw == needle {
 			return true
 		}
 	}
