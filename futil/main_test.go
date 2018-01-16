@@ -9,10 +9,19 @@ var ()
 // TestHardlinks tests Hardlinks
 func TestHardlinks(t *testing.T) {
 
-	matches := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/file1.svg", "../.test_tmp/dir1/dir2/file2-link.svg", "../.test_tmp/dir1/dir2/file2.svg", "../.test_tmp/dir1/dir2/terminal.svg"}
-	expected := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/file1.svg", "../.test_tmp/dir1/dir2/file2.svg", "../.test_tmp/dir1/dir2/terminal.svg"}
+	t.Run("Hardlinks (no symlinks)", func(t *testing.T) {
+		matches := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/file1.svg", "../.test_tmp/dir1/dir2/file2-link.svg", "../.test_tmp/dir1/dir2/file2.svg", "../.test_tmp/dir1/dir2/terminal.svg"}
+		expected := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/file1.svg", "../.test_tmp/dir1/dir2/file2.svg", "../.test_tmp/dir1/dir2/terminal.svg"}
+		hardlinks := Hardlinks(matches)
+		if !slcEquals(hardlinks, expected) {
+			t.Errorf("Expected `hardlinks` to be %v but got %v.\n", expected, hardlinks)
+			return
+		}
+	})
 
-	t.Run("Hardlinks", func(t *testing.T) {
+	t.Run("Hardlinks (no dirs)", func(t *testing.T) {
+		matches := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/file1.svg", "../.test_tmp/dir1/dir2/file2-link.svg", "../.test_tmp/dir1/dir2/file2.svg", "../.test_tmp/dir1/dir2/terminal.svg", "../.test_tmp/dir1/dir2"}
+		expected := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/file1.svg", "../.test_tmp/dir1/dir2/file2.svg", "../.test_tmp/dir1/dir2/terminal.svg"}
 		hardlinks := Hardlinks(matches)
 		if !slcEquals(hardlinks, expected) {
 			t.Errorf("Expected `hardlinks` to be %v but got %v.\n", expected, hardlinks)
