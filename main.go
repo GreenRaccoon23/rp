@@ -6,6 +6,7 @@ import (
 
 	"github.com/GreenRaccoon23/rp/cmd"
 	"github.com/GreenRaccoon23/rp/futil"
+	"github.com/GreenRaccoon23/rp/globber"
 	"github.com/GreenRaccoon23/rp/logger"
 	"github.com/GreenRaccoon23/rp/replacer"
 )
@@ -46,7 +47,8 @@ func setLogger() {
 
 func setFpaths() {
 
-	matches, err := futil.Glob(cmd.Rpaths, cmd.Inclusions, cmd.Exclusions, cmd.Recursive)
+	g := globber.New(cmd.Rpaths, cmd.Inclusions, cmd.Exclusions, cmd.Recursive)
+	matches, err := g.Glob()
 	if err != nil {
 		log.Fatal(err)
 	}
