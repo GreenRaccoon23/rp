@@ -27,10 +27,8 @@ func main() {
 	// debug()
 	// os.Exit(0)
 
-	commit := !cmd.List
-	r := replacer.New(cmd.ToFind, cmd.ToReplace, cmd.Regex, commit)
 	start := time.Now()
-	edited, err := r.Edit(fpaths, cmd.Concurrency)
+	edited, err := rp()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -54,6 +52,18 @@ func setFpaths() {
 	filtered := futil.FilterSymlinks(matches)
 
 	fpaths = filtered
+}
+
+func rp() (int, error) {
+
+	commit := !cmd.List
+	r := replacer.New(cmd.ToFind, cmd.ToReplace, cmd.Regex, commit)
+	edited, err := r.Edit(fpaths, cmd.Concurrency)
+	if err != nil {
+		return 0, err
+	}
+
+	return edited, nil
 }
 
 // func debug() {
