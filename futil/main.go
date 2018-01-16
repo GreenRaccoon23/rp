@@ -37,6 +37,10 @@ func Glob(rpaths []string, inclusions []string, exclusions []string, recursive b
 
 func globRecursiveBatch(rpaths []string, inclusions []string, exclusions []string) ([]string, error) {
 
+	if len(inclusions) == 0 {
+		inclusions = []string{"*"}
+	}
+
 	matches := []string{}
 
 	for _, rpath := range rpaths {
