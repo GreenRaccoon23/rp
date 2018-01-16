@@ -35,9 +35,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if cmd.Recursive {
-		logger.Report(edited, start)
-	}
+	logger.Report(edited, start)
 }
 
 func setLogger() {
