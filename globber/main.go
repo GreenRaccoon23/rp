@@ -158,25 +158,25 @@ func (g *Globber) glob(patterns []string) ([]string, error) {
 	return matches, nil
 }
 
-func difference(includes []string, excludes []string) (diff []string) {
+func difference(slc1 []string, slc2 []string) (diff []string) {
 
-	for _, include := range includes {
+	for _, str1 := range slc1 {
 
-		if contains(excludes, include) {
+		if contains(slc2, str1) {
 			continue
 		}
 
-		diff = append(diff, include)
+		diff = append(diff, str1)
 	}
 
 	return diff
 }
 
-func contains(excludes []string, include string) bool {
+func contains(slc []string, str string) bool {
 
-	for _, exclude := range excludes {
+	for _, str2 := range slc {
 
-		if include == exclude {
+		if str == str2 {
 			return true
 		}
 	}
