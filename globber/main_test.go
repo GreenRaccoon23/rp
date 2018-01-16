@@ -23,7 +23,7 @@ func TestGlobNonRecursive(t *testing.T) {
 			return
 		}
 		if !slcEquals(matches, expected) {
-			t.Errorf("Expected `matches` to be %v but got %v.\n", expected, matches)
+			t.Errorf("Expected `matches` to be\n%v\nbut got\n%v.\n", expected, matches)
 			return
 		}
 	})
@@ -61,7 +61,7 @@ func TestGlobRecursive(t *testing.T) {
 			return
 		}
 		if !slcEquals(matches, expected) {
-			t.Errorf("Expected `matches` to be %v but got %v.\n", expected, matches)
+			t.Errorf("Expected `matches` to be\n%v\nbut got\n%v\n", expected, matches)
 			return
 		}
 	})
