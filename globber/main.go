@@ -126,17 +126,17 @@ func (g *Globber) globHere() ([]string, error) {
 	inclusions := g.inclusions
 	exclusions := g.exclusions
 
-	included, err := g.glob(inclusions)
+	includes, err := g.glob(inclusions)
 	if err != nil {
 		return nil, err
 	}
 
-	excluded, err := g.glob(exclusions)
+	excludes, err := g.glob(exclusions)
 	if err != nil {
 		return nil, err
 	}
 
-	matches := difference(included, excluded)
+	matches := difference(includes, excludes)
 
 	return matches, nil
 }
@@ -158,25 +158,25 @@ func (g *Globber) glob(patterns []string) ([]string, error) {
 	return matches, nil
 }
 
-func difference(inclusions []string, exclusions []string) (diff []string) {
+func difference(includes []string, excludes []string) (diff []string) {
 
-	for _, inclusion := range inclusions {
+	for _, include := range includes {
 
-		if contains(exclusions, inclusion) {
+		if contains(excludes, include) {
 			continue
 		}
 
-		diff = append(diff, inclusion)
+		diff = append(diff, include)
 	}
 
 	return diff
 }
 
-func contains(exclusions []string, inclusion string) bool {
+func contains(excludes []string, include string) bool {
 
-	for _, exclusion := range exclusions {
+	for _, exclude := range excludes {
 
-		if inclusion == exclusion {
+		if include == exclude {
 			return true
 		}
 	}
