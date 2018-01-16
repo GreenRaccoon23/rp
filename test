@@ -2,7 +2,7 @@
 
 _delete() {
     [ -d ".test_tmp" ] && rm -r ".test_tmp";
-    [ -d ".test_tmp_file.svg" ] && rm ".test_tmp_file.svg";
+    [ -f ".test_tmp_file.svg" ] && rm ".test_tmp_file.svg";
     return 0;
 };
 
