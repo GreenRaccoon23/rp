@@ -52,7 +52,7 @@ func TestGlobRecursive(t *testing.T) {
 	exclusions := []string{"*1.svg"}
 	recursive := true
 	g := New(rpaths, inclusions, exclusions, recursive)
-	expected := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/audio-x-mpeg.svg", "../.test_tmp/dir1/dir2/file2-link.svg", "../.test_tmp/dir1/dir2/file2.svg", "../.test_tmp/dir1/dir2/terminal.svg"}
+	expected := []string{"../.test_tmp/battery-050-charging.svg", "../.test_tmp/dir1/audio-x-mpeg.svg", "../.test_tmp/dir1/dir2/terminal-link.svg", "../.test_tmp/dir1/dir2/terminal.svg"}
 
 	t.Run("Glob (recursive)", func(t *testing.T) {
 		matches, err := g.Glob()
