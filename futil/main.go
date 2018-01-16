@@ -1,19 +1,9 @@
 package futil
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 )
-
-// Pwd gets the PWD
-func Pwd() string {
-	pwd, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err) // if the fs is screwed, so is this program
-	}
-	return pwd
-}
 
 // Glob runs filepath.Glob, and it does this recursively if requested.
 func Glob(rpaths []string, inclusions []string, exclusions []string, recursive bool) ([]string, error) {
