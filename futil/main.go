@@ -15,15 +15,6 @@ func Pwd() string {
 	return pwd
 }
 
-// IsDir indicates whether a file is a directory by using its filepath
-func IsDir(fpath string) bool {
-	fi, err := os.Lstat(fpath)
-	if err != nil {
-		return false
-	}
-	return fi.Mode().IsDir()
-}
-
 // Glob runs filepath.Glob, and it does this recursively if requested.
 func Glob(rpaths []string, inclusions []string, exclusions []string, recursive bool) ([]string, error) {
 
