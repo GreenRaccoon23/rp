@@ -57,9 +57,10 @@ func setFpaths() {
 		log.Fatal(err)
 	}
 
-	filtered := futil.FilterSymlinks(matches)
+	nonSyms := futil.FilterSymlinks(matches)
+	nonDirs := futil.FilterDirs(nonSyms)
 
-	fpaths = filtered
+	fpaths = nonDirs
 }
 
 func rp() (int, error) {
