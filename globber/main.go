@@ -97,12 +97,12 @@ func (g *Globber) globRecursive(rpath string) ([]string, error) {
 
 func (g *Globber) globThere(dpath string) ([]string, error) {
 
-	rpath, err := os.Getwd()
+	cpath, err := os.Getwd()
 	if err != nil {
 		return nil, err
 	}
 
-	defer os.Chdir(rpath)
+	defer os.Chdir(cpath)
 
 	err = os.Chdir(dpath)
 	if err != nil {
