@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/GreenRaccoon23/rp/futil"
 	"github.com/spf13/pflag"
 )
 
@@ -132,6 +133,10 @@ func validate() {
 
 	if List && Quiet {
 		complain("-l option incompatible with -q option")
+	}
+
+	if Recursive && futil.AnyHardlinks(Rpaths) {
+		complain("-r option only compatible with directories")
 	}
 }
 
